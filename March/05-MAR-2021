@@ -1,0 +1,12 @@
+In relational database we store the data across multiple tables by representing relationship between the tables using pk and fk. So in-order to access the data from these tables along their relationship data of the other tables we need to use join queries.
+  
+How to write a join query?
+  The records of 2 tables has to be combined with each other by matching primary key of one table with each of the record foreign key of the other table.
+  
+There are 3 types of join queries are there
+1. inner join = The intersection 2 table records will be returned as an outcome
+2. left outer join 
+3. right outer join
+
+
+  

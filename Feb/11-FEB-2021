@@ -1,0 +1,67 @@
+No-Sql databases
+
+There are 2 types of databases are there in No-Sql
+1. Semi-Structured Database
+2. Object Storage / Block Storage / Bucket Storage
+
+Semi-Structured = all the records we store in the table doesnt have same no of columns, such a data we have in asymetric way is called semi structured data. These type of data is not suitable to be persisted as part of RDBMS because we endup with huge wastage of storage memory. Even though we can store semi structured data in RDBMS by transposing the columns into keys and values format but there are lot of challenges with that.
+  challenges:-
+    1. The table cannot be in relationship with other tables
+    2. Data Manipulation operations are very difficult, as based on the same key they would exist multiple records an update/delete operation effects all of the records
+    3. querying and accessing the data is very difficult
+Instead of storing such data in relational database management system, store them in no-sql semi-structured databases like mongo, casendra, couch database
+
+In semi-structured databases there is no structured definition like a table. we gather and collect all the related data into collections it is similar to "table" but no structure definition. within the collections we store the data as "json" format. we can access the data by querying through attributes. There are no relationship columns to establish relationship between the data. we cannot enforce constraints on the data.
+To ensure all the operations we carry on these database results in high performance/throughput transactionality is not supported.
+    
+Examples of data:- Audit, Monitoring, data analytics, log processing, weather data, scientific data, sensors data, statistical information
+
+Object Storage or Block Storage databases
+There is some data which is not either structured or nor semi-structured as well. for example images, documents, audios and video files are unstructured representations at all. In Relational database management system we store them in blob/clob type columns.
+
+There are lot of drawbacks in storing the unstructured data in RDBMS.
+  1. Due to huge volume of data i/o operation in serving these images/documents/audios or videos eats the bandwith of the machine and slows down the responsiveness of the database.
+  2. These type of data occupies more storage due to which to accomodate lot of data we need scaleup the database system. This results in high cost of maintaining the data
+  3. backup and restoration of the data takes more time because of this unstructure data.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

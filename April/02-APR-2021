@@ -1,0 +1,160 @@
+package com.sfm.entities;
+class Address implements Serializable {
+  protected int addressNo;
+  protected String streetAddress;
+  protected String city;
+  protected String state;
+  protected int zip;
+  protected String country;
+  //accessors
+  // equals and hashCode
+}
+com/sfm/entities/Address.hbm.xml
+---------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE ...>
+<hibernate-mapping package="com.sfm.entities"> 
+  <class name="Address" table="address">
+    <id name="addressNo" column="address_no"/>
+    <property name="streetAddress" column="street_address"/>
+    <property name="city"/>
+    <property name="state"/>
+    <property name="zip"/>
+    <property name="country"/>
+  </class>
+</hibernate-mapping>
+
+hibernate.cfg.xml
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/hdb</property>
+    <property name="connection.username">root</property>
+    <property name="connection.password">root</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+    <property name="show_sql">true</property>
+    <property name="format_sql">true</property>
+    <mapping resource="com/sfm/entities/Address.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>
+
+class AddressDao {
+  public Address getAddress(int addressNo) {    
+    SessionFactory sessionFactory = null;
+    Session session = null;
+    Address address = null;
+    
+    sessionFactory = SessionFactoryRegistry.getSessionFactory();
+    session = sessionFactory.openSession();
+    
+    address = session.get(Address.class, addressNo);
+    
+    return address;
+  }
+}
+
+class BranchDao {
+  public Branch getBranch(int branchNo) {    
+    SessionFactory sessionFactory = null;
+    Session session = null;
+    
+    sessionFactory = SessionFactoryRegistry.getSessionFactory();
+    session = sessionFactory.openSession();
+    
+    Branch branch = session.get(Branch.class, branchNo);
+    return branch;
+  }
+}
+
+class Test {
+  public static void main(String[] args) {
+    AddressDao addressDao = null;
+    
+    try {    
+      addressDao = new AddressDao();
+      Address address = addressDao.getAddress(1);
+    }finally {
+      // at the end of the main method, close the SessionFactory
+      SessionFactoryRegistry().getSessionFactory().close();
+    }    
+  }
+}
+
+
+How to manage SessionFactory within an Application?
+SessionFactory is an object that holds the hibernate configuration and mapping information pertaining to an database of an application using which we can create the object of the Session.
+
+How many objects of the SessionFactory do we need to create in an application?
+We should not create multiple objects of SessionFactory within an application, because 
+  1. A SessionFactory is an object immutable object that holds the configuration and mapping information once created we cannot modify the SessionFactory. (it is thread-safe). So we dont need multiple objects of the SessionFactory which would unnecessary duplicates the jvm memory in holding the duplicate copies of the object.
+  2. A SessionFactory hold the connection pool in optimizing the creation of Session object. 
+  Each time a Session object will be created with a  Connection, so opening and closing a connection for each Session object kills the performance of the application.
+  To avoid the above problem SessionFactory maintains ConnectionPool, so creating multiple SessionFactory will endup in creating several Connectionpools in our application which becomes very costly and a huge performance impact. Avoid creating multiple objects of SessionFactory.
+
+From the above we can easily understand we should create only one object of the SessionFactory within an application, then why not hibernate has made it Singleton?
+
+In an application while using multiple database we need per each database one object of the SessionFactory, making SessionFactory as a singleton enforces us to only use one database per application. So hibernate has not made SessionFactory as a singleton.
+So, application programmers should ensure the keep only one object of SessionFactory per one database within their application, to avoid wastage of memory and performance.
+  
+SessionFactory per database of an application Rule.
+  
+When should we create a SessionFactory object and close it?
+At the time of starting the application create SessionFactory object and at the end of the application close the SessionFactory object.
+  
+How to maintain only one SessionFactory per one database of our application?
+assuming we are only using one database in our application, we can maintain Single SessionFactory for our application as below.
+  
+class SessionFactoryRegistry {
+  private static SessionFactory sessionFactory;
+  
+  static {
+    Configuration configuration = new Configuration().configure();
+    sessionFactory = configuration.buildSessionFactory();  
+  }
+  
+  public static SessionFactory getSessionFactory() {    
+    return sessionFactory;
+  }
+}    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

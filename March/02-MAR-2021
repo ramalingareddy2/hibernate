@@ -1,0 +1,6 @@
+after gathering the business data as raw data, we need to store the data into relational database. Never store the data of a business in one single table always we need break the data and store in multiple tables.
+Why we should break the data into multiple tables, why not we can store in one table itself?
+If we store all the application/system/business data in one single table we will run into anomalies.
+insertion anomalies
+updation anomalies
+deletion anomalies

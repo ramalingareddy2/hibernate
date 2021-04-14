@@ -1,0 +1,16 @@
+There are 3 ways we can establish relationship between the tables in the database.
+  
+1. One-To-One
+If a record of one table is in relationship with only one record of another table, then those 2 tables are said to be in One-To-One relationship.
+There are 2 ways we can represent One-To-One relationship between the tables.
+  1.1. Direct One-To-One = If the record in child table doesnt exists without having a record in parent table then we go for direct one-to-one relationship.
+  Write Primary Key of parent table as Primary key and foreign key in child table to establish the relationship. 1.2. One-To-Many as One-To-One = If the records of both Parent and Child table can exists indepedent of each other, then both the tables has independent identity (primary key). So to establish one to one relationship between such tables we write primary key of parent table as foreign key in child and make foreign key as unique so that it becomes One-To-Many as One-To-One
+  
+2. One-To-Many | Many-To-One
+For a record in parent table they could exists many records in child table relationship with the record of the parent.
+Write primary key of parent table as foreign key in child table.
+    
+3. Many-To-Many
+Many records in parent has relationship with many records of the child table.
+    
+

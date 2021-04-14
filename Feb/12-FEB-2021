@@ -1,0 +1,68 @@
+Relational database management system
+We can store unstructured data in relational database management system by using special Sql Types called "Clob" & "Blob".
+  1. due to heavy i/o operation in serving the clob/blob the load on the database will increase and leads to slow responsiveness of the database
+  2. More storage space is occupied because of storing blob/clob, so we need to scaleup the database to add storage, rdbms requires high-end machines with huge cpu and memory to handle data processing, this leads to more cost of storage of data.
+  3. backup and restoration database will takes lot of time due to more volumes of data.
+
+To overcome the above problems we can use Object storage/Bucket Storage database.
+Here we can store any unstructured data like Images, Audio, Video and Documents/Files into these database and they generate unique identifier upon persisting them into database management system. We can access these objects back using the identifier. We can group relation groups of data by placing them in buckets.
+  
+Relational database management systems allows us to persist the data in Tables interms of rows/columns. In java programs we can access the data from RDBMS using jdbc api, it allows us to access the data from RDBMS in a relational format interms of records/columns of data, 
+
+Java being an Object Oriented Programming lanugage, it always wants to access the data interms of Objects to perform operations.
+  
+add-on batch - hibernate demo
+
+  
+Connection con = DriverManager.getConnection(url, un, pwd);
+Statement stmt = con.createStatement();
+ResultSet rs = stmt.executeQuery("select * from emp");
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,121 @@
+class SalesDataAccessor {
+  public ResultSet getSalesData(Date saleDate) throws ClassNotFoundException, SqlException {
+    try {
+      Class.forName("com.mysql.cj.jdc.Driver");
+      Connection con = DriverManager.getConnection(url, un, pwd);
+      PreparedStatement pstmt = con.prepareStatement("select * from sales where sale_date = ?");
+      pstmt.setDate(1, new java.sql.Date(saleDate.getTime()));
+      ResultSet rs = pstmt.executeQuery();
+      return rs;
+    }finally {
+      
+    }
+    return null;
+  }
+}
+class SalesManager {
+  public double getTotalSalesOfADay(Date saleDate) {
+    double paidAmount 0;
+    double totalSalesOfADay = 0;
+    
+    SalesDataAccessor salesDataAccessor = new SalesDataAccessor();
+    ResultSet rs = salesDataAccessor.getSalesData(saleDate);
+    while(rs.next()) {
+      paidAmount = rs.getDouble("paid_amount");
+      totalSalesOfADay += paidAmount;
+    }
+    return totalSalesOfADay;
+  }
+}
+
+Even though we separated the business logic from Data Access logic, still the business logic is exposed to the underlying source system from where the data is coming from, as it is directly reading the data from ResultSet.
+So all the problems we discussed earlier still appears.  
+How to solve this problem?
+  
+class Sale {
+  int saleNo;
+  Date saleDate;
+  int quantity;
+  double totalAmount;
+  double discount;
+  double paidAmount;
+  // accessor  
+}  
+
+class SalesDataAccessor {
+  public ResultSet getSalesData(Date saleDate) throws ClassNotFoundException, SqlException {
+    List<Sale> sales = null;
+    Sale sale = null;
+    try {
+      Class.forName("com.mysql.cj.jdc.Driver");
+      Connection con = DriverManager.getConnection(url, un, pwd);
+      PreparedStatement pstmt = con.prepareStatement("select * from sales where sale_date = ?");
+      pstmt.setDate(1, new java.sql.Date(saleDate.getTime()));
+      ResultSet rs = pstmt.executeQuery();
+      
+      // programmer has to write the logic for converting Relational data into object format
+      sales = new ArrayList<>();
+      while(rs.next()) {
+        sale = new Sale();
+        sale.setSaleNo(rs.getInt("sale_no"));
+        sale.setSaleDate(rs.getDate("sale_dt"));
+        sale.setQuantity(rs.getInt("quantity"));
+        sale.setTotalAmount(rs.getDouble("total_amount"));
+        sale.setDiscount(rs.getDouble("discount"));
+        sale.setPaidAmount(rs.getDouble("paid_amount"));
+        sales.add(sale);
+      }
+      return sales;
+    }finally {
+      
+    }
+    return null;
+  }
+  public List<Sale> getSalesBetweenDates(Date fromDate, Date toDate) {
+    
+  }
+}
+
+class SalesManager {
+  public double getTotalSalesOfADay(Date saleDate) {
+    double totalSales = 0;
+    SalesDataAccessor salesDataAccessor = new SalesDataAccessor();
+    
+    List<Sale> sales = salesDataAccessor.getSalesData(saleDate);
+    for(Sale sale : sales) {
+      totalSales += sale.getPaidAmount();        
+    }
+    return totalSales;
+  }
+}
+  
+From the above code we can understand java applications should be designed to process the data by holding them interms of Objects so that we can avoid the problems we discussed earlier.
+  
+Using jdbc api we get the data interms of relational format in rows/columns, but java applications wants to process the data by keeping them in Objects.  
+  
+So looks like the programmer has to write the code in converting the data that has been retrieved from Relational database using jdbc api interms of Relational format into Java bean objects. There are several challenges are there in performing this conversion logic
+1. For each of the data we access from Table, we need to write the conversion logic in mapping the data from the table to corresponding class object, which takes more amount of time in development and increases the overall application development time.
+2. Looks like majority of our time is spent on writing the data conversion logic and 60-70% of our code is data conversion logic, seems like we are spending most of the time on conversion logic which doesnt yeilds or results in an valuable computed outcome and we are investing the time and efforts on throw-away logic.
+3. It is very complex to map the data from Relational Tables with Relationships into Object Format.
+4. Any change in the underlying tables not only affects the data access logic even data conversion logic also has to be modified, so maintainance of the application is very hard.
+5. Looks like several places in our application we query the data from database table, now the conversion logic would gets duplicated in converting the data of the table into object.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+

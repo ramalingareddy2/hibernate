@@ -1,0 +1,110 @@
+Relational Database management System
+No-Sql Databases
+
+In an application there exists all types of data, both structured, semi structured or un-structured data so as part of the application developement people are using both of these types of databases.
+
+While using the Relational Database management system we have certain problems.
+Using jdbc api we access the data from database in relational format in terms of Rows/Columns. We use the data as part of our program to perform operation directly as shown below, which has lot of problems.
+  
+try {
+  double totalSales = 0;
+  Class.forName("com.mysql.cj.jdbc.Driver");
+  Connection con = DriverManager.getConnection(url, un, pwd);
+  Statement stmt = con.createStatement();
+  ResultSet rs = stmt.execute("select * from sales");
+  while(rs.next()) {
+    double paidAmount = rs.getDouble("paid-amount");
+    totalSales+=paidAmount;
+  }
+}finally {
+  // close rs, con
+}
+
+try {
+  BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("d:\sales.txt")));
+  while((String line = bufferedReader.readLine()) != null) {
+    String[] token = line.split(",");
+    Double paidAmount = Double.parseDouble(token[7]);
+    totalSales += paidAmount;
+  }  
+}
+
+There are 2 types of logics are there aspart of the above code.
+1. Data access logic
+2. Business logic
+so here we inter-mingled the 2 types of code and written together.
+  
+1. In the above code the business logic is directly reading the data from database, which makes it exposed to the source system where the data is coming from. So if the underlying source system has been changed lets say from database to FileSystem, then not only the data access logic, even the business logic also will be impacted.
+  
+2. The business logic gets duplicated across multiple source systems, if we are reading the data directly from the source system for performing operations.
+  
+3. If there is a change in underlying data format of the source system where data is coming from it affects not only data access logic even business logic also gets affected.
+
+4.Two different logics are written together it becomes complex to understand the application
+
+Due to the above problems maintainability of the code becomes very different and cost of maintainance of the application also become high.
+  
+  
+class SalesAccessor {
+  public ResultSet getSalesData() {
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    Connection con = DriverManager.getConnection(url, un, pwd);
+    Statement stmt = con.createStatement();
+    ResultSet rs = stmt.execute("select * from sales");
+    return rs;
+  }
+} 
+
+class SalesManager {
+  public double totalSales() {
+    SalesAccessor salesAccessor = new SalesAccessor();
+    ResultSet rs = salesAccess.getSalesData();
+    while(rs.next()) {
+      double paidAmount = rs.getDouble("paid-amount");
+      totalSales+=paidAmount;
+    }
+    return totalSales;
+  }
+}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

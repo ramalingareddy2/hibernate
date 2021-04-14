@@ -1,0 +1,59 @@
+Normalization = is a database design technique that helps us structing the data into tables and reduces data redundancy and eliminates the anamolies while storing the data in relational database tables. There are 6 Normal Forms are there, each of these normal forms provided rules, that we should apply on the raw data to normalize it.
+1NF
+2NF
+3NF
+BCNF
+5NF
+6NF
+These Normal Forms should be applied in an incremental manner one on top of the another. Lets say we cannot apply directly the 2NF unless our data has been normalized with 1NF. To say a data model is in Normalized state, atleast we need to normalize the data to 3rd NF.
+  
+Rules of:-
+  
+1 Normal Form
+-----------------------
+1. No Repeating groups of data
+2. Each field should be atomic in nature
+3. Every table must have a primary key
+
+
+What is Repeating groups of data?
+For a group of fields in the table, other fields of the table should be stored repeatedly.
+
+
+2nd Normal Form
+----------------
+1. Your datamodel must be in 1NF
+2. All the Non-Key columns must be fully dependent on all the parts of keys
+3. Every table must have a primary key
+
+
+3rd Normal Form
+---------------
+1. Your datamodel must be in 2NF
+2. All the Non-Key columns of your table should not be dependent on other non-key columns of your table. Eliminate transitive dependencies
+3. Every table must have a primary key.
+
+How to write join queries?
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

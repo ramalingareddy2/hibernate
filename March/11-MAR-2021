@@ -1,0 +1,564 @@
+How can relationship between the tables exists?
+  One-To-One
+  One-To-Many | Many-To-One
+  Many-To-Many
+
+How can Objects can have relationship with each other?
+  Inheritance
+  Association
+
+Object Relational Mapping Technology
+How to map data of a relational database tables into objects and viceversa. The guidelines are provided by orm methodology. The orm technology has provided guidelines of how to represent relationtable relationships in java classes.
+  
+
+account
+account_no  account_holder_nm   account_type  balance  branch_no
+
+branch
+branch_no  branch_nm   bank_nm   ifsc_code  contact_no   
+
+Account
+ accountNo
+ accountHolderName
+ accountType
+ balance
+ Branch branch;
+
+Branch
+ branchNo
+ branchName
+ bankName
+ ifscCode
+ contactNo
+ Set<Account> accounts;
+----------------------------------------------------------------------------------------------------------------
+Hibernate/Jpa is an ORM Technology Frameworks/Api
+The adopted orm technology principles and provided apis for accessing the relational database data interms of java class objects.
+
+  
+How to access the data of a relational database table interms of java class objects?
+  
+account
+--------
+account_no  account_holder_nm  account_type  mobile_no  email_address  balance
+
+branch
+------
+branch_no  branch_nm  bank_nm  ifsc_code  contact_no  location
+
+
+
+
+To access the data of the account table in java application interms of object we need a java class representing the structure of the database table to hold the records of data of that table.
+
+The class that is created based on the structure of the database table to hold the records of the table into its objects is called "Entity" class.
+  
+class Account {
+  private String accountNo;
+  private String accountHolderName;
+  private String accountType;
+  private String mobileNo;
+  private String emailAddress;
+  private String balance;
+  
+  public void setAccountNo(String accountNo) {}
+  public String getAccountNo() {}
+  
+  // accessors
+}  
+  
+
+
+The class in which we write the code for accessing the data from underlying source system, such classes are called "Data Access Object" or "Accessors"
+  
+class AccountAccessor {
+  public Account findAccount(int accountNo) {
+    Connection con = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    Account account = null;
+    AccountMapper accountMapper = null;
+    
+    try {
+      /*Class.forName(driverName);
+      con = DriverManager.getConnection(url, un, pwd);*/
+      con = ConnectionManager.newConnection();
+      
+      pstmt = con.preparedStatment("select account_no, account_holder_nm, account_type, mobile_no, email_address, balance from account where account_no = ?");
+      pstmt.setInt(1, accountNo);
+      //accountMapper = new AccountMapper();
+      
+      rs = pstmt.executeQuery();
+      /*Properties columnsToAttributesProps = new Properties();
+      columnsToAttributesProps.load(this.getClass().getResourceAsStream("accounts.properties"));*/
+      
+      if(rs.next()) {
+        // account = accountMapper.mapResultSetRecordToAccount(rs);
+        /*account = new Account();
+        account.setAccountNo(rs.getInt(1));
+        account.setAccountHolderName(rs.getString(2));
+        account.setAccountType(rs.getString(3));
+        account.setMobileNo(rs.getString(4));
+        account.setEmailAddress(rs.getString(5));
+        account.setBalance(rs.getDouble(6)); */
+        account = GenericMapper.mapResultSetRecordToObject(rs, Account.class);
+      }
+      
+    }catch(SqlException | ClassNotFoundException e) {
+      // throw e
+    }finally {
+     // close all the resources 
+    }
+    return account;
+  }
+  
+  public Account findAccountByMobileNo(String mobileNo) {
+    ResultSet rs = null;    
+    Connection con = null;
+    Account account = null;
+    PreparedStatement pstmt = null;
+    AccountMapper accountMapper = null;
+    
+    try {
+      con = ConnectionManager.newConnection();
+      ptmt = con.preparedStatement("select account_no, account_holder_nm, account_type, mobile_no, email_address, balance from account where mobile_no = ?");
+      ptmt.setString(1, mobileNo);
+      
+      rs = pstmt.executeQuery();
+      //accountMapper = new AccountMapper();
+      /*Properties columnsToAttributesProps = new Properties();
+      columnsToAttributesProps.load(this.getClass().getResourceAsStream("accounts.properties"));*/
+      
+      if(rs.next()) {
+        //account = accountMapper.mapResultSetRecordToAccount(rs);
+        account = GenericMapper.mapResultSetRecordToObject(rs, Account.class);
+      }
+    }catch(SqlException | ClassNotFoundException e) {
+      throw e;
+    }finally {
+      // close the resources
+    }
+  }
+}  
+
+
+class Branch {
+  String branchNo;
+  String branchName;
+  String bankName;
+  String ifscCode;
+  String contactNo;
+  String location;
+  
+  // accessors
+}  
+  
+class BranchAccessor {
+  public Branch findBranch(int branchNo) {    
+    ResultSet rs = null;
+    Branch branch = null;
+    Connection con = null;
+    PreparedStatement pstmt = null;
+    BranchMapper branchMapper = null;
+    
+    try {
+      Class.forName(driverClassname);
+      
+      //con = ConnectionManager.newConnection();
+      
+      pstmt = con.preparedStatement("select branch_no, branch_nm, bank_nm, ifsc_code, contact_no, location from branch where branch_no = ?");
+      pstmt.setInt(1, branchNo);
+      rs = pstmt.executeQuery();
+      //branchMapper = new BranchMapper();
+      /*Properties props = new Properties();
+      props.load(this.getClass().getResourceAsStream("branch.properties"));*/
+      
+      if(rs.next()) {
+        //branch = branchMapper.mapResultSetToBranch(rs); 
+        branch = GenericMapper.mapResultSetRecordToObject(rs, Branch.class);
+      }
+    }catch(SqlException | ClassNotFoundException e) {
+      // throw e
+    }finally {
+      // close the resources
+    }
+    return branch;
+  }
+}  
+  
+class ConnectionManager {        
+  
+  public static Connection newConnection() {
+    Connection con = null;
+    Properties props = null;    
+    
+    try {
+      props = new Properties();
+      props.load(ConnectionManager.class.getClassLoader().getResourceAsStream("dbentity-configuration.properties"));
+      
+      Class.forName(props.getProperty("db.driverClassname"));
+      con = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.username"), props.getProperty("db.password"));
+      con.setAutoCommit(false);      
+    }catch(SqlException | ClassNotFoundException e) {
+      // throw e
+    }
+    return con;
+  }
+}  
+
+dbentity-configuration.properties
+---------------------------------
+db.driverClassname=com.mysql.cj.jdbc.Driver
+db.url=jdbc:mysql://localhost:3306/db
+db.username=root
+db.password=root
+
+com.jdbcorm.entities.Account=account.properties
+com.jdbcorm.entities.Branch=branch.properties
+
+
+  
+ConnectionManager should create how many objects of Connection?
+1) It has to create only 1 connection for the entire application? 
+2) It should create 1 connection per 1 operation we want to perform on the database?
+  
+ConnectionManager.getConnection() = should always open a new connection and return it, because per each database operation we want to perform, we should create a new connection and at the end of the operation we should close it.  
+  
+Connection object should not be singleton (anti-pattern).
+----------------------------------------------------------------------------------------------------------------
+  
+Per a table - One Entity Class (Principle)
+---------------------------------------------
+  
+Whenever we query the data from table the columns of data we get from the table would always same whereever the query the data from that table.  To hold the data of the table we can dont need several entity class, if we create a entity class representing the structure of the table, always we can use the same class to hold data of the table irrespective of where/how many times we access the data from that table.
+So this proves one table requires only one entity class.
+  
+From the above we can understand whenever we queried the data for a particular table always we populate the data of the table into its corresponding/same entity class only. so that code for gathering and populating the data of the table into the class is being duplicated across all over the classes of my application whereever am queries the data from that table.
+So to avoid the above problem use Mapper classes.
+  
+Mapper class takes one record of the table interms of resultset and should write the code for converting that record into corresponding object.
+  
+class AccountMapper {
+  // read a record and store the columns into corresponding attributes of the account object
+  public Account mapResultSetRecordToAccount(ResultSet rs) {
+    // important: we should not iterate, give record we need to convert into object
+    Account account = null;
+    
+    account = new Account();
+    account.setAccountNo(rs.getInt("account_no"));
+    account.setAccountHolderName(rs.getString("account_holder_nm"));
+    account.setAccountType(rs.getString("account_type"));
+    account.setMobileNo(rs.getString("mobile_no"));
+    account.setEmailAddress(rs.getString("email_address"));
+    account.setBalance(rs.getDouble("balance"));
+    
+    return account;
+  }
+}  
+
+class BranchMapper {
+  public Branch mapResultSetRecordToBranch(ResultSet rs) {
+    Branch branch = null;
+    
+    branch = new Branch();
+    branch.setBranchNo(rs.getInt("branch_no"));
+    branch.setBranchName(rs.getString("branch_nm"));
+    branch.setBankName(rs.getString("bank_nm"));
+    branch.setIfscCode(rs.getString("ifsc_code"));
+    branch.setContactNo(rs.getString("contact_no"));
+    branch.setLocation(rs.getString("location"));
+    return branch;
+  }
+}  
+  
+across all the mapper classes the functionality is getting duplicated, that means in  all the mappers we are extracting the data from the resultset record and binding the data into entity class object, here from mapper to mapper the table from where the record is coming and object to which we are binding the data will change, but the rest of the logic is same.
+  
+Accessor:-  
+Properties columnsToAttributesProps = new Properties();
+columnsToAttributesProps.put("account_no","accountNo");
+columnsToAttributesProps.put("account_holder_nm","accountHolderName");
+columnsToAttributesProps.put("account_type","accountType");
+columnsToAttributesProps.put("mobile_no","mobileNo");
+columnsToAttributesProps.put("email_address","emailAddress");
+columnsToAttributesProps.put("balance","balance");
+
+pstmt = con.preparedStatement("select * from account where account_no = ?");
+// substitute
+rs = pstmt.executeQuery();
+if(rs.next()) {
+  Account account = (Account) GenericMapper.mapResultSetRecordToEntity(rs, Account.class, columnsToAttributesProps);
+}
+  
+We are caling GenericMapper class by passing a record, to which class object the record should be binded and what columns of the row should be binding to which attributes of the class.
+  
+class GenericMapper {
+  public static Object mapResultSetRecordToEntity(ResultSet rs, Class<?> entityClass) {    
+    String columnData = null;    
+    Method setterMethod = null;
+    Object entityObject = null;
+    String attributeName = null;    
+    String mappingFileName = null;
+    Set<String> columnsSet = null;
+    Properties dbEntityConfigProps = null;    
+    Properties columnsToAttributesProps = null;
+    
+    
+    //how does generic mapper knows which properties file contains the mapping information for the entity class
+    //this information is already available in dbentity-configuration.properties
+    dbEntityConfigProps = new Properties();
+    dbEntityConfigProps.load(GenericMapper.class.getClassLoader().getResourceAsStream("dbentity-configuration.properties"));
+    
+    if(dbEntityConfigProps.containsKey(entityClass.getCanonicalName()) == false) {
+      throw new RuntimeException("no mapping found for entity : "+ entityClass.getName());
+    }
+    mappingFilename = dbEntityConfigProps.getProperty(entityClass.getCanonicalName());
+    columnsToAttributesProps = new Properties();
+    columnsToAttributesProps.load(GenericMapper.class.getClassLoader().getResourceAsStream(mappingFilename));
+    
+            
+    entityObject = entityClass.newInstance();
+    // read the data for all the colums of the record
+    columnsSet = columnsToAttributesProps.keySet();
+    
+    for(String column : columnsSet) {
+      columnData = rs.getString(column);
+      
+      attributeName = columnsToAttributesProps.getProperty(column);
+      // now  we need to bind columnData into entityObject attributeName
+      String setterName = "set"+attributeName.substring(0,1).toUpperCase()+attributeName.substring(1, attributeName.length());
+      
+      setterMethod = entityClass.getDeclaredMethod(setterName, String.class);
+      setterMethod.invoke(entityObject, columnData);
+    }        
+    
+    return entityObject;
+  }
+}  
+
+
+package pkg1;
+class A {
+  private int i;
+  public int m1(int i) {
+    return 10;
+  }
+}
+
+class B {
+  
+}
+
+
+java.lang.Class = is a class and the objects of this class holds the metadata information about a java class.
+Who creates the java.lang.Class object?
+The classloader while loading the class into jvm memory, it reads the bytecode of a java class then looking at the bytecode it derives information about the class  (Fileds, Methods, Constructors) and creates Class object and places that in the jvm memory.
+  
+class java.lang.Class {
+  String classname;
+  String cannonicalClassName;
+  String packageName;
+  Field[] fields;
+  Method[] methods;
+  Constructor[] constructors;
+}
+
+class Field {
+  String accessModifier;
+  String fieldName;
+  Class fieldType;
+  
+}
+class Method {
+  String accessorModified;
+  String methodName;
+  Class<?>[] argumentsType;
+  Class<?> returnType;
+  
+}
+
+We can access the java.lang.Class object of a class using static variable of the class.
+package pkg1;
+class A {
+  int i;
+  int m2(int i){
+    return 10;
+  }
+}
+
+A.class = will give us java.lang.Class object of that class.  
+Class<?> aClass = A.class;
+
+String classname = aClass.getName();
+String fqnClassname = aClass.getCanonicalName();
+
+Field[] fields = aClass.getDeclaredFields();
+for(Field field : fields) {
+  System.out.println(field.getName());
+}
+
+Method[] methods = aClass.getDeclaredMethods();
+for(Method method: methods) {
+  System.out.println(method.getName());
+}
+
+How can we access the information about my class like Fields, Methods, Constructors at runtime?
+Use reflection api
+class AccountAccessor {
+  String table;
+  public String getAccountHolderName(int accountNo) {
+    return "steve";
+  }
+  public String getAccountHolderName(String mobileNo)  {}
+}
+
+The information about this class will be available in Class object of this class, we can access Class object of the class in 2 ways
+1. static variable .class of every class AccountAccessor.class
+2. use Class.forName("fqnClass") to load byte code of the class into jvm memory and return Class object
+3. if you already have an object the above class we can call Object.getClass() to access the class object of it.
+  
+Class<?> accountAccessorClass = AccountAccessor.class;
+Method[] method = accountAccessorClass.getDeclaredMethods();
+Field[] fields = accountAccessorClass.getDeclaredFields();
+Constructor[] construtors = accountAccessorClass.getConstrutors();
+
+We can get a specific method of a class by using getDeclaredMethod() on Class object by passing methodName and parameterTypes of the method.
+Method method = accountAccessorClass.getDeclaredMethod("getAccountHolderName", int.class);
+
+AccountAccessor accountAccessor = new AccountAccessor();
+String accountHolderName = accountAccessor.getAccountHolderName(2933);
+
+In the above lines of code we are calling the method of a class using the reference of the class. I gave you class name, methodName, parameterTypes and parameterValues asking you to call the method of a class at runtime how to invoke?
+  
+  
+"AccountAccessor"  
+getAccountHolderName() int.class
+10
+  
+  
+Class<?> clazz = Class.forName("AccountAccessor");
+Object obj = clazz.newInstance();
+Method method = clazz.getDeclaredMethod("getAccountHolderName", int.class);
+
+method.invoke(obj, 10); = instead of calling object.method(), because we need to down cast to be called using object, we are calling method invoke on this object with these parameters.
+  
+-------------------------------------------------------------------------------------------------------------
+account.properties // mapping information
+-------------------
+account_no=accountNo
+account_holder_nm=accountHolderName
+account_type=accountType
+mobile_no=mobileNo
+email_address=emailAddress
+balance=balance
+
+branch.properties
+-----------------
+branch_no=branchNo
+branch_nm=branchName
+bank_nm=bankName
+ifsc_code=ifscCode
+contact_no=contactNo
+location=location
+-------------------------------------------------------------------------------------------------------------
+What is hibernate framework?
+Hibernate is an ORM Technology Framework (Object Relational Mapping) technology Framework, that helps us in accessing the data of a relational database management system in terms of objects. 
+  
+How to work with hibernate in accessing the data of a database table in object format?
+
+Here is the table for us.
+  
+account
+account_no  account_holder_nm   account_type   mobile_no   email_address  balance
+
+#1
+To access the above table data interms of Object we need entity class. There are few rules we need to following in writing entity class in Hibernate.
+Entity Class:- A class created based on the structure of the database table is called Entity class.
+
+1. It is recommended to write Entity class implementing from Serializable interface
+2. Entity class must and should have default constructor.
+3. all the attributes that we defined requires accessor methods to participate in persistency operations
+4. It is recommended to override equals and hashcode method for an Entity class.
+  
+In hibernate it allows only one Entity class per One table. Since the table data can always be stored in same entity class, there is no use of allowing multiple Entity classes for a table.  
+  
+package com.hfe.entities;
+class Account implements Serializable {
+  protected int accountNo;
+  protected String accountHolderName;
+  protected String accountType;
+  protected String mobileNo;
+  protected String emailAddress;
+  protected double balance;  
+  
+  // accessors
+  // override equals and hashcode
+}  
+
+#2 To let the hibernate understand how to query and access the data for a given Entity class from the database table, we need to provide Mapping Information.
+Per an Entity class we need to provide only One Mapping File.
+  
+    
+  
+class Test {
+  public static void main(String[] args) {
+    
+  }
+}
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  

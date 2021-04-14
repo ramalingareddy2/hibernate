@@ -1,0 +1,41 @@
+Branch branch = session.get(Branch.class, 1);
+
+1. session object has to search through the mapping information to identify the appropriate mapping for the Branch entity class, and reads the database table details from the mapping file. (table, columns)
+2. session takes the help of dialect in creating the sql query for fetching the record from the database based on primary key column
+
+what is a dialect?
+dialect is a component provided hibernate which is an abstract component for which hibernate has provided multiple implements each per one database.
+In hibernate we write hql queries for querying the data from database, these hql queries will gets translated into native sql queries by using the help of dialect of the database, while hibernate is executing the sql query on database. Thus making hibernate framework portable across the database.
+
+session object passes the table and column information to dialect asking to generate sql query for fetching the data based on primary key column, so that dialect generates the query pertaining to the database.
+
+To let hibernate know which dialect to be used, we need to write the dialect information in hibernate.cfg.xml
+<property name="hibernate.dialect">org.hibernate.dialect.MySql8Dialect</property>
+Many cases the hibernate auto detect the dialect information by looking at driver class we specified in configuration file, in few cases we have to specify the dialect explicitly.
+  
+3. The session object creates the preparedStatement using the sql query and connection
+4. substitute the primary key value passed to the get() method
+5. execute and collect the resultset
+6. use generic mapper in converting the resultset data record into entity class object.
+-------------------------------------------------------------------------------------------------------------
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

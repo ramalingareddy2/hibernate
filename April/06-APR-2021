@@ -1,0 +1,57 @@
+For each operation we perform, we create one object of connection/session as well and at the end of the operation we should close the connection/session. 
+Never share connection/session object
+  1. a connection/session object establishes a database session from the application and all the operations we do with the connection/session will be tracked and comitted by the database, so if we share the connection/session object it will result into transaction inconsistency
+  2. if we share a connection/session between the classes, if any class closes the session/connection will results in loss of connection for all the other classes of our application
+-------------------------------------------------------------------------------------------------------------
+how to manage transactions as part of jdbc application?
+  
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

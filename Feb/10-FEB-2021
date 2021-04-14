@@ -1,0 +1,77 @@
+Hadoop = its an Distributed File System, where the data is chuncked into packets, distributed and stored across the nodes of the Hadoop Cluster. As the data is chuncked and distributed across the nodes of the cluster the data processing operations are fast and would be possible to perform parllely processing as well. Due to this hadoop can manage large volumes of data.
+
+There are database management systems exits on top hadoop filesystem and these are called no-sql databases.
+1. mongo
+2. casendra
+3. couch
+4. oracle big data
+5. aws/gcp/oci block storage
+
+There are divided into 2 types
+1. Semi-Structured databases
+
+in RDBMS we create table definition with fixed set of columns, and all the rows carries the data for all of these columns, thus called as "Structured Database management system". All the data in the real-world is not truely structured, if we handle such data in RDBMS there is a huge wastage of data and difficult to perform operations as well.
+Instead use No-SQL Semi-Structured databases like
+mongo
+casendra
+couch 
+
+For eg.. in mongo db we store data in json document format, so we can define our own columns as attributes in json with corresponding values.
+
+Mobile Collection
+{
+  "id":"33003"
+  "modelName":"Samsung Galaxy Ultra S21",
+  "manufacturer":"Samsung",
+  "battery":"5000 MAH"
+},
+{
+  "modelName":"Iphone 12",
+  "manufacturer":"Apple",
+  "displayType":"Retina 3"
+}
+
+displaySize > 6.5
+data analytics, logs processing, auditing, weather data, statiscal information
+
+rdbms
+no-sql semi structured
+
+2. Object storage database
+In rdbms there are special column types called blob and clob to hold binary and character large objects. are these data is structured and has to participate in relationship with any other data or not?
+The blob and clobs are not structured and does have any attributes of data to be in relationship with others, so storing them as part of relational database management system will eats up the storage space of the database, and consumes huge amount of network bandwith in serving these data.
+drawbacks:-
+  1. the more the clob/blob are persisted, more memory usage and backup and recovery of the database will takes lot of time. but transactional/business data requires frequent backups which may not be possible to have
+  2. due to huge volumes of data, the blob and clobs takes more time in transferring and becomes burden on database to carry i/o operations
+  3. In order to serve more i/o of clobs/blobs we need to scaleup the database management system, which results in more cost of maintaining the data.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

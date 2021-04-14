@@ -1,0 +1,125 @@
+Hibernate Framework and Jpa api as a way we can adopt and build applications in java language towards ORM Technology.
+
+The best approach towards Hibernate & Jpa api is to understand
+How does data is stored in relational database and how relationship between the data is established?
+How does java class objects hold the data, how can we relate objects each other?
+Then we can map both the worlds easily and can understand how to use Hibernate and Jpa api.
+
+How does data is represented as part of Relational database?
+The data is stored in tables interms of rows and cols where each row of the table consists of all the columns of data, thus called as structured databases.
+
+As we distribute data across the tables we can related the data by writing the primary key of a table as foreign key in another table. There are 3 types of relationships we can represent in relational database tables.
+1. one-to-one
+  1.1 direct one-to-one
+  1.2 one-to-many as one-to-one
+2. one-to-many | many-to-one
+3. many-to-many
+
+sales
+sale_no (pk)  sale_dt     quantity  total_amount discount paid_amount customer_no (fk)
+1             23/01/2021  8         1500         300      1200        1
+2             24/02/2021  10        2000         200      1800        1 
+
+customer
+customer_no (pk)  customer_nm   gender   age    mobile_no   email_address    
+1                 Mathew        Male     25     928293938   mathew@gmail.com  
+  
+
+
+in relational database 2 tables can be establish relationship by writing one of the table primary as foreign key in another table, its an uni-directional only. We should not write both the tables primary keys as foreign keys in each of the other tables this result in ambiguty of relationship.
+  
+as it is an uni-directional relationship how do we decide which table primary key should be written as foreign key? This depends on how the underlying data is related with each other, this means derive the relationship of the data between tables first and then establish the relationship accordingly.
+  
+How do we know the data between the tables are related?
+This is purely dependes on your business and we need to make business assumptions in establishing relationship between the data.
+
+  
+  
+
+
+
+account
+account_no (pk)  account_holder_nm   dob         gender   mobile_no    email_address   account_type 
+ac1              paul                10/02/1991  Male     988282999    paul@gmail.com  savings      
+
+address                                                                             (many-side of relationship)
+address_no (pk)  street_address              city        state    zip     country    account_no (fk)
+1                12/1/2/B, Govt School lane  Hyderabad   TS       50494   India      ac1
+2                                                                                    ac1   
+
+
+
+one-to-one (both sides)
+one-to-many | many-to-one
+many-to-many
+
+  
+One-To-One = one record of my table is in relationship with only one record of another table, then the tables are said to be in one-to-one relationship
+
+One-To-Many = one record of my table is in relationship with multiple records of another table, then the tables are said to be in one-to-many relationship. Many-To-One is the inverse of One-To-Many relationship.
+
+Many-To-Many = multiple records of my table is in relationship with multiple records of another table, then the tables are said to be in many-to-many relationship.
+
+How to establish these relationship between the tables?
+We represent relationship between the tables using primary keys and foreign keys. In relational database we express relationships in uni-directional only. A bi-directional relationship leads to ambiguty.
+
+Note:- In order to represent relationship between the tables, we need to derive the relationship of the underlying data based on the business requirement.
+
+
+Lets explore how to establish these relationships between the tables.
+
+One-To-Many relationship:-
+Write the primary key of my table as a foreign key in another table, so that my table will in one-to-many relationship with another table. Here the table who holds the foreign key columns represents "many" side of the relationship and other table will be on "one" side of the relationship.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

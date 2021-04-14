@@ -1,0 +1,135 @@
+How does objects can be related with each other, how many ways an object can be in relationship with other object?
+There are 2 reasons an object can be in relationship with another object
+  1. either it want to use the functionality of another object
+  2. to represent relationship between the data the objects are holding.
+
+Here is the eg.. of class holding another class reference to reuse the state of another class
+class Account {
+  int accountNo;
+  String accountHolderName;
+  String accountType;
+  String bankName;
+  String ifscCode;
+  double balance;
+  Address address
+  // accessors
+}
+
+class Branch {
+  String branchNo;
+  String branchName;
+  String ifscCode;
+  String bankName;
+  String manager;
+  Address address;
+  
+}
+  
+class Address {
+  String streetAddress;
+  String city;
+  String state;
+  int zip;
+  String country;  
+}  
+--------------------------------------------------------------------------------------------------------------
+How can a class can have relationship with another class?
+A class can be in relationship with another class in 2 ways
+  1. Inheritance
+  2. Association
+  
+1. Inheritance = it represents is-a relationship between the class. If we want to reuse the data/functionality of another class entirely then we can go for Inheritance. There are 3 forms of Inheritance are there
+  1. Generalization
+  2. Specialization
+  3. Realization
+  
+1. Generalization = deriving the super class out of the classes in our application, to reuse the common behaviours or data across multiple classes in our application. In this form of relationship mostly the super clases are abstract base classes, as they are created/derived from existings classes to share common data/behavior to multiple other classes.
+  
+  
+abstract class Base { 
+  void m1() {}
+  void c2() {}
+}  
+  
+class C extends Base {  
+  void m5() {}  
+}  
+
+class D extends Base  {
+  void f2() {}
+  void c7() {}  
+}
+
+class E extends Base  {
+  int e3() {}
+  double d4() {}
+  void c7() {}  
+}
+  
+2. Specialization  = From an existing class of our application we drive new classes to add specific functionality that is not common for other classes of our application. Here from the super class we drive sub-classes.
+
+class A {
+  void m1();
+  void c3();
+}
+
+class A1 extends A {
+  void m4();
+}
+
+3. Realization = serving a contract is called Realization. interface with behaviours declared. A class written implementing the interface and providing implementation to all of its methods defined in the interface is called Realization.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  

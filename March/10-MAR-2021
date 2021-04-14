@@ -1,0 +1,71 @@
+A class object can be in relationship with another class object for either reusing the data or functionality of another class. We can establish relationship between classes in 2 ways.
+1. Inheritance
+Inheritance is about reusing the state/functionality of another class inside our class. it represents is-a relationship between the classes. When our class wants all of its functionality/data of another class then we should go for inheritance. There are 3 forms of Inheritance
+
+1. Generalization
+Deriving the super class out of the existing class of our application is called Generalization. Identify the commonalities across several classes in our application, since all of these are duplicated across multiple classes let us create a base class to have these common functionalities/data, so that it can inherited by the other classes. Since the Super class has been formed only to share the common functionalities, it would be abstract as it is partial.
+  
+2. Specialization
+From existing classes we derive new classes to add specific behaviour that is not common for others, as we create new classes to add specialized behavior it is called Specialization.
+
+3. Realization
+class written to serve the contract of an interface is called "Realization"
+----------------------------------------------------------------------------------------------------------------
+  
+2. Association
+A class can reuse few/all of the functionalities of another class through association, its an another dimension of reusability. always association establishes "has-a" relationship between the objects, saying i have another class object in me to reuse.
+Classes in association relationship has 2 special characteristics
+1. cardinality = My class holds how many objects of another class.
+  
+2. directionality = either uni-directional or bi-directional
+If both the classes holds each other objects within them, then these classes are said to be in bi-directional relationship. If only one of the class holds the objects of another class, then it is said to be uni-directional. The decision of a having uni-directional or bi-directional association between the classes will be derived purely based on the usage of the classes/objects.
+
+optionally in a association relationship we have ownership of the association, indicating who is the owner of the relationship.
+  
+The association relationship is of 3 forms
+1. association
+2. aggregation
+3. composition
+out of the above the highest degree of association is "Composition". If 2 classes are said to be in Composition relationship with each other means their degree of association is very high, indicates there are tightly coupled.
+  
+How do we derive our classes on in which form of association relationship?
+It is derived based on 2 factors.
+  1. ownership of the relationship
+  2. lifetime/depedency between the objects
+  
+association = if a class holds the object of another class and there is no ownership and lifetime dependency between the classes then those classes are said to be in "association" relationship
+
+aggregation = if a class holds the object of another class where ownership of the association exists but there is no lifetime dependency between them then those classes are said to be in "aggregation" relationship
+
+composition = if a class holds the object of another class where between those classes ownership and lifetime dependency also exists then those classes are said to be in "composition" relationship.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

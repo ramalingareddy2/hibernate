@@ -1,0 +1,108 @@
+jdbc api allows us to access the data from database interms of rows/columns using ResultSet object. We use the data that is returned in terms of ResultSet in java application to perform the operation.
+
+try {
+  double totalSales = 0;
+  double paidAmount = 0;
+  Class.forName("com.mysql.cj.jdbc.Driver");
+  Connection con = DriverManager.getConnection(url, un, pwd);
+  Statement stmt = con.createStatement();
+  ResultSet rs = stmt.executeQuery("select * from sales");
+  while(rs.next()) {
+    paidAmount = rs.getDouble("paid_amount");
+    totalSales += totalSales;
+  }
+}finally {
+  // close resources
+}
+We have 2 types of logics
+1. Data access logic
+2. Business logic
+
+From the above code we have 4 problems.
+In above code our business logic is reading the data directly from the source system so that our business logic is exposed to the source system and brings several problems
+1. if we want to switch from one source system to another, we not only need to modify data access logic,even business logic also will be impacted
+2. if we have multiple source systems from which we want to read the data and perform operation,then the business logic will be duplicated across all the source systems.
+3. If we change the source system representation format of storing the data again business logic is impacted.
+4. having the data access logic and business written together makes the code complex to understand and difficult to maintain.
+  
+class SalesDataAccessor {
+  public ResultSet getSalesData() {
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      Connection con = DriverManager.getConnection(url, un, pwd);
+      Statement stmt = con.createStatement();
+      ResultSet rs = stmt.executeQuery("select * from sales");      
+    }finally {
+      // close resources
+    }
+    return rs;
+  }
+}
+
+class SalesManager {
+  public double getTotalSale() {
+    SalesDataAccessor salesDataAccessor = new SalesDataAccessor();
+    ResultSet rs = salesDataAccessor.getSalesData();
+    while(rs.next()) {
+      double paidAmount = rs.getDouble("paid_amount");
+      totalSales +=paidAmount;
+    }
+    return paidAmount;
+  }
+}
+
+tech.sriman@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,34 @@
+1. One-To-One
+  1.1 Direct One-To-One
+  1.2 One-To-Many as One-To-One
+2. One-To-Many | Many-To-One
+3. Many-To-Many
+
+
+1.2 One-To-Many as One-To-One
+When do we say a relationship between the tables is in One-To-One Relationship?
+One record of a table is in relationship with only one record of the other table, then those 2 tables are said to be in One-To-One relationship.
+  
+When (or) how we represent One-To-Many as One-To-One relationship?
+If both the tables has independent identity (separate primary keys) and the records of those 2 tables can exists independently, the we represent relationship between those 2 tables by writing primary key of one table as foreign key in another table. But this makes the 2 tables into One-To-Many relationship, so to have them in One-To-One relationship convert that foreign key into unqiue column. Thus the tables are in One-To-One relationship.
+  
+1.1 Direct One-To-One relationship
+If we have 2 tables where the child table doesnt have independent identity, because the record in another table doesnt exists without the presence of the record of parent table then we can establish one-to-one relationship between those tables by writing the primary key of parent table as primary key and foreign key in child table.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

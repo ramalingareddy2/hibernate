@@ -1,0 +1,105 @@
+What is a database management system?
+its an pre-built software application that abstracts the complexities in managing and storing the data on the persistence storage. So that software application can quickly talk to database software in dealing with persistency operations.
+
+There are different types of databases are there
+1. Hierarchial database
+2. Network database
+3. Relational database
+4. Object oriented database
+5. No-Sql database
+
+
+#1 Hierarchial database management system
+------------------------------------------
+These database allows us to store the data in nodes and allows us to establish relationship between the data interms of parent and child, so called "Hierarchial". Every node has 2 parts, data and address part.
+Within the data part we store the information we want to persist permanently and in address part it holds the addresses of the children/parent nodes in which it is in relationship with.
+A node can have any no of child nodes, but should have only one parent. 
+searching, traversal, insertion, updation and deletion of the data is going to be very easy if the data is stored independent of each other in nodes with addresses used for linking.
+
+Node - is a single unit of data that holds a record of information independent of other data.
+
+advantages:-
+1. quick/easy to perform data operations on the underlying data
+2. finally we can establish relationship between the data as parent and child
+3. permits random access of the data.
+
+dis-advantages:-
+1. The hierarchial databases are poor at representing real-world relationships, a data/node can have only one parent, but in reality the data can be related with any other data in any form. So to express real-world relationship of the data in hierarchial databases we landup into data redundancy problems.
+2. Rather than the data a node has many addresses to express relationship with other data, so that more memory wastage is there
+3. We need to memorize the addresses of the nodes to access thier corresponding data.
+
+#2 Network databases
+----------------------
+The network databases are same as the hierarchial databases in storing the data, but the only difference is we can establish relationship between the nodes in anyway. Due to which we can express real-world data with complex relationships as well.
+
+advantages:-
+1. finally we can represent real-world relationship between the data.
+2. There is not data redundancy
+
+dis-advatages:-
+1. The more and the more relationships are we end up with huge wastage of memory
+2. Data operations are going to be very very complex, why to insert or delete a node in the system, we need to break/re-establish relationships to all other data it is related with.
+Right now there are no presense of Hierarchial and Network database management systems and no one is using.
+
+3. Relational database management system
+------------------------------------------
+In a rdbms there is a defined datastructure to hold the data called "Table". A related group of data is stored in one table as tuples/rows and columns. Every table has to be defined with a structure indicating the columns of data we want to store. Now all the records of the table will have same columns in which data has to be stored. That is where the term "Structured" database is applicable for Relational database management system.
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,14 @@
+There are 5 different types of databases are there.
+1. Hierarchial database
+2. Network database
+3. Relational database
+4. Object Oriented database
+5. No-Sql database
+
+
+Relational database management system:-
+We store the data in Relational Database Management System in a data structure called "Table". Tables are defined with columns in which we store the data interms of Tuples/records. 
+We should not store all of the application data in one single table, because we run into data anamolies, here anomolies means problems in managing the data.
+identify different groups of data and store them separately into different tables.
+  
+  

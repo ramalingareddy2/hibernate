@@ -1,0 +1,93 @@
+Transaction it is an single unit of work, which has to be completed comitted or should be completely rolledback, here the unit of work represents all the operations we need to carryout in fullfilling a business operation.
+
+For example we want to register a user into the system, for which we need to insert data into 2 tables user_accounts and address table and both these operations should be considered as a single unit work to say registering the user operation has been finished.
+  
+user_accounts [table]        address [table]
+---------------------        -----------------
+user_account_no (pk)         adress_no (pk)
+email_address                street_address
+password                     building_address
+first_nm                     city
+last_nm                      state (4)
+mobile                       zip 
+                             country
+----------------------------------------------------------------------------------------------------
+
+
+// business logic
+class UserAccountDao {
+  public void addUser(UserAccount userAccount, Address address) throws SQLException {
+    boolean flag = false;
+    Connection con = null;
+    PreparedStatement uaPstmt = null;
+    PreparedStatement adPstmt = null;
+    
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      con = DriverManager.getConnection(url, un, pwd);
+      con.setAutoCommit(false); // disable autocommit
+      
+      uaPstmt = con.preparedStatement("insert into user_accounts(user_account_no, email_address, password, first_nm, last_nm, mobile) values(?,?,?,?,?,?)");
+      uaPstmt.setInt(1, userAccount.getUserAccountNo());
+      uaPstmt.setString(2, userAccount.getEmailAddress());
+      uaPstmt.setString(3, userAccount.getPassword());
+      uaPstmt.setString(4, userAccount.getFirstName());
+      uaPstmt.setString(5, userAccount.getLastName());
+      uaPstmt.setString(6, userAccount.getMobile());      
+      uaPstmt.executeUpdate(); 
+      // commit will not takes place now
+      
+      adPstmt = con.preparedStatement("insert into address(address_no, street_adress, building_address, city, state, zip, country) values(?,?,?,?,?,?,?)");
+            
+      adPstmt.setInt(1, address.getAddressNo());
+      adPstmt.setString(2, address.getStreetAddress());
+      adPstmt.setString(3, address.getBuildingAddress);
+      adPstmt.setString(4, address.getCity());
+      adPstmt.setString(5, address.getState());      
+      adPstmt.setInt(6, address.getZip());
+      adPstmt.setString(7, address.getCountry());
+      adPstmt.executeUpdate();         
+      
+      flag = true; // operation completed successfully
+    }catch(SQLException e) {      
+      flag = false;
+      throw e;
+    } finally {
+    
+      // either commit() or rollback() here
+      if(con != null) {
+        if(flag) {
+          con.commit();
+        }else {
+          con.rollback();
+        }
+      }      
+      // close resources (con, pstmts)
+    }
+  }
+}
+
+1. When we create a connection, by default autocommit mode on connection object will be true which means, when we perform any dml operation (executeUpdate()) [insert/update/delete] after completing the operation it commits the data into database table immediately
+due to which each executeUpdate() will be comitted into the database irrespective of the other operations we carried out as part of the business operation and would not participate in single transaction.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            

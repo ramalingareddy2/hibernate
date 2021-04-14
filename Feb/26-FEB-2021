@@ -1,0 +1,9 @@
+one-to-one
+a record of one table is in relationship with only one record of another table, then those tables are said to be in one-to-one relationship.
+There are 2 ways of representing one-to-one relationship
+  1. direct one-to-one relationship
+  2. one-to-many as one-to-one relationship
+  
+#2 
+one-to-many as one-to-one relationship.
+If both the tables has independent identify (primary key columns), then we have to establish one-to-one relationship by representing one-to-many relationship between the tables and convert into one-to-one by making fk column as unique

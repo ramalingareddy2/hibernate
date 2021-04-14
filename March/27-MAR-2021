@@ -1,0 +1,284 @@
+branch
+---------
+branch_no
+branch_nm
+bank_nm
+ifsc_code
+contact_no
+location
+
+5 tables
+
+package com.hormex2.entities;
+class Branch implements Serializable {
+  protected int branchNo;
+  protected String branchName;
+  protected String bankName;
+  protected String ifscCode;
+  protected String contactNo;
+  protected String location;
+  // default constructor
+  // accessors
+  // equals and hashCode  
+}
+
+com/hormex2/entities/entities-mapping.hbm.xml
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hormex2.entities">
+
+  <class name="Branch" table="branch">
+  </class>
+  
+  <class name="Account" table="account">
+  </class>
+  
+</hibernate-mapping>
+
+we can declare multiple entity classes mapping information in one single mapping file my writing multiple class declarations under hibernate-mapping element, we can add package attribute at root element to avoid duplicating package name for each class declaration.
+  
+it is not recommended to write multiple class mapping information in one mapping file, it is difficult to manage, so always keep mapping file separate for each entity class.
+------------------------------------------------------------------------------------------------------------  
+com/hormex2/entities/Branch.hbm.xml
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hormex2.entities">
+
+  <class name="Branch" table="branch">
+    <id name="branchNo" column="branch_no"/>
+    <property name="branchName" column="branch_nm" />
+    
+    <property name="branchName" type="java.lang.String">
+      <column name="branch_nm" size="50" type="VARCHAR" unique="true"/>
+    </property>
+    <property name="bankName" column="bank_nm"/>
+    <property name="ifscCode" column="ifsc_code"/>
+    <property name="location" />
+  </class>  
+</hibernate-mapping>  
+  
+by default hibernate while reading the mapping information, it doesnt validate the mapping information against the database table to check does the table exists or not and does the column definitions we declared in mapping are correct or not asper table.
+  
+If there is a conflict/mis-match between mapping information and database table hibernate application will run into runtime exception only by terminating the application
+
+What is the purpose of column definition in mapping file, when hibernate is not going to validate the mapping information against the table?
+if we want we can create database tables from the mapping information itself as we have all the table definition in the mapping file, due to this reason hibernate allows us to write complete column definition in the mapping file
+------------------------------------------------------------------------------------------------------------
+hibernate.cfg.xml
+-------------------
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/hdb</property>
+    <property name="connection.username">root</property>
+    <property name="connection.password">root</property>
+    
+    <mapping resource="com/hormex2/entities/Branch.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>
+
+An hibernate configuration file contains the configuration and table mappings of a database. if we are having multiple databases being used for our application, then we need to write multiple configuration files representing their respective database and tables.
+-------------------------------------------------------------------------------------------------------------  
+What is a session object?
+Session is a class provided as part of hibernate api, always a Session class object holds the connection to the database and contains mapping and configuration information using which it perform the database operation. 
+The entire logic for accessing/persisting the data into relational database management interms of objects has been abstracted as part of the Session class. Let the operation we want to perform on the database could be
+  - accessing an object from db
+  - save
+  - update
+  - delete
+  - access by using sql query
+let it be any operation, that can be carried by the Session class.
+
+but in order to create the session object we need mapping and configuration information, each time while performing an operation, session byitself reading the mapping and configuration information from physical file system of these xml files will impacts the performance of the application. That is where we use SessionFactory.
+  
+What is a SessionFactory?
+The name would itself suggest SessionFactory acts an factory for creating the object of Session. but there are several reasons for using the SessionFactory.
+  1. it acts as an context object in storing configuration and mapping information, so that we can avoid repeatedly reading these hibernate.cfg.xml and entity mapping files while creating and using the session object.
+  2. each time to create a session object we need connection to perform database operation. everytime opening a connection and closing a connect impacts performance, instead session factory holds the connection pool by default using which it pulls connection from its connection pool and creates the object of Session.
+  3. Finally it acts as factory for creating the object of Session,  so while creating the Session object it passing connection, mapping and configuration information to the Session object.
+    
+One SessionFactory object represents one database configuration and their table mapping information.
+    
+SessionFactory is an heavy weight object because it holds the pool of connections within it and it is always recommended to close the SessionFactory at the end of the application.    
+        
+    
+How to create Session object using SessionFactory?
+Session session = sessionFactory.openSession();
+
+What is Configuration class, what is the purpose of it?
+In order to build SessionFactory we need populate entity mappings and configuration information. So Configuration class acts as a builder in reading the mapping files and configuration file using which he will create the object of SessionFactory.
+
+First we need to create the object of Configuration and populate mapping and configuration information into Configuration object. Thereafter we can use this object for building sessionfactory.
+  
+Configuration configuration = new Configuration().configure();
+Here we create an empty Configuration class object, and using the object we call configure() method. The configure() method goes to the classpath of our application searches for a configuration file with name "hibernate.cfg.xml" only if it was not found throws an Exception and terminates the application. If the hibernate.cfg.xml found, then it reads the configuration information and mapping information out of it and loads into Configuration object.
+  
+Once the configuration object was build, the using that object we need to create SessionFactory.
+  
+Configuration configuration = new Configuration().configure();
+SessionFactory sessionFactory = configuration.buildSessionFactory();
+Session session = sessionFactory.openSession();
+-------------------------------------------------------------------------------------------------------------
+How to access an entity object from database?
+Session class has a method get(ClassType, id) which we can call for querying an entity object using primary key value from datbaase table interms of object.
+  
+What happens when we call get() method on the Session?
+when we call get(ClassType, id) for example 
+
+session.get(Branch.class, 1);
+
+we are asking session object to fetch Branch entity class object whose primary key column value is "1". In order to fetch the Branch entity class with id 1 session.get() method does the following.
+  
+  1. in order to fetch the data for entity class Branch, session object requires mapping information for identifying which table and what columns of data we need to query from table.
+  So as we have already provided mapping information, the session has to goto each mapping information and should identify the <class name=""> in the mapping is matching with ClassType we provided in get method to identify the relevant mapping file.
+      
+  2. as it already has connection withit, not to fetch the data from table it requires PreparedStatement with sql query. so here session takes the help of Dialect to create sql query.
+  
+  What is a Dialect, what is the purpose of it?
+  Dialect is a class that takes the responsibility of creating sql queries for fetch data from tables and it helps in translating hibernate queries written hql language into database dependent queries.
+    
+  most of the sql queries are portable across all the databases because all database management systems follows sql92 standard syntax for support sql query language.
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+

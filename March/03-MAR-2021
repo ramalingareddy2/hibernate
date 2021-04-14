@@ -1,0 +1,100 @@
+Don't store all the data pertaining to an business system in one single table of the relational database, rather break the data and distribute the data into multiple tables.
+How do we identify and distribute fields into tables, looks like this process of identifying and creating tables in storing the data is very difficult, this refers to data modelling.
+Data Modelling = refers to designing database tables with fields and relationships is called "Data Modeling"
+
+To help us in easily identifying the tables with fields and relationships, EF Codd has introduced Normalization Technics. The EF Codd has provided 5 Normal Forms using which we can normalize the data to be stored in relational database.
+1 Normal Form
+2 Normal Form
+3rd Normal Form
+Boyy Cott Normal Form
+5 Normal Form
+
+These Normal Forms provides set of rules that should applied on Raw data to Normalize and store in database tables. We always need to start with 1 NF and apply those rules on Raw data, the outcome of the 1 NF has to be act as input to 2NF in this way sequentially we need to apply all the normal forms in the order specified.
+
+The highest level of Normalization we can achieve is 5 th Normal Form. If we normalize the data to 3rd Normal Form that should be sufficient for most of the data models, and we dont need to apply 4th and 5th normal form always.
+
+Raw data
+---------
+student_no student_nm qualification  dob  gender  mobile_nbr  email_address  course_no  course_nm  duration fee faculty_no  faculty_nm  experience  mobile_nbr  email_address
+
+1 Normal Form
+-------------
+1. No repeating groups of data
+2. all the fields should be atomic in nature
+3. Every table should have a primary key
+
+repeating groups of data means = For a group of fields in a table, the other fields of table should be repeatedly stored.
+
+If we find any repeating groups of data, break the data into new table and include the primary key of the original table into child.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.

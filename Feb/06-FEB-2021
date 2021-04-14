@@ -1,0 +1,62 @@
+Relational Database Management System = will allows us to store the data in a data structure called Table. Table has to defined with columns, so that each record/tuple will be stored with same number of columns of data. We should not store all of the data of our application into one single table, because we run into data anamolies, which is nothing but problems in managing the data.
+  
+Different groups of data has to broken down and store in separate table, to avoid data anamolies. 
+If we store the data in separate tables how can we establish relationship between the data?
+
+To identify the relationship between the records of 2 different tables we need to some how link a record of one table with a record of another table.
+For e.g.. the sale no "1" has been made by "micheal", to identify this relationship we need link those 2 records of those tables?
+How can we link the records of the tables?
+
+#1 store the address one record inside the other record with whom you want to establish relationship. but this approach seems to be having lot of problems.
+  1.1 huge amount of memory wastage
+  1.2 we need to rebuild address everytime when there is a change of data, this kills the performance of the system.
+  1.3 need to keep track of a each record and its corresponding address
+  
+  
+Instead of linking records using addresses to establish relationship between the data let us use data itself as a logical address in establishing the relationship. In  order to establish relationship between the data of tables using data, we need a column which uniquely identifies the record of data inour table, which is called primary key column.
+  
+Primary Key = is a unique column in a table which can be used as a logical address of the record to establish relationship with the other record of another table. 
+To establish relationship between the tables now we need to write the primary key column value of our table into another table column, so that we can relate the data.
+The column in which we hold the primary key column value of other table is called "Foreign Key".
+  
+Joining Tables?
+out of the relationship we established we should be able to read the data by comibining the records of those 2 tables. always pick the foreign key column data of a table and goto another related table and compare with primary key column to identify which 2 records are in relationship.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  

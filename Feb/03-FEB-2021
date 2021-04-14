@@ -1,0 +1,87 @@
+1. Fixed Width Field Size Format
+2. Comma Separated Values (CSV)
+3. Extensible Markup Language (XML)
+4. Serialization
+
+Generalized Characteristics of persisting the business data.
+1. Human readable and Machine Redable
+2. Memory Efficient
+3. Secured
+4. Sequential and Random access of the data
+5. Easy to perform data manipulation operations
+6. should be interoperable
+7. low utilization of cpu and memory to process the data
+8. High accuracy
+9. Should hold relationships
+10. Should support operations like searching, sorting and querying the data
+
+
+Developing a software application in handling the above characteristics of persisting the data onto the underlying persistency storage in terms of Files has lot of difficulties.
+  1. Choosing the write data representation Format is very difficult based on the need of the Persistency.
+  2. Building software applications in persisting the data on File with all above operations is
+    - high complex
+    - time taking as well
+    - The cost of developing software applications will be very high.
+
+So in a software application we are writing 2 types of logic
+  1. business logic in computing the data
+  2. persistency logic in reading/writing the data onto the Files
+  
+Looks like 60% of the efforts of developing a software application goes to persistency tier/logic of your application, so that software manufacturing costs are going high.
+
+If we can comeup with a software system that takes the aspects of managing the persistency aspects of an application, then we can reduce the overall development time and cost of developing software applications that where "Data Management System" has been brought.
+
+Databases abstracts/protects/shields the software applications from the underlying storage of the data on a computer, just give the data to the database management system, it takes care of hanlding the persistency requirements of the application, so obviously the development efforts and cost of developing the software applications drastically came down.
+  
+There are different types of database management systems are there
+1. Hierarchial database
+The express the data interms of parent and child relationship. The data is stored in Nodes Format, where a Node contains data part and addresses part. In the address part we store what is my parent node address and what are all the children related to me.
+A Node can have multiple children, but a child node has only one Parent Node.
+  
+advantages:-
+  1. We can store data and we can related the data easily as parent-child relationships
+  2. Performing data manipulation operations are also very easy
+dis-advantages:-
+  1. They fail in representing the real-world relationships that usually exists in business data, always hierarchial database represents relationships interms of parent-child only where a parent can have multiple children, but a child can have only one parent.
+  But in reality a node can have multiple parent as well, which cannot be expressed in hierarchial databases.
+  
+2. Network database
+
+3. Relational database management system (why?)
+4. Object oriented database
+5. No-Sql database
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

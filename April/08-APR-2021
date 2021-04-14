@@ -1,0 +1,201 @@
+How to manage transactions as part of the jdbc application?
+by default autocommit=true when we create a connection in jdbc, so that at the end of every dml operation the transaction would be committed, because of this we can apply transactionality across the operation we carried on multiple tables as they individually gets committed and rollbacked.
+So in order to manage transactionality we need to setAutoCommit(false) on connection, so that we can gain the control of comitting and rollbacking the transactionality
+
+boolean flag = false;
+try {
+  Class.forName("com.mysql.cj.jdbc.Driver");
+  Connection con = DriverManager.getConnection(url, un, pwd);
+  con.setAutoCommit(false); // disable autocommit
+  
+  //  create pstmt, substitute params and execute query
+  // create another pstmt, substitute params and execute query
+  flag = true
+}catch(SQLException e) {
+  flag = false;
+}finally {
+  if(con != null) {
+    if(flag) {
+      con.commit();
+    }else {
+      con.rollback();
+    }
+  }
+}
+------------------------------------------------------------------------------------------------------------
+  
+loan_account
+[loan_account_no | loan_account_holder_nm | loan_type | loan_sanctioned_dt | loan_amount ]
+---------------------------------------------------------------------------------------------  
+package com.htx.entities;
+class LoanAccount implements Serializable {
+  int loanAccountNo;
+  String loanAccountHolderName;
+  String loanType;
+  Date loanSactionedDate;
+  double loanAmount;
+  // accessors
+  // equals and hashCode
+}  
+
+com/htx/entities/LoanAccount.hbm.xml
+-------------------------------------
+<hibernate-mapping package="com.htx.entities">
+  <class name="LoanAccount" table="loan_account">
+    <id name="loanAccountNo" column="loan_account_no"/>
+    <property name="loanAccountHolderName" column="loan_account_holder_nm"/>
+    <property name="loanType" column="loan_type"/>
+    <property name="loanSanctionedDate" column="loan_sactioned_dt"/>
+    <porperty name="loanAmount" column="loan_amount"/>
+  </class>
+</hibernate-mapping>
+
+hibernate.cfg.xml
+------------------
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.driver_class">com.mysql.cj.Driver</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/hdb</property>
+    <property name="connection.username">root</property>
+    <property name="connection.password">root</property>
+    
+    <property name="show_sql">true</property>
+    <property name="format_sql">true</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+      
+    <mapping resources="com/htx/entities/LoanAccount.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>
+
+class SessionFactoryRegistry {
+  private static SessionFactory sessionFactory;
+  static {
+    Configuration configuration = new Configuration().configure();
+    sessionFactory = configuration.buildSessionFactory();    
+  }  
+  public static SessionFactory getSessionFactory(){ 
+    return sessionFactory;
+  }
+  // close
+}
+
+class LoanAccountDao {
+  public void saveLoanAccount(LoanAccount loanAccount) {
+    SessionFactory sessionFactory = null;
+    Session session = null;
+    
+    sessionFactory = SessionFactoryRegistry.getSessionFactory();
+    session = sessionFactory.openSession();
+    
+    session.save(loanAccount); // will not be comitted    
+  }
+}
+
+Test.java
+-------------
+LoanAccountDao laDao = new LoanAccountDao();
+LoanAccount loanAccount = new LoanAccount();
+//populated data
+
+lDao.saveloanAccount(loanAccount);
+
+
+Always when we are performing dml operations in hibernate, we need to manage the transaction explicitly otherwise the data will not gets committed into the database. because while SessionFactory is creating the object of Session, it would pass Connection object to the Session, but this connection has been created by setting autcommit=false.
+Due to this by default at the endof dml operation the transaction would not be comitted, so that in hibernate we need to manage transactions for dml operations.
+
+  
+In general there are 2 types of transactions are there
+1. local transactions = we perform a commit/rollback on a single transactional participating resource
+jdbc api only supports local transactions
+
+2. global/xa/distributed transactions = we issue a commit/rollback across multiple transactional participating resources
+to support global transactions we need to use jta api
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

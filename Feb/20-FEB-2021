@@ -1,0 +1,69 @@
+ORM Technology is a methodology that provided set of rules and guidelines in mapping the data from relational database tables into Objects. 
+Its the responsibility of the programmers to build applications based on the rules and guidelines defined by ORM technology in mapping data from relational tables to objects, but seems application developement becomes very complex in adopting the ORM Methodology, So we need support from programming languages in providing api for working with ORM Technology.
+
+Initially Java has not provided any api supporting ORM Technology, thats where lot of third-party vendors provided third-party libraries to work with ORM technology in Java.
+  1. Hibernate Framework
+  2. MyBatis
+  3. TopLink
+  4. Eclipse Link
+
+There are problems in working with third-party libraries. Every third-party library provides their own set of concreate classes helping us in building our application by using them.
+  1. Choosing the right third-party library is difficult and has to spend lot of time.
+  2. We cant switch from one third-party library to another, because it enforces us to scrap the existing code and rewrite the code from scratch.
+
+    
+Later on Sun has announced the support for ORM Technology by providing an api called "Jpa api" stands for Java Persistency Api.
+Jpa api = The hibernate has greatly contributed in writing the specification and desiging the api of jpa. Ultimately Hibernate has to provide implementation for Jpa api as well.
+  
+In support of Jpa api hibernate has divided into 2 parts from Hibernate 3.0 onwards
+hibernate-core = third-party library
+hibernate-entity-manager = hibernate has provided additional implementations for jpa api interfaces/abstract classes.
+  
+From the above we can say hibernate still continue to exsists as a Framework and provided support for Jpa api by providing a separate implementation.
+  
+Slowly over the time Hibernate has merged most of its classes into Jpa api by deprecating hibernate classes. As of now in Hibernate 5.0 many of the api classes of Hibernate Framework has been removed and encouraged us to use jpa api only in support of Java Language.
+  
+Basics of Relational database management system
+How to establish relationships between the data 
+data normalization
+joins basics
+
+object relationships
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

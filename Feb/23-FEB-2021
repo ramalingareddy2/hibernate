@@ -1,0 +1,61 @@
+orm technology = object relational mapping technology has provided rules and guidelines that can be followed in easily mapping the data from relational format into object format.
+
+Java has not provided support for working with orm technology initially and they have not provided any api. So third-party vendors has provided third-party libraries support orm technology as part of java language.
+1. hibernate
+2. mybatis
+3. toplink
+4. eclipselink
+
+later on java has released jpa api supporting orm technology. To work with jpa api we need implementation. Hibernate Framework has provided implementation for jpa api so we can work with hibernate in 2 ways.
+1. hibernate core [hibernate framework]
+2. hibernate entity-manager [jpa implementation]
+
+----------------------------------------------------------------------------------------------------------------
+Hibernate or Jpa api help us in adopting orm technology. orm technology has provided guidelines in mapping data of relational format into object format.
+  
+orm technology has designed the guidelines by exploring the below things.  
+  
+- how does data is stored in relational database, what are the ways we can establish relationship between the data?
+- how do we hold data in objects, which way we can relate the objects?  
+  
+out of the above learning they have arrived to a best practices of mapping the data from relational database to objects.
+  
+Now we are implementing the rules/guidelines of orm technology through hibernate/jpa, but to understand why we are following these rules the best ways is let us also explore the path of how does relational database stores and establishes relationships and same with objects as well, the we can easily understand guidelines.
+----------------------------------------------------------------------------------------------------------------
+How does data will be stored in relational database management system? How do we establish relationship between the data?
+We store the data in relational database management in tables with fixed set of columns defined as part it, and the data is stored in records/rows where each of the row has all of the columns defined by the table. Thus being called as Structured Database System.
+  
+The entire data of the application should not be stored in one single table, the data should be broken down into parts and stored in multiple tables. We can establish relationship between the of the tables by writing primary key of one table as foreign key in another table.
+  
+How many types of relationships are there in relational database management system?
+  There are 3 types of relationships can be established.
+  1. one-to-one 
+    There are 2 ways of representing one-to-one relationship
+      1.1 direct one-to-one relationship
+      1.2 one-to-many as one-to-one
+  2. one-to-many | many-to-one
+  3. many-to-many
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  

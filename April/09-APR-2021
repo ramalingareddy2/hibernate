@@ -1,0 +1,133 @@
+There are 2 types of transactions are there
+  1. Local Transaction = we are managing the transaction by issuing commit/rollback on 1 single transactional participating resource
+  
+  2. Global Transaction = we are managing the transaction by issuing commit/rollback on multiple transactional participating resources
+  
+  ->executeUpdate() - #T1 of Database#1
+                    - $T2 of Database#2
+                    --------------------- commit
+                    
+jdbc api doesnt supports global transactions, only jta api supports global transactions.
+jta api = java transaction management api
+  - to use jta api/global transactions we must and should require support of jee container
+  - every jee container provides an object "UserTransaction" object binded to the jndi registry, using that object we need to manage transactionality
+
+
+How to manage transactions in respective apis?
+
+jdbc api
+---------
+con.setAutoCommit(false);
+con.commit();/rollback();
+--------------------------------------------------------------------------------------
+  
+jta api
+--------
+// perform lookup of userTransaction object from jndi registry of jee container
+userTransaction.beginTransaction();
+// perform database operations
+userTransaction.commit();/rollback();
+
+Jndi registry is the place where jee container objects are placed and made accessible to the world/applications.
+-------------------------------------------------------------------------------------------------------------
+
+While working with transactions, switching between local transaction to global transaction or vice versa requires lot of code changes across all the classes of our application. 
+Hibernate to overcome this problem has provided an unified Transaction Management api. It has provided an interface called org.hibernate.Transaction with multiple implements one for Local Transaction and another for Global Transaction.
+
+The session acts as factory for creating the object of Transaction implementation as we dont need transaction unless we are performing some operation using session.  
+
+To let hibernate session object to instantiate appropriate implementation of Transaction interface, we need to specify which Transaction Management mechanism we want to use for our application in hibernate.cfg.xml
+
+hibernate.cfg.xml
+<property name="hibernate.transaction.coordinator_class">global</property>
+
+  
+Transaction transaction = session.beginTransaction();
+transaction.commit();/rollback();
+
+
+
+class LoanAccountDao {
+  public void saveLoanAccount(LoanAccount loanAccount) {
+    SessionFactory sessionFactory = null;
+    Transaction transaction = null;
+    Session session = null;
+    boolean flag = false;
+    
+    try {
+      sessionFactory = SessionFactoryRegistry.getSessionFactory();
+      session = sessionFactory.openSession();
+      transaction = session.beginTransaction();
+
+      session.save(loanAccount); 
+      flag = true;
+    }finally {
+      if(transaction != null) {
+        if(flag) {
+          transaction.commit();      
+        }else {
+          transaction.rollback();
+        }
+      }
+      if(session != null) {
+        session.close();
+      }
+    }
+    
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

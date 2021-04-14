@@ -1,0 +1,45 @@
+In java applications we want to hold the data interms of Objects to perform the operation, but while using jdbc api it allows to access the data from Relational Database Managment System in Relational Format only in terms of rows/columns. So we need to write the code for converting the Relational Format into Object format to be used as part of our application.
+  
+There are many challenges are there in converting the relational format into object format.
+  1. Not just one table, for all the data we access from the database we need to write the logic for converting the data from relational format into object format. We can image the amount of time and efforts goes in writing the logic to perform the conversion. Looks like most of the time the developer would endup in writing the code for conversion only. These shoots up the application development cost as well.
+  2. If the underlying table structure changes not only the data access logic, even the data conversion logic also should be modified which inccurs huge maintainance cost.
+  3. Tables with relationships are difficult in mapping to the java objects, we need to endup in writing complex logic in converting the relational data with relationships into Objects of relationships
+  4. The code gets duplicated across various classes of our application in performing this conversion.
+    
+It looks like not only one project/java applications, every one who is developing applications on object oriented programming languages are looking for accessing the data from relational database management system interms of Objects.
+
+Looks like its a common problem, that is where the experts in the industry cameup with the best practices/guidelines in how to design objects so that we can easily map the data of the relational tables into corresponding class objects. These set of rules/guidelines provided by these experts are called Object Relational Mapping Technology.
+
+As sun microsystems has not initially adopted ORM Technologies and havent provided any api third-party vendors came into market and started producing third-party libraries.
+There are several third-party libraries are there
+1. Hibernate Framework / Library
+2. MyBatis
+3. Toplink
+4. Eclipse Link
+
+  
+Java Persistency Api (Jpa api)
+  
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

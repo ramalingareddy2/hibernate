@@ -1,0 +1,79 @@
+What is SessionFactory and what is the purpose of it?
+SessionFactory holds the configuration and mapping information using which we it creates the object of Session.
+
+How many objects of the SessionFactory we should create for an application?
+We should avoid creating multiple objects of the SessionFactory because
+  1. it is an immutable object which holds configuration and mapping, would gets duplicated in jvm memory if we create multiple objects and waste jvm memory
+  2. it hold connection pool to optimize the creation of Session object. so creating and closing the SessionFactory for an application multiple times will heavily impacts the performance of our application.
+To avoid the above problems we should create only one Object of SessionFactory per one database in an application.
+
+How to create only one object of SessionFactory per one database within an application?
+
+class SessionFactoryRegistry {
+  private static SessionFactory sessionFactory; // only one copy of the object is required
+  
+  // it executes only once
+  static {
+    Configuration configuration = new Configuration().configure();
+    sessionFactory = configuration.buildSessionFactory();
+  }
+  public static SessionFactory getSessionFactory() {
+    return sessionFactory;
+  }
+}
+------------------------------------------------------------------------------------------------------------
+How many objects of the connection we need to create per an application?
+Connection should not be a Singleton class, we should not share the connection object between multiple classes of our application. 
+  
+because a connection represents a session to the database and all the operation we do on database will be tracked based on Connection/Session we are holding, comit/rollback operation takes place based on the transactions we carried using the Connection object, sharing the same connection across multiple operations of our application results in inconsistency.
+If a class closes a connection then the rest of the classes using the connection will be lost.
+
+We should always create a connection per operation level and at the end-of the operation we should close connection to release the resource. 
+  
+similar to the above, even Session object should be create one per operation and should be closed at the end of the operation.  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

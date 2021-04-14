@@ -1,0 +1,53 @@
+Relational Database management system = it allows us to store the data in a data structure called "Table", the table is defined with fixed set of columns of pre-defined sizes and we store the data in rows where each row contains all the columns in which we have to store the data.
+
+Data of our application is distributed across multiple tables and the relationship between the data is established using the primary key and foreign key columns.
+  
+advantages:-  
+  1. We can establish real world relationships between the data using the data, which requires minimal efforts and memory footprint.
+  2. The dml operations are very fast as the database takes care of updating, deleting and inserting the data into the database system.
+  3. We dont need to memorize the address of the data to access the data. we can ask database itself to provide the requried data by using SQL Language
+
+dis-advantages:-
+  1. while querying the data by joining the tables, the database run into comparisions of the records of the 2 tables we are joining to fetch the joined data, which increases the memory and cpu requirements in processing the data and may leads to performance problems.
+  2. This has resulted in cost of maintaining the database management systems.
+    
+    
+Object Oriented Database Management System
+In object oriented programming languages they want to access the data interms of objects to perform operation, but in the pre-decessors (rdbms and others), they let you access the data in rows/columns of tables. So is there any way we can directly store the data in objects so that those can be accessed and can perform operations directly.
+We can relate objects either through inheritance or association and persit together in database and these databases allows us to query the data from database based on objects and relationship.
+    emp.salary > 50000
+    emp.department.name = 'IT'
+These databases are not matured and are not fully invented those are being stopped at their priliminary stage of innovation itself and these is not concrete product that is available in  the market to use them.
+    
+    
+No-Sql databases
+There are 2 types of No-SQL databases are there
+1. Semi-Structured databases
+2. Object storage / Block storage databases / Bucket storage databases
+
+Hadoop  = Hadoop Distributed FileSystem
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

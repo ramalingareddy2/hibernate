@@ -1,0 +1,71 @@
+Dis-Advantages of Relational Database Management System.
+1. While joining the tables in fetching the data, more amount of cpu and memory will be consumed if more amount of data is there
+2. We need large machines with huge cpu and memory capacity to scale up in handling large volumes of data, this resulted in heavy cost of maintainance
+
+Object oriented databases
+These allows us to directly persit Object of data within the database management system. They allow us to represent relationship between the objects in terms of association inheritance as well. Object query language has been provided where we can query and access objects from database using attributes of data.
+
+These are stopped at their pre-limineary state of innovation and no concrete support is available for further development.
+
+No-Sql Database
+1. Semi-Structured Database
+2. Object Storage | Block Storage | Bucket Storage
+
+Hadoop - is a hadoop distributed file system.
+
+on a File System we can store the data in Files. A File can container any data written in plain text of characters. But usually the plain text of characters cannot be understood by Machines and cannot be used in programming. So, we use data representation standards for storing so that it can be used for programming.
+
+Unlike DOS or Linux File Systems Hadoop is a distributed file system, where large volumes of data is broken into packages and are distributed around cluster of computers to persist the data. so that any processing of data will happens paralelly across all the nodes.
+
+api
+----------
+Hive
+Map Reduce
+Pigx
+
+There are challenges in managing the data on hadoop file system by applications that is where databases are built on top of hadoop File system.
+
+No-Sql databases
+=================
+Mongo 
+casendra
+oracle big data
+couch 
+aws block storage
+
+Semi Structured databases
+There is lot of data in the real-world that is actually not structured, how do we capture such semi-structured data in rdbms.
+
+
+Block storage databases
+
+Structured = all things should look alike
+Data is not semetric across
+
+{
+"imei":"0303",
+"gps version" :"003.3",
+"displayType":"super amloed",
+"networkType":"5G"
+},
+{
+"imei":"033",
+"gps version":"303",
+"battery":5000 mah
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+1. write entity class
+2. writing mapping and configuration files 
+
+session.get(Class, id) = is a method used for querying single object/record from database based on the primary key value
+
+
+
+Always a SessionFactory should be created by populating the configuration and mapping information. So Configuration class acts as a builder for creating the object of SessionFactory
+We need to create the object of configuration by populating hibernate configuration and mapping information, once the configuration has been created then we should call build...() method for creating the object of SessionFactory.
+  
+  1. Configuration configuration = new Configuration();
+     configuration = configuration.configure(); // hey read hibernate.cfg.xml and load configuration and mapping information with you.
+     sessionFactory = configuration.buildSessionFactory();
+
+Configuration configuration = new Configuration().configure();
+
+
+
+SessionFactory
+There are multiple usages of SessionFactory
+1. it acts as factory for creating the object of session
+2. it holds the mapping and configuration information within the memory and passes the same to session object while creating the object of session
+3. it maintains a connection pooling, and creates the object of session by populating the connection from connection pooling
+
+
+SessionFactory
+ - configuration
+ - mapping
+ 
+Configuration
+  - configuration
+  - mapping
+buildSessionFactory() {}
+
+
+maven is a java build tool that helps in compiling, packaging and executing a java program instead of we typing the command manually on command-prompt to run java program.  
+in addition maven helps us in performing dependency management by adding the dependencies from maven central repository
+
+How to install maven?
+download maven bundle - https://maven.apache.org/download.cgi
+https://mirrors.estointernet.in/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip
+
+This will dowload a zip file name apache-maven-3.6.3-bin.zip
+1. now extract the above zip into c:\ drive directly
+2. delete zip file not required
+3. set 2 environment variables 
+  MAVEN_HOME=c:\apache-maven-3.6.3
+  M2_HOME=c:\apache-maven-3.6.3
+    
+  pointing to home location of your maven directory you extract c:\ drive above
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

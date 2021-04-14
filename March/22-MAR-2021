@@ -1,0 +1,239 @@
+How to access the data from database table interms of entity object using hibernate?
+
+Database Table:-
+account
+--------
+account_no (pk)
+account_holder_nm
+account_type
+mobile_no
+email_address
+balance
+------------------------------
+#1 To query the data for the above account table and retrieve the data interms of object first we need an entity class representing the structure of the table. Below are the rules based on which we need to write entity class
+  1. It is recommended to write Entity class implementing from Serializable interface
+  2. Entity class must and should have default constructor
+  3. all of the attributes of the entity class should have accessor methods, because hibernate will access the attributes of the class using setters/getters only.
+  4. It is recommended to overrride equals and hashcode for an entity class
+
+package com.hre.entities;    
+class Account implements Serializable {
+  protected int accountNo;
+  protected String accountHolderName;
+  protected String accountType;
+  protected String mobileNo;
+  protected String emailAddress;
+  protected double balance;
+  // default constructor
+  // accessors
+  // equals and hashcode
+}  
+-----------------------------------------------------------------------------------------------------------    
+We dont have to write the code for querying the data, collecting the data from ResultSet into Entity class object, because it is a boiler-plate logic, instead hibernate has provided classes that would take care of querying and converting the data for a table record into Entity Object. We should make use of those classes.
+  
+Hibernate has provided a class called "Session". Session is an intelligent class which knows the details of how to query the data and convert the data from ResultSet into Entity object, but we should provided details of the database table and its corresponding entity class into which the data should be binded to which is nothing but "Mapping Information".
+
+Mapping Information = For a give database table, we specify the corresponding entity class into which the data should be binded and each of the columns of the table we provided the corresponding attributes to which the data should be binded, this is called mapping information which helps in mapping table data into object.
+  
+The mapping information has to be provided in an xml format, which is predefined by the Hibernate with fixed elements and standard structure which is called "Hibernate Mapping File".
+Hibernate has defined an standard dtd document describing the structure of the XML, we should following that dtd in writing the Hibernate Mapping File.
+"Document Type Definition"   = Its a file in which we define the structure of an xml document.
+
+The Mapping File we are writing should follow the below conventions.
+  1. It is recommended to write the Name of the Mapping File same as your classname so that we can quickly identify the Mapping File for a give Entity Class.
+  2. It is recommended to write the extension of the Mapping File with ".hbm.xml" even though a typical xml ends with ".xml". So even write the Filename without .hbm.xml there is no problem, its just a sake of differentiating between normal xml and mapping xml file we are using .hbm.xml
+  3. Keep the hibernate mapping files in the same package of your entity classes, so that we can easily find for a give class the corresponding mapping information at the same place.
+    
+The file should be written as below
+sourcedirectory: com/hre/entities/Account.hbm.xml
+Note: The file naming convention should be used as Class naming convention only.
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "location"> [mandatory]
+<hibernate-mapping>
+  <class name="com.hre.entities.Account" table="account">
+    <id name="accountNo" column="account_no"/>
+    <property name="accountHolderName" column="account_holder_nm"/>
+    <property name="accountType" column="account_type"/>
+    <property name="mobileNo" column="mobile_no"/>
+    <property name="emailAddress" column="email_address"/>
+    <property name="balance" column="balance"/>
+  </class>
+</hibernate-mapping>
+
+In the above xml the <!DOCTYPE> declaration is mandatory, to let the hibernate know what dtd it has to use for validting the mapping file.    
+  
+Important:- For a table to be managed with hibernate, it must and should have a primary key, without a primary key hibernate cannot manage to perform persistency operations for that table.
+  
+-------------------------------------------------------------------------------------------------------------
+In order for Session class to go and query the data from the database table it needs the information about the database to grab connection, along with that we need to provide the details of our entity classes with mapping information.
+  
+We need to define this information in another xml file called hibernate-configuration file.
+  What are the rules/conventions we should follow in writing the hibernate configuration file.
+    1. The hibernate configuration file should be written with name as hibernate.cfg.xml (by default)
+    2. this file has to be written based on the dtd definition provided by the hibernate
+    3. The extension of the file is recommended as .cfg.xml even though we can write with .xml because to easily distinguish between mapping file, configuration file and normal xml.
+    4. It should kept inside the classpath of our project (for eg.. under resources directory)
+  
+hibernate.cfg.xml  
+------------------
+<?xml version="1.0" encoding="utf-8"?>  
+<!DOCTYPE hibernate-configuration PUBLIC ".../hibernate-configuration.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/hibdb</property>
+    <property name="connection.username">root</property>
+    <property name="connection.password">root</property>
+    
+    <mapping resource="com/hre/entities/Branch.hbm.xml"/>   
+    <mapping resource="com/hre/entities/Account.hbm.xml"/>  
+  </session-factory>
+</hibernate-configuration>
+    
+-------------------------------------------------------------------------------------------------------------
+
+how to access one record from the database table
+- write the sql query with where clause pointing to primary key column of the table
+
+There is a method get() as part of the Session class, which can be used for querying single object from the database table based on primary key.
+      
+#1 Configuration  
+It helps us in reading hibernate configuration and mapping files information inside it and helps us in creating the object of Session.
+Configuration acts as an builder in creating the object of SessionFactory with pre-populated configuration and mapping information.
+      
+Configuration configuration = new Configuration().configure();
+- when we instantiate the object of Configuration with new Configuration(), an empty configuration object will be created. 
+- on the object that has created, we are calling configure() method,
+  - now the configure method quickly goes to classpath of our application looking for hibernate.cfg.xml file only.
+  - if the file is not found, it throws an exception and terminates the application
+  - if available reads the configuration and mapping information and loads into Configuration Object.
+          
+
+#2 SessionFactory
+1. We read the hibernate configuration and mapping information and store in SessionFactory, so that it acts an ContextObject in holding the hibernate information.
+2. by taking the hibernate configuration it reads the database information and creates a default connection pool within the SessionFactory
+3. acts as an factory for creating the object of the Session, whenever we requested SessionFactory to create object of Session, it populates the mapping, configuration and database connection with which it creates the object of Session and returns to us.
+  
+  SessionFactory sessionFactory = configuration.buildSessionFactory();
+  
+      
+# Session
+  - get(Account.class, 1)
+takes the mapping information of the entity class, creates the sql query and creates preparedStatement
+with connection, executes and gets ResultSet and convert ResultSet into Entity class object using GenericMapper and returns to us.
+  
+class Test {
+  public static void main(String[] args) {
+    Configuration configuration = new Configuration().configure();
+    SessionFactory sessionFactory = configuration.buildSessionFactory();
+    
+    Session session = sessionFactory.openSession();
+    Account account = session.get(Account.class, 2);
+    
+    sop(account);    
+  }
+}  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+  
+  
