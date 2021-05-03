@@ -1,0 +1,42 @@
+Hibernate 4 bootstrapping
+
+Configuration configuration = new Configuration().configure();
+sessionFactory = configuration.buildSessionFactory();
+
+hibernate.cfg.xml
+#jdbc approach
+#jee approach
+#third-party connection pooling libraries
+  -c3p0, proxool, dbcp, hikari cp
+
+How many ways a connection external resource can be acquired in hibernate application?
+There are 3 fixed ways in which hibernate can aquire the external resource connection
+1. jdbc approach
+2. jndi datasource approach
+3. connection-pool third-party libraries (c3p0, proxool)
+
+
+
+BlazeCloudConnectionPool library
+  - aws
+  - oci
+  - azure
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

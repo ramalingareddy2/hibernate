@@ -1,0 +1,202 @@
+#1 jdbc is an api, programmer should write boilter-plate logic in building application using jdbc api
+   hibernate is a framework, it provides classes with the boiler-plate logic, so while developing applications with framework programmer dont need to write boiler-plate logic
+#2 jdbc api doesnt support global transactions it only supports local transactions
+   hibernate framework supports both global/local transactions
+#3 jdbc api has provided all the exceptions as checked exception
+   hibernate framework all the exceptions are unchecked exceptions
+#4 in jdbc api programs, programmer has to write native sql query that makes the java application tightly        coupled with underlying database, a change in db effects the java application
+   in hibernate framework we dont refer columns names and table names instead we access the data interms of objects and attributes so any change in the db needs to modify only the mapping files
+#5 jdbc api code is not portable across databases, because we write native sql queries in querying the data,      if we switch from one database to another again we need to modify the query and code in extracting the data
+   hibernate framework we write hql queries which are database independent query langauge, hibernate framework takes case of translating the hql into native sql queries at runtime during the execution of queries on database using dialect. so we switch from one db to another db, there is no need of modifying the code.
+#6 jdbc doesnt support caching, programmer has to implement explicitly
+#7 hibernate framework has inbuilt support of caching, there are 3 levels of caching supported to serve          different types of caching requirements of a applicaiton.
+#8 working with join queries in extracting the data is very complex, developer has to build object model and      wrap the data of the ResultSet into corresponding object
+   In hibernate we declare relationship between the tables interms of objects, so hibernate takes care of fetching objects out of relationship and returns effectively,  we dont need to write complex logic in extracting the data.
+------------------------------------------------------------------------------------------------------------
+Hibernate bootstrapping options
+
+There are many different ways creating the hibernate core objects in building an hibernate application, so these technics of creating the core objects are called "Bootstrapping" hibernate framework application.
+The bootstrapping options differ between hibernate framework versions.
+  bootstrapping hibernate framework in
+    1.hibernate 3.x
+      There are 3 ways of bootstrapping the hibernate framework in hibernate 3.x
+      1.1 programmatic approach
+      1.2 properties-file approach
+      1.3 xml-based configuration file approach
+    2.hibernate 4.x
+      Service and ServiceRegistry approach
+    3.hibernate 5.x
+      Metadata api
+      
+#1 Hibernate 3.x bootstrapping mechanism
+In general we write the hibernate.cfg.xml in configuring the framework components to be instantiated, but in few situations, bootstrapping through cfg.xml may not be relevant and requires more options, so to added that flexibility in instantiating the hibernate core objects, hibernate has provided several bootstrapping options like
+  1.1 programmatic approach
+  1.2 properties approach
+  1.3 xml-based configuration approach
+
+1.1 programmatic approach
+in this approach we avoid writing a configuration file, rather we directly instantiate the Configuration object and populates all the hibernate configuration into Configuration object programmatically. so its an alternate to writing an configuration files in bootstrapping the hibernate framework.
+     
+Configuration configuration = new Configuration(); // dont call configure() method
+if we call configure() method on configuration object, it will tries to load hiberante.cfg.xml from classpath of the application, which we dont have and leads to exception.
+configuration.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+...
+configuration.addResources("com/pa/entities/Account.hbm.xml");
+SessionFactory sessionFactory = configuration.buildSessionFactory();
+
+1.2 properties approach
+Writing an xml-configuration file in bootstrapping the hibernate framework core objects is a very complex job, and many developers find often complex in writing the xml files. To avoid xml, hibernate has provided support for properties file bootstrapping.
+Write a properties file directly under classpath of the application with name hibernate.properties. In this file populate all the hibernate configuration with mandatory prefix as "hiberante."
+
+hibernate.properties
+hibernate.connection.driver_class=com.mysql.cj.Driver
+hibernate.connection.url=jdbc:mysql://localhost:hdb
+
+In properties approach since we can hold only key/value pairs, we cannot represent mapping information here. so we need to programmatically register/add mapping files information after creating the configuration object.
+
+#1  
+Configuration configuration = new Configuration(); // dont call configure() method
+The default constructor of Configuration class looks for hibernate.properties file under classpath.
+  if found, reads the properties file and loads into Configuration object
+  if not found, it ignores and creates itself as empty object
+#2 once after creating the object of Configuration, populate mapping resources before creating the SessionFactory object.
+  configuration.addResources("location of hbm")
+There after create the object of SessionFactory
+SessionFactory sessionFactory = configuration.buildSessionFactory();
+
+1.3 xml-based configuration approach
+In xml-based configuration approach by default hibernate Configuration class, configure() method looks for a file under classpath with name hibernate.cfg.xml and reads the configuration and loads into itself.
+  
+Configuration configuration = new Configuration().configure(); // reads hibernate.cfg.xml and loads into it.
+In case if we want to change the name of the xml file or location of the xml file we can pass filename and path as an input to configure method
+
+Configuration configuration1 = new Configuration().configure("com/xba/common/hr-hibernate.cfg.xml");
+Configuration configuration2 = new Configuration().configure("com/xba/common/finance-hibernate.cfg.xml");
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     

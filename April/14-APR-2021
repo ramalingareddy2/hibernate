@@ -1,0 +1,268 @@
+Why do we need to use Hibernate Framework, when we have jdbc api? What are the advantages of using Hibernate Framework when compared with Jdbc api?
+#1
+jdbc api :   
+jdbc is an api (application programming interface). apis are always partial and will provide interfaces and abstract classes only, one should use implementation of api provided by vendor to work with them. api's will not provide boiler-plate logic
+  
+boiler-plate logic
+-------------------
+For executing any sql query in jdbc, developer has to repeatedly write the same code in loading driver, creating connection, create statement and executing
+
+Class.forName(driverClassname);
+Connection con = DriverManager.getConnection(url, un, pwd);
+Statement stmt = con.createStatement();
+ResultSet rs = stmt.executeQuery(sql);
+while(rs.next()) {
+  // extract data
+}
+
+Looks like the above piece of code is common across all the developers, across all the applications, whoever is writing the code using jdbc api, this is nothing but boiler-plate logic. 
+Due to the above the developers has to write more lines of code in building the application, which increases the efforts, cost, and time of delivering the application, and chances of increating the bugs because of more lines of code. the testing time also takes more. This totally results in high cost of development and delayed delivery of the application
+
+hibernate framework:
+Hibernate is a Framework, Frameworks always concreate in nature and provide bunch of concreate classes which can directly used without any vendor implementation unlike api. The bunch of classes provided by the Framework has boiler-plate written inside them, so that programmer can use the Framework classes in building the application quickly. As the programmer doesnt write boiler-plate logic he end-up in writing less number of lines of code, due to which the effors, time and cost of developing application will be less and time required for deliverying the application will also be very less
+
+#2 
+jdbc api:
+supports only local transactions, to work with global transaction programmer has to use jta api, so the logic for mananging global transaction and local transaction is different as the underlying apis are different. In an application if we are using local transaction, to switch to global again we need to re-write the code, its a big problem in jdbc api
+
+hibernate framework:
+hibernate framework supports both local and global transactions, it has provided a unified api through which we can easily work with both and can switch between local/global without the need of modfying the code
+
+
+checked and un-checked exceptions
+----------------------------------
+
+How many types of exceptions are there in java?
+There are 2 types of exceptions are there
+  1. checked exception
+  2. unchecked exception
+  
+
+What is an exception?
+exception is an object that holds the error information that has to been encountered during the execution of a program, to report it the programmer/developer about a failure is called "exception".
+
+Any program during its execution, its quite common it runs into errors and results into a failure, the real problem arises when the program doesnt reports any information about its failure, because never we get a chance of seing the reason for the failure we can never fix the applicaton. That is where java language has built-in support for Exceptions, in wrapping the failure information and reporting to the user at anypoint of failure in execution.
+
+We can categorize the failures reported by java interms of exceptions as 2 types
+
+checked = is always recoverable, programmer can write alternate path of code, in recovering out of the failure encountered
+un-checked = may or may not be recoverable, so it is not mandatory to have alternate path of execution
+
+#3 jdbc api:
+all the exceptions in jdbc api are checked-exceptions. so programmer has to end-up in writing annoying try-catch block while writing the programs in java jdbc, this makes program clusttered and difficult to understand.
+  
+hibernate framework: 
+hibernate has its own exception hierarchy representing different types of failures while performing operation. and all of its exceptions are unchecked, so we dont need to always sourround our code around try-catch block. unless required we can handle. The base exception class in hibernate for all of their exceptions is HibernateException.
+  
+#4 jdbc api:
+our programs are hardwired with database table names, column names etc. so that any change in underlying database tables requires re-writing the entire program and sql queries whereever we have reffered those tables and columns.
+  
+hibernate framework: we map tables and columns to the corresponding classes and attributes in a xml mapping file, we dont reffer any table/column names as part of java application, so a change in table/column only requires changes in xml mapping file, which can quickly reflected with no maintainance 
+
+#5 
+jdbc api: we write native sql queries (database specific queries), when we switch from one database to another the queries we wrote will not work. again we need to modify the queries which might change the output of executing the query, so this result in modification of data extraction logic also, so your jdbc code is not portable across the database.
+  
+hibernate framework: we dont write native sql queries, rather hibernate has provided its own query language hql. 
+  - hql is an object oriented query language where we write queries using classnames and attribute names referring the underlying columns and tables through mapping. so any change in table requires modification only in mapping file. in this way we can easily maintain queries
+  
+  - hibernate has defined its own query language with clauses (hql), so the queries are not database specific, but in order to get these queries executed on underlying database these has to be native queries. so hibernate provided dialect which takes the responsibility of converting hql query into native sql queries before running them on database.
+  so while working with hibernate we never need to modify our code/query since dialect takes care of translating them. so hibernate code is database portable.
+  Write once and run on any databases 
+
+#6 
+java jdbc api: doesnt have support for caching, programmer by himself has to explicitly maintain cache for performance optimization
+
+hibernate framework: has rich support for caching, there are multiple levels of cache are supported by hibernate framework. 1st level cache, second-level cache and query-level cache. by fine tuning and enabling these caches we can achieve greater performance of the application.
+  
+#7
+while executing join queries the data will be returned combining both queries based on join condition, so developer has to create object modelling according to the relationship of the underlying tables to optimize memory wastage and has to write complex logic in wrapping the data into these objects. which is a very complex job in java jdbc api
+
+hibernate framework: has default support for the join queries, we express relationship of the tables in entity classes so that hibernate takes care of performing the above operation and returns the data optimally.
+
+tables with data:
+-----------------
+account
+1  rocky   savings   1
+2  smith   savings   1
+3  paul    current   2
+4  adam    savings   2
+5  steve   savings   1
+
+branch
+1     ameerpet
+2     sr nagar
+3     marthali
+
+select a.*, b.* from account a inner join branch b on a.branch_no = b.branch_no;
+
+output of above query:-
+----------------------
+1  rocky   savings  1     ameerpet
+2  smith   savings  1     ameerpet
+5  steve   savings  1     ameerpet
+3  paul    current  2     sr nagar
+4  adam    savings  2     sr nagar
+
+// this is proper object modelling to hold above data
+class Branch {
+  int branchNo;
+  String branchName;
+  List<Account> accounts
+}
+
+// this is wrong way of designing classes to hold about data, because this will duplidate branch data across multiple objects
+class AccountBranch {
+  int accountNo
+  accountholdername
+  accountype
+  branchNo
+  branchName
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

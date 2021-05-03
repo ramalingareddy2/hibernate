@@ -1,0 +1,186 @@
+What is Service?
+Services are component interfaces provides various functionalities which are pluggable in nature. These interfaces are called "Service Role", for which there are pre-defined implementations are provided by Hibernate Framework and those are called "Service Implementations". The pluggability comes into picture because Hibernate Framework coded to these interfaces for which we can pass our own implementations.
+For all these services the base interface is Service interface.
+
+These services has special characteristics:
+1. Lifecycle management = post construction and pre-destruction activities
+2. Service scope = a service can use or refer which other services
+3. dependency management = these can be served or managed in 2 ways either using pulling or injection
+
+The above responsibilities are taken care by ServiceRegistry. Service registry acts as an ioc container in hosting and managing the services. It is defined by an interface "ServiceRegistry". These Service Registries are hierarchial.
+  
+There are total 3 ServiceRegistries
+1. BootstrapServiceRegistry
+  has all the essential and manadatory services are binded to bootstrap service registry
+  1. ClassloaderService = we can access the hibernate classloaders using this service
+  2. IntegratorService = third-party applications can build integrations here
+  3. StrategySelector = fqn classes are given short names
+  
+2. StandardServiceRegistry
+  Most of the hibernate services are hosted by StandardServiceRegistry, few of them are:
+  1. ConnectionProvider = manages jdbc connections
+  2. JdbcServices = aggregrator service for all jdbc connection implementations
+  3. TransactionFactory = helps in getting UserTransaction object from jndi Registry
+  4. JtaPlatform = to manage global transaction
+  5. RegionFactory = 2nd level cache
+  
+3. SessionFactoryServiceRegistry
+  The services used by SessionFactory are placed here
+  1. EventListenerRegistry = for publishing and subscribing for events
+  2. StatisticsImplementor = to track the operations being carried in hibernate framework
+------------------------------------------------------------------------------------------------------
+by default these ServiceRegistries are instantiated with default service implementations based on hibernate configuration we provided.
+    
+    SessionFactory sessionFactory = configuration.buildSessionFactory();
+The buildSessionFactory() method takes care of instantiating the hierarchy of Service Registries and passes it to SessionFactory.
+  
+
+If we want to customize the Service Role of a ServiceRegistry then we should instantiate the appropriate ServiceRegistry based on the Service association and should plugin. To instantiate and manage ServiceRegistry for each of these ServiceRegistries builder class is provided.
+  
+BootStrapServiceRegistry  -> BootStrapServiceRegistryBuilder
+StandardServiceRegistry -> StandardServiceRegistryBuilder
+SessionFactoryServiceRegistry -> SessionFactoryServiceRegistryFactory (these are mutable)
+
+  
+BootStrapServiceRegistryBuilder bsrBuilder = new BootStrapServiceRegistryBuilder();
+builder.withClassloader(MyClassloader.class);
+BootStrapServiceRegistry bsRegistry = bsrBuilder.build();
+
+StandardServiceRegistryBuilder ssrBuilder = new StandardServiceRegistryBuilder(bsRegistry);
+ssrBuilder.setService(ConnectionProvider.class, MyConnectionProviderImpl());
+StandardServiceRegistry registry = ssrBuilder.build();
+------------------------------------------------------------------------------------------------------
+How to customize the Service Role implementations?
+Choose an Service Role interface and write an class implementing the ServiceRole interface providing your own implementation for the Contract.
+  
+There are 2 ways we can plugin the ServiceRole implementation into ServiceRegistry.
+  1. Instantiate the ServiceRegistryBuilder and directly set the Service for that ServiceRole
+    - here we are going to instantiate the ServiceRole implementation and we will bind it to the ServiceRegistry, this has few problems.
+      1. The services are instatiated before their use.
+      2. Lifecycle operations are not managed by ServiceRegistry
+      3. Dependency Injection will not takes place as injection happens at the time of instantiating the objects by the ServiceRegistry, since we are instantiating the only way to manage dependencies is pulling only.
+      
+  2. We can bind the Service to the ServiceRegistry through ServiceInitiator
+    - The ServiceRegistry dont know how to instantiate the object of ServiceRole implementation, so we need to write the logic of instantiating the ServiceRole implementation in ServiceInitiator and bind ServiceInitiator to the ServiceRegistry for that ServiceRole
+    
+    ConnectionProvider
+    |-BlazeConnectionProviderImpl
+    
+    class BlazeConnectionProviderServiceInitiator implements ServiceInitiator {}
+    StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
+    builder.addInitiator(ConnectionProvider.class, new BlazeConnectionProviderServiceInitiator());
+
+    advantages:-
+      1. ServiceRole implementations are instantiated only when those are used (ondemand)
+      2. lifecycle management will be taken care by ServiceRegistry
+      3. Dependency Injection will takes place
+      
+
+#1 
+BootStrapSerivceRegistryBuilder btSRBuilder = new BootStrapSerivceRegistryBuilder();
+BootStrapSerivceRegistry btServiceRegistry = btSRBuilder.build(); 
+"this will instantiate boot strap registry with default service implementations based on configuration"
+----------------------------------------------------------------------------------------------------  
+StandardServiceRegistryBuilder sSRBuilder = new StandardServiceRegistryBuilder(btServiceRegistry);
+sSRBuilder = sSRBuilder.configure("hibernate.cfg.xml");
+(or)
+sSRBuilder = sSRBuilder.loadProperites("hibernate.properties");
+(or)
+sSRBuilder = sSRBuilder.applySetting("connection.driver_class", "com.mysql.cj.jdbc.Driver");
+
+(or)
+Configuration configuration = new Configuration().configure();
+sSRBuilder = sSRBuilder.applySettings(configuration.getProperties());
+
+
+"StandardServiceRegistry has ConnectionProvider, TransactionFactory etc and these requires Configuration", so that StandardServiceRegistryBuilder Will instantiate ServiceRegistry with default implementations of ServiceRoles based on that configuration.
+
+StandardServiceRegistry sSRegistry = sSRBuilder.build();
+
+SessionFactory sessionFactory = configuration.buildSessionFactory(sSRegistry);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

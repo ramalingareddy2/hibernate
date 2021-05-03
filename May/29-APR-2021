@@ -1,0 +1,38 @@
+Hibernate 5.0
+
+Configuration configuration = new Configuration();
+StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().configure();
+StandardServiceRegistry registry = builder.build();
+SessionFactory sessionFactory = configuration.buildSessionFactory(registry);
+
+In the above code the Configuration class doesnt hold any configuration, it just acts as a Factory for creating the object of SessionFactory by passing ServiceRegistry.
+
+Previously we used to hold the hibernate configuration in memory within Configuration object, and used to modify the configuration programmatically as well. 
+1. Because Configuration object here is empty, and any changes in Configuration object will not reflect while instantiating the SessionFactory, since all the configuration ServiceRegistry is being used directly.
+2. ServiceRegistry is an ioc container but it doesnt allows us to modify the configuration programmatically.  
+Finally there is no way in modifying or managing the metadata programmatically in hibernate 4  
+To overcome the above problem hibernate 5 has introduced Metadata api with this we can avoid using Configuration class.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

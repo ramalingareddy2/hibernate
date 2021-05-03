@@ -1,0 +1,114 @@
+How to bootstrap Hibernate Framework 4.0?
+We use Service and ServiceRegistries in creating the SessionFactory.
+
+Configuration configuration = new Configuration();
+create empty configuraiton object.
+StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().configure();
+We are passing the configuration directly to builder
+StandardServiceRegistry registry = builder.build();
+
+SessionFactory sessionFactory = configuration.buildSessionFactory(registry);
+
+From the above code we can understand there is no way we can pass configuration programmatically and there is no parsed, in-memory representation of the data has been created.
+In Hibernate 5, they have added parsed, in-memory model of application/database configuration so that we can modify it easily by using Metadata Api
+
+MetadataSources = A class for collecting the Metadata information from different sources, it holds the pointer to the configurations
+
+MetadataBuilder(MetadataSources) = creates an parsed representation of the Metadata, we can modify any if we want.
+  - xml (hiberante.cfg.xml)
+  - properties (hibernate.properties)
+  - addResource (.hbm.xml)
+  - setProperty()
+    
+Metadata object = The parsed/in-memory representation of the application/database configuration is placed inside this object.
+  
+
+SessionFactoryBuilder = create the SessionFactoryBuilder from Metadata
+  - build() = creates SessionFactory object
+
+MetadataSources = gathers all the sources of configurations
+MetadataBuilder = parses and holds in memory to create object of metadata
+Metadata = using the metadata create sessionFactoryBuilder
+SessionFactoryBuilder = using this create sessionFactory object.
+
+
+StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();  
+
+MetadataSources metadataSources = new MetadataSources(registry);
+MetadataBuilder builder = metadataSources.buildMetadataBuilder();  
+// modify the metadata here, before creating metadata object
+
+Metadata metadata = builder.build();
+SessionFactoryBuilder sfBuilder = metadata.getSessionFactoryBuilder();
+SessionFactory sessionFactory = sfBuilder.build();
+
+(or)
+
+StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();  
+MetadataSources metadataSources = new MetadataSources(registry);
+Metadata metadata = metadataSources.buildMetadata();
+SessionFactory sessionFactory = metadata.buildSessionFactory();
+
+(or)
+
+SessionFactory sessionFactory = new MetadataSource(new StandardServiceRegistryBuilder().configure().build()).buildMetadata().buildSessionFactory();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

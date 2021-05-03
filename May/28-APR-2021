@@ -1,0 +1,109 @@
+What is a Service?
+Service provides various different functionalities in a pluggable manner with pre-defined interfaces for each of the functionalities.
+
+Services has special characteristics
+1. Lifecycle Management
+2. Scope
+3. Dependency Management
+
+Service Registry being a container for hosting and managing the Services plays a crucial role in managing their Lifecycle, below are the lifecycle management phases of a service
+1. Initiation (creation)
+  - either we can create the service and bind it to Service Registry
+  - We can use ServiceInitiator and pass it to Service Registry, so that it creates the Servce on-demand
+2. Configuration
+  A Service can implement from Configurable interface and override configure(Map configurations), then ServiceRegistry after instantiation before using the service it will configure method by passing configuration.
+3. Starting
+  A service can implement from Startable interface, that Service Registry calls the start() to perform post construction activities
+4. Stopping
+  A service can implement from Stoppable interface and override stop() method so service registry invokes that while the hibernate is closing.
+
+class BlazeJdbcConnectionProviderImpl implements ConnectionProvider, Configurable, Startable, Stoppable {
+  private String driverClassname;
+  private String url;
+  private String username;
+  private String password;
+  
+  // ServiceRegistry by passing hibernate.cfg.xml
+  public void configure(Map configurationMap) {
+    driverClassname = (String) configurationMap.get("connection.driver_class");
+    url = (String) configurationMap.get("connection.url");
+    username = (String) configurationMap.get("connection.username");
+    password = (String) configurationMap.get("connection.password");
+  }
+  
+  public void start() {
+    Class.forName(driverClassname);
+  }
+  public void stop() {
+    driverClassname = null;
+    url = null;
+    username = null;
+    password = null;
+  }
+  
+  public Connection getConnection() {
+    Connection con = null;
+    con = DriverManager.getConnection(url, username, password);
+    con.setAutoCommit(false);
+    return con;
+  }
+  public void closeConnection(Connection con) {
+    if(con != null && con.isClosed() == false) {
+      con.close();
+    }
+  }
+    
+  public boolean supportsAggressiveRelease() {
+    return true;
+  }  
+  
+  public boolean isUnwrappable(Class clazz) {}
+  public T unwrap(Class<T> clazz) {}
+}  
+
+public BlazeJdbcConnectionProviderServiceInitiator implements ConnectionProviderInitiator {
+  public ConnectionProvider initiateService(Map configurationMap, ServiceRegistryImplementor registry) {
+    return new BlazeJdbcConnectionProviderImpl();    
+  }
+}
+  
+class SessionFactoryRegistry {
+  private static SessionFactory sessionFactory;
+  
+  static {
+    Configuration configuration = new Configuration();
+    StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").addInitiator(new BlazeJdbcConnectionProviderServiceInitiator());
+    
+    StandardServiceRegistry registry = builder.build();
+    sessionFactory = configuration.buildSessionFactory(registry);    
+  }
+  // getSessionFactory() and close()  
+}  
+  
+Test.java
+SessionFactory sessionFactory = SessionFactoryRegistry.getSessionFactory();
+Session session = sessionFactory.openSession();
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  

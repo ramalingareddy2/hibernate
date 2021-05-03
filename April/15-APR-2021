@@ -1,0 +1,191 @@
+There are 2 types of exceptions are there in java
+1. checked exception
+2. unchecked exception
+
+What is an exception?
+Exception is an object encapsulated with the information of the failure in executing the programs by the jvm and reports the programmer, so that programmer can identify/understand the root cause of the failure and can debug
+
+during the execution of the program, failures are quite common, every failure may not leads to the termination of the program, some can be handled and continue to execute the program, representing/differentiating such 
+failures java has classified exceptions into 2 types.
+
+1. checked exception = recoverable out of the failure and can continue to execute the program, if the developer has written alternate path of execution
+
+2. un-checked exception = may or may not be recoverable, most they represent programming glitches or poor handling of logic
+
+In our program if we have any lines of code written that is causing a checked exception, there is always of chance of recovering from that failure, but having poor knowledge about this a program may not provide alternate path of code to mitigate, then there is no sense/meaning of classifying the exceptions.
+
+Sun Microsystems by keeping the above thing into consideration, they have designed java compiler to always report to the programmer about your code is going to run into checked exception and looks like you have not provided alternate path of execution can you provide by enforcing with an error.
+
+Reader.java
+File f = new File("d:\\license.txt");
+FileInputStream fis = new FileInputStream(f);
+
+How to disghuish normal flow of exection and alternate path of execution can you help?
+try {
+  // any of the lines of execution are causing failure
+}  catch(Exception e) {
+  // mitigation logic in recovering from the failure. we never catch the exception for termination
+}finally {
+  // to avoid abnormal termination and to facilitate any cleanup activities during the termination of the program we can write logic in catch-block
+}
+
+How to write the above code?
+Reader.java
+try {
+  File f = new File("d:\\license.txt");
+  FileInputStream fis = new FileInputStream(f);  
+}catch(IOException e) {
+  // write alternate path of execution logic to recover
+}
+-------------------------------------------------------------------------------------------------------------
+Reader.java
+Calendar calendar = null;
+calendar.get(Calendar.DAY);
+
+The above line of code is going to cause a failure which is NullPointerException. this is unchecked exception which is a programmer mis-take in writing the code, for this we should not encourage the programmer to write alternate code, rather terminate the application by providing the reason, so that he can fix it.
+Similarly ArrayIndexOutOfBounds, OutOfMemoryException, ArthematicException etc caused because of poor way of handling the code, for which we should terminate the program, letting the program identify and correct the program.
+  
+So, while we compile the program the java compiler will not enforce the programmer to write try/catch block for unchecked exceptions as most of these are logic mistakes that should be corrected by the programmer.
+
+-------------------------------------------------------------------------------------------------------------
+Always for an checked exception, we can have alternate path of execution? no depends on the way programmer want to manage. in such case if i dont provide alternate path for checked exception java compiler will enforce by giving error.
+To let the compiler understand we dont want to write alternate path of execution and let the exception result into propagation or termination just by declaring throws the exception  
+
+Reader.java
+public void read() throws IOException { // this indicates i dont want to have alternate path of execution
+  File f = new File("d:\\license.txt");
+  FileInputStream fis = new FileInputStream(f);  
+}
+-------------------------------------------------------------------------------------------------------------
+In case of un-checked exception we can write try-catch block as well, but we are not forced to write it and still the catch-block would be executed.
+  but depends on the Exception encountered, the program may terminate or continue to execute even though we provided catch-block. If the exception reported is representing a system failure like OutOfMemory or IllegalThreadState exceptions then the jvm cannot contiue to execute and leads to termination of the program. But in case of Non-System failures (purely programmatic errors), like NullPointerException program after catching will continue to execute
+  
+  
+Checked Exception:-
+These are always recoverable and represents business failures indicating we can provide alternate path of execution to continue executing the program without terminating
+
+mandatory:-
+since these are recoverable java compiler makes an extra check during compilation, helping the programmers to identify the snippet of code running into checked-exception and gives an error enabling them to write try-catch block
+in case if i dont want to provide alternate path of execution, how do I inform java compiler about this, just declare the exception in throws clause.
+  
+------------------------------------------------------------------------------------------------------------
+Un-Checked Exception :-
+These are may or may not be recoverable and these exceptions represents system failure / programming errors for which programmer has to optimize the logic in correcting these errors most of time
+
+Not Mandatory:-
+since these are programming errors, enforcing to write alternate path may not discover the original problem, so java compiler will not force to write try-catch block.
+
+Can we catch un-checked exceptions:-
+Yes we can
+
+will the program continue to execute after catching?
+depends on the type of the exception, if it is representing system failure will terminate otherwise will continue to execute.
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
