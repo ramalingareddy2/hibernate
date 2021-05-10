@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.sar.entities">
+	<class name="Job" table="jobs">
+		<id name="jobNo" column="job_id" />
+		<property name="jobTitle" column="job_title" />
+		<property name="description" />
+		<property name="organizationName" column="organization_nm" />
+		<property name="designation" />
+		<property name="experience" />
+		<property name="location" />
+		<property name="requiredSkills" column="required_skills" />
+		<property name="jobStatus" column="job_status" />
+	</class>
+</hibernate-mapping>

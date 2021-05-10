@@ -1,0 +1,204 @@
+There are 2 methods available to query one single object of data from database
+  1. get() method
+  2. load() method
+both these methods are part of Session class and takes 2 parameters.
+  1. EntityClass Type
+  2. Object id
+
+Why do we have 2 methods when both are meant for getting single object of data from database?
+#1
+  - get(): whenever we call the session.get(Class, Object), it immediately goes to the database, queries the data and populates into entity object and returns to us. This indicates get() method supports eager loading/initialization
+  - load(): whenever we call session.load(Class, Object), it creates an Proxy class at runtime within the jvm memory (using javaassist proxy lib) by populating pk value into it and returns the Proxy object to us.
+  Whenever we tried accessing the data by calling the non-primary key column represented attributes accessor methods, then the proxy object has the logic for fetching the data from the database of the pk value and returns to us. This indicates load() method support lazy loading/initialization
+  
+  The proxy might look as below:
+  Branch branch = session.load(Branch.class, 1);
+  Internally hibernate generates the proxy when we call load() method:
+
+  class Branch$Proxy extends Branch {
+    Branch branch;
+    boolean initialized;
+    public Branch$Proxy(Object id) {
+      initialized = false;
+    }
+    public int getBranchNo() {
+      return branch.getBranchNo();
+    }
+    public void setBranchNo(int branchNo) {
+      this.branch.setBranchNo(branchNo);
+    }
+    public String getBranchName() {
+      load();
+      return branch.getBranchName();
+    }
+    public void setBranchName(String branchName) {
+      load();
+      this.branch.setBranchName(branchName);
+    }
+    // accessors
+    
+    private void load() {
+      if(initialized == false) {
+        // queries the data from database based on pk value
+        // populates the data into Branch attribute of proxy  
+      }      
+    }
+  }
+  How many times the data will be fetched from the database by a proxy object. only once, first-time before initialized, there after the data is cached in attribute of the proxy and returns the same data.
+
+#2 whenever we call get() method with non-existing pk value, the get method returns the entity object as null
+    Branch branch = session.get(Branch.class, 10); // record with pk value 10 doesnt exists in database so it returns null
+  when we call load() method with non-existing pk value, the load() method always returns an empty proxy object by populating the pk value we supplied without going to the database.
+    
+    Branch branch = session.load(Branch.class, 10);//even the pk value doesnt exists also still we get proxy object
+  whenever we tried accessing the data from database using proxy by calling accessor methods, then we run into ObjectNotFoundException
+  String branchName = branch.getBranchName(); // will reports an exception
+  
+  
+  question: why getBranchName() method above throws an exception, why not just return null?
+  Branch branch = session.load(Branch.class, 2);
+  lets say the record with BranchNo = 2 exists, so we get proxy object with 2 populated. Now I called  String branchName = branch.getBranchName(); // it returned null value
+  does this mean record is not there or column value is null?
+    
+  in case record doesnt exists also or column value not there also, in both cases if it returns null only differentiating them will becomes difficult, so if underlying object doesnt exists in database then accessor methods throws exception, otherwise if record exists but column value is null then the accessor methods returns null;
+
+#3 get(): always supports eager loading/initialization only
+   load(): by default it supports lazy loading, but we can turn off the lazy loading behaviour by writing lazy=false in mapping file on entity class level
+    <hibernate-mapping>
+      <class name="Branch" table="branch" lazy="false">
+      </class>
+    </hibernate-mapping>
+    in this case load() also just works like get() method only
+
+#4 get(): only supports eager loading
+   load(): if the entity class has been marked as final
+   final class Branch implements Serializable {
+     int branchNo;
+     String branchName;
+   }
+  then Branch branch = session.load(Branch.class, 1);
+  it returns branch object by populating data directly (witout lazy loading);, because load cannot create proxy on the final class, it justs works as get() method only.
+    
+I want to declare the class as final but want to support lazy loading, is there any way to achieve it?
+Yes we can support lazy loading even the class is final, by proxying the interface
+  
+interface IBranch {
+  int getBranchNo();
+  void setBranchNo(int branchNo);
+  String getBranName();
+  void setBranchName(String branchName);
+  String getIfscCode();
+  void setIfscCode(String ifscCode);
+  String getLocation();
+  void setLocation(String location);
+}
+class Branch implements IBranch {
+  int branchNo;
+  String branchName;
+  String ifscCode;
+  String location;
+  // accessors override
+}
+IBranch branch = session.load(IBranch.class, 1);
+
+Branch.hbm.xml
+<hibernate-mapping>
+  <class name="Branch" table="branch" proxy="IBranch">
+  </class>
+</hibernate-mapping>
+
+
+#5
+Branch branch = session.get(Branch.class, 10);
+we can always verify whether the object exist are not by writing null condition check, so our code is safe with get() method.
+
+where as load() method always returns proxy object irrespective of object exists or not. due to this we cannot check for record is existing or not with null condition check.
+  so always we should be sure about record exists then only use load() method otherwise should ensure our code is sourrounded by try/catch block to avoid termination of the application
+  
+  branch = session.load(Branch.class, 10);
+  try {
+    String branchName = branch.getBranchName();
+  }catch(ObjectNotFoundException e) {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

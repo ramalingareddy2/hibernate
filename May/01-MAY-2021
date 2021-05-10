@@ -1,0 +1,228 @@
+Hibernate 5 bootstrapping
+
+In Hibernate5 it has introduced Metadata Api to build parsed representation model of the application/database configuration, so that developer can modify the in-memory model the configuration before creating the SessionFactory and use it.
+
+MetadataSources = through which we can add/pass several sources of configuration into our application
+(or)
+we can collect the configuration/mapping information from various different sources like
+ - registry
+ - xml-based configuration
+ - programmatic
+ - properties
+
+MetadataSource metadataSources = new MetadataSources(registry);
+MetadataBuilder metadataBuilder = metadataSources.getMetadataBuilder();
+Metadata metadata = metaBuilder.buildMetadata();
+SessionFactoryBuilder sFBuilder = metadata.getSessionFactoryBuilder();
+
+SessionFactory sessionFactory = sFBuilder.build();
+----------------------------------------------------------------------------------------------------
+Hibernate Single Object Query Api
+GET / LOAD Methods of Hibernate
+
+
+How to fetch a single object of data from the database table in hibernate?
+To fetch only one record of data from a database table we need to query the data from table against primary key column. 
+GET is a method that is available in hibernate, that helps us in querying single-object of data from database table against the primary key. Along with GET method there is an another method available called LOAD which is also meant for querying single object of data from database table.
+  
+Looks like we have 2 methods in hibernate that helps us in fetching single object data from database tables against the primary key
+  1. get()
+  2. load()
+
+both get() and load() methods takes entityClassType and object primary key in fetching an object of data from database, and these methods are located as part of Session object.
+  
+  For eg.. Branch branch = session.get(Branch.class, 1);
+
+The session.get(entityClassType, object) will do the below steps in fetching object of data from database.
+  1. based on the entityClassType we passed, it will identify the mapping information for that entityClass, so that it can derive which table and what columns of data to be fetched
+  2. constructs the sqlquery using the help of dialect to query record against the primary key column.
+  3. then creates prepared statement and substitutes the parameters and execute the sql query and fetches the ResultSet
+  4. passes the ResultSet to GenericMapper asking to convert into Entity class object and returns 
+
+The get() and load() both of these methods are meant for fetching a single object of data from database, when get() method can perform the same operation why load() again, what is the difference between them.
+    
+Difference between get() method and load() method in hibernate.
+#1    
+When we use get() method for fetching object of data from the database. The get() method of the Session class immediately goes to the database and tries to query the data to fetch a single object based on primary key we passed. it returns the entity class object by populating the record of data it has queried so that we can read the data.    
+    
+Where as in case of load() method when we call session.load(entityClassType, Object key), it will not goes to the database and will not fetches the data, rather it returns any empty EntityClass object by populating the primary key column values we supplied quickly.
+    
+    Branch branch = session.load(Branch.class, 1);
+The above method will not fetches the data from database rather returns the empty Branch object by populating primary key as part of it.
+Now when we try to access the data by using branch.getBranchName() or any other accessor methods on the Branch object then it actually goes and fetches the data from the database table. which means load() supports lazy loading, the actual data will be fetched from database while we are accessing the data from entity class.
+  
+where as in case of get() it is eager loading, immediately after calling the get() method, it goes and fetches the data from database.
+  
+How does load() method works, how is it supporting lazy loading?
+  Branch branch = session.load(Branch.class, 2);
+
+The load method instead of going to the database to query the data, to support lazy loading (on-demand access of data) it just returns the proxy of the EntityObject rather than the original entity object by populating the primary key value.
+
+load() method will generate an proxy of the entity class at runtime within the jvm memory and returns the proxy of the entity object to us when we call load() method. So the proxy class has the relevant logic for fetching the record of data from database when we call any methods  
+  
+class Branch$Proxy extends Branch {
+  Branch branch;
+  
+  String getBranchName() {}
+  setBranchName(String branchName) {}
+  String getContactNo() {}
+  setContactNo(String contactNo) {}
+  // it has generated the logic in such a way if we call any of these accessor methods they will goto database table fetchs the data and populates into branch attribute of proxy. then once the proxy initialization has completed theyby all the subsequent method calls will return the data from local cached object of the entity.
+}  
+
+Branch proxy = session.load(Branch.class, 1);
+
+String branchName = proxy.getBranchName(); // then the actual database call will takes place in fetching the data.
+
+String contactNo = proxy.getContactNo();// as the proxy has already initialized and fetched the data again it will not goto database rather it returns the data from the same object it has fetched earlier.
+
+get() vs load() method differences
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

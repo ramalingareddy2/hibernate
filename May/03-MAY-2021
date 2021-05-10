@@ -1,0 +1,185 @@
+Single Object query api in Hibernate
+How to fetch a record of data interms of object in Hibernate?
+We can query the data against the primary key column of the table, so that we can get always one record of data only.
+As part of the Session object hibernate has provided 2 methods to fetch the same.
+  1. get()
+  2. load()
+both of these methods are present as part Session and takes 2 parameters. 1: entityClassType and 2: Object (primarykey value).
+
+If both the above methods are meant for fetching only one object from database, why do we need 2 methods, what is the purpose of them?
+There are several differences between get() and load() method.
+
+Branch branch = session.get(Branch.class, 1):
+get() method within the session class will immediately goes to the database and executes the query and fetches the data from database into an object and returns to us. This indicates get supports eager initialization.
+  
+Branch branch = session.load(Branch.class, 1):
+load() method within the session class will not goes to the database, rather it creates an Proxy object ontop of the EntityClass we specified at Runtime and populates the PrimaryKey into the Proxy object and returns to us.
+
+String branchName = branch.getBranchName();
+When the user tries to access the data (by calling accessor methods) by using Proxy, then the Proxy object goes to the database and fetches the record of data from the database and returns the value to us. This indicates load() method supports lazy initialization.
+  
+The load() method creates the proxy object here, what is a proxy design pattery?
+Proxy is always an class which acts as a substitue of the original class, we can access the same functionality of the original through proxy as well. When we talk to the proxy, internally proxy goes to the original in serving the original functionality to the end user.
+  
+                 webservice eg..
+  
+  interface                       interface
+  - proxy ->   ------------------ provider
+                    n/w           implementation
+  [consumer]                      [provider]
+  
+when we call session.load(Branch.class, 1)-> internally load method is creating an proxy class which exactly looks like the original class, by adding database logic in fetching the record of data from database, something similar to below.
+  
+class Branch$Proxy extends Branch {
+  Branch branch; // into this branch object it will store primarykey value we passed to load method
+  boolean initialized;
+  
+  public Branch$Proxy(Object pk) {
+    initialized = false;
+    branch = new Branch();
+    // set primary key
+  }
+  
+  public int getBranchNo() {
+    return branch.getBranchNo();
+  }
+  public void setBranch(int branchNo) {
+    this.branch.setBranchNo(branchNo);
+  }
+  
+  public String getBranchName() {    
+    load();    
+    return branch.getBranchName();
+  }
+  public void setBranchName(String branchName) {
+    load();
+    this.branch.setBranchName(branchName);
+  }
+  
+  public String getIfscCode() {
+    load();
+    return branch.getIfscCode();
+  }
+  public void setIfscCode(String ifscCode) {
+    load();
+    this.branch.setIfscCode(ifscCode);
+  }
+  
+  public String getLocation() {
+    load();
+    return branch.getLocation();
+  }
+  public void setLocation(String location) {
+    load();
+    this.branch.setLocation(location);
+  }      
+  
+  private void load() {
+    if(initialized == false) {
+      // PreparedStatement pstmt = dialect.selectByKey(Branch.class);
+      // substitute parameters
+      // execute query and get ResultSet
+      // call GenericMapper to get the object
+      // populate the data into branch attribute
+      initialize = true;
+    }    
+  }
+} 
+Branch branch = session.load(Branch.class, 1);
+// 
+String branchName = branch.getBranchName();
+String location = branch.getLocation();
+
+
+1. The load() method generates a proxy class similar to the above by holding the original object inside it. along with that it populates the primary key value we supplied as a second parameter into the entityClass attribute of the proxy. so that it can identify which record should be queried when user is calling the accessor methods.
+  
+2. If we call the accessor method on primary key attribute represented attribute on Proxy object, it will not fetches the record from database.
+
+3. If we call the non primary key column represented attributes, then the proxy object goes to the underlying database and fetches the record of data and populates into entityClass attribute it has and returns tye data.  
+
+The load() method uses javaassist libraries to create runtime proxies within the jvm memory. 
+
+#2 
+Branch branch = session.get(Branch.class, 10);
+
+if the record corresponding to the primary key value supplied is not found in database, then get() method returns null.
+  
+Branch branch = session.load(Branch.class, 10);
+if the record corresponding to the pk value we supplied is not found, the  load method() still returns the proxy object by populating the pk value 10. since load() method never goes to the database.
+  
+but when we try accessing the data using proxy object returned, then the accessor methods throws an exception ObjectNotFound if the record doesnt exists.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  

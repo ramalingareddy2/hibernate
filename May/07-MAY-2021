@@ -1,0 +1,74 @@
+What are annotations?
+Annotations used for providing configuration information about a java class by directly writing as part of the source code of java class, its an alternate means of providing the configuration information to a class, instead of using xml-based configuration file.
+  
+In hibernate we have 2 xml-based configuration files are there
+1. Mapping File
+We can replace xml-based mapping file with equivalent annotations that are provided by the jpa api
+
+2. Configuration File
+There is no way to configure hibernate.cfg.xml interms of Annotations as this configuration doesnt belongs to a specific class, so only way to avoid xml-based configuration is through programmatic approach
+
+There are 2 types of annotations are provided in jpa api
+1. Logical Annotations = to attach additional configuration information pertaining to the framework in mananging the entity class.
+  
+2. Physical Annotations = These are used for mapping the entity class to the corresponding database table and their columns
+
+interface IMerchant {
+  @Id  
+  @Column(name="merchant_no")
+  public int getMerchantNo(){}
+  public void setMerchantNo(int merchantNo){}
+  
+  @Column(name="merchant_nm")
+  public String getMerchantName(){}
+  public void setMerchantName(String merchantName) {}
+}  
+
+@Entity
+@Table(name="merchant")
+class Merchant implements Serializable, IMerchant {    
+  protected int merchantNo;
+  protected String merchantName;    
+  protected String businessName;  
+  protected String businessType;  
+  protected String contactNo;  
+  protected String emailAddress;  
+  protected Date establishedDate;  
+  protected String location;
+  
+  
+  public int getMerchantNo(){}
+  public void setMerchantNo(int merchantNo){}
+  
+  public String getMerchantName(){}
+  public void setMerchantName(String merchantName) {}
+  
+}
+
+<hibernate-mapping>
+  <class name="Merchant" table="merchant">
+    <id name="merchantNo" column="merchant_no"/>
+    <property name="merchantName" column="merchant_nm"/>
+    <property name="businessName" column="business_nm"/>
+    <property name="businessType" column="business_type"/>
+    <property name="contactNo" column="contact_no"/>
+    <property name="emailAddress" column="email_address"/>
+    <property name="establishedDate" column="established_dt"/>
+  </class>
+</hibernate-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

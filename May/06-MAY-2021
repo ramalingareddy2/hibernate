@@ -1,0 +1,121 @@
+How to work with Annotations as part of the Hibernate Framework?
+What are annotations, what is the purpose of Annotation?
+
+Annotations are used for defining the configuration information of a Java class. it an alternate means of writing the configuration instead of using xml configuration file. Annotations are directly written at the source code of the java class itself.
+  
+While working with hibernate we are using 2 types of Xml configuration files.
+  1. Hibernate Mapping File = is used for providing the mapping information of a java class to its corresponding database table, to perform persistence operation  
+  In Mapping File we define the information about a java class, the samething can be achieved using annotations as well, because annotations are defined at source code of class to bind configuration
+    
+  2. Hibernate Configuration File = holds the configuration information not specific to a class, rather it describes the Framework configuration and Database configuration, which cannot be attached interms of annotations to any specific class in our application. So there is no replacement of hibernate.cfg.xml equivalent in terms of Annotations.
+    Only way we can avoid hibernate.cfg.xml is using Metadata programmatic api approach provided by Hibernate5
+
+Hibernate 3 Framework on it has provided annotations to attach mapping information to an Entity class. Later on Jpa api has been brought and aspart of its api they provided Jpa api Annotations.
+  
+Now if developers are writing Hibernate Mapping File in defining the Mapping information, the Entity classes are Pojo. whereas if we write mapping information by using hibernate annotations on an Entity class, then the classes would be tightly coupled with Hibernate Framework and loose pojo behaviour.
+  
+To overcome the above problem, from hibernate 4 onwards, it has deprecated all the annotations of hibernate and in hibernate 5 they removed them. Instead of using hibernate annotation, now hibernate supports Jpa api annotation to be used on Entity classes to provide Mapping information.
+  
+Now the SessionFactory and Session classes are tweaked to use mapping information from jpa annotation.
+The jpa annotations can be broadly classified into 2 types
+  1. physical annotations = These annotations allows us to map entity class to the database tables
+  2. logical annotations = These doesnt defines information about the tables, rather they carry framework specific configuration attached to an Entity class.
+     
+
+@Entity
+class Merchant implements Serializable {
+  @Id
+  protected int merchantNo;
+  protected String businessName;
+  protected String businessType;
+  protected Date establishedDate;
+  protected String contactNo;
+  protected String emailAddress;
+  protected String location;
+  
+  public int getMerchantNo() {}
+  public void setMerchantNo(int merchantNo) {}
+  
+  public String getBusinessName() {}
+  public void setBusinessName(String businessName) {}
+  
+  public void setEstablishedDate(Date establishedDate) {}
+  public Date getEstablishedDate() {}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,109 @@
+What is Jpa api, how to work with Jpa api?
+Jpa standards Jakarta (Java) Persistence Api, it is used for working on ORM Technology as part of java language.
+Jpa 2.0
+  |-Hibernate 5/6
+
+EntityManager:-
+Equivalent to a Session class in Hibernate Framework in Jpa api we have EntityManager, how a Session object holds the connection and mapping information to perform persistency operation similary an EntityManager holds a database Connection and has Mapping Information within it with which it performs Persistency operation on underlying database  
+
+Per operation we need to create one EntityManager similar to Session object in Hibernate Framework.
+  
+EntityManagerFactory:-
+Equivalent to a SessionFactory class in Hibernate Framework, 
+1. It acts as a Repository for holding mapping and configuration information in memory
+2. It acts as an factory for creating the object of EntityManager
+3. Based on the implementation vendor they can even maintain connection pool in optimizing the creation of Connection object
+
+We should create one object of EntityManagerFactory for one database.
+
+Persistence:-
+Equivalent to a Configuration class, responsible reading the configuration and mapping information with which it creates the object of EntityManagerFactory.
+  
+  
+We need to provide persistence configuration file and should be placed under META-INF directory under the classpath of your application directly, location is fixed and cannot be changed.
+The name of the file must and should be persistence.xml only.
+  
+jpaconfig
+|-src
+  |-main
+    |-java
+    |-resources
+      |-META-INF
+        |-persistence.xml
+|-pom.xml
+
+Unlike hibernate.cfg.xml having 1 per 1 database, we will have here only one persistence.xml irrespective of number of schemas/databases. To support multiple schemas/database we define persistence-unit per each database in persistence.xml.
+  
+<?xml version="1.0" encoding="utf-8"?>
+<persistence>
+  <persistence-unit name="vogopu">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <mapping-file></mapping-file>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hdbd"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.password" value="root"/>
+      
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dailect"/>
+    </properties>
+  </persistence-unit>  
+</persistence>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
