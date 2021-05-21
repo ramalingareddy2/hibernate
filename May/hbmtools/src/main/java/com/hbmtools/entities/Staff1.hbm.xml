@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.hbmtools.entities">
+	<class name="Staff" table="staff">
+		<id name="staffNo" column="staff_no" />
+		<property name="fullName" column="full_nm" />
+		<property name="age" />
+		<property name="gender" />
+		<property name="designation" />
+		<property name="experience"/>
+		<property name="mobileNo" column="mobile_nbr" />
+		<property name="emailAddress" column="email_address" />
+	</class>
+</hibernate-mapping>

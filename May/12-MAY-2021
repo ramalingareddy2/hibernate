@@ -1,0 +1,110 @@
+Why do we need Hibernate Tools?
+Hibernate Framework is metadata intensive framework, we need write lot of information describe the classes and the related database tables to perform persistence operation, this is going to eatup lot development time in developing the application. To reduce the time of development hibernate has provided tools.
+  There are 2 types of tools are there
+  1. Command Line Tools
+  2. Graphical User Interface Tools
+  
+#1 Command-Line Tools
+These tools are used for  creating, updating or validating the database schema out of the mapping we have in our application. There are total 3 tools are available
+  1. SchemaExport = is used for exporting/dropping database tables out of the mapping information we have already in our application
+    Typically we use SchemaExport in 2 conditions
+    - If we have an existing project which is under development for which we have already created tables and mapping information now we want to setup the application/project across the developers environment quickly, then rather than running the sql scripts in creating database tables, we can create tables out of the mapping we have in our application
+    
+    - During the time of executing unit testing we always need a new database to be used for running our testcases, and we want to drop the test database we created at the end of completion, this can be done easily using SchemaExport tool
+    
+  2. SchemaUpdate = is used for updating an existing database with changes we made in mapping file  
+    - During the development, the developer can quickly make changes in the application and can get these reflected onto the underlying database to testing his changes using SchemaUpdate tool
+  
+  3. SchemaValidate = is to validate whether the current database schema is matching with mapping information we have in our application
+    - Always we can check for the mapping information is compatible and valid against the database tables or not before running the application by using SchemaValidate tool, this helps us in rolling out the applications in production environment.
+
+The above 3 classes are not tools rather those are classes provided by hibernate, so that out of your existing project using hibernate dependencies, mapping and configuraiton files we can run these tools.
+      
+org\jboss\logging\jboss-logging\3.4.1.Final\jboss-logging-3.4.1.Final.jar
+javax\persistence\javax.persistence-api\2.2\javax.persistence-api-2.2.jar
+org\javassist\javassist\3.27.0-GA\javassist-3.27.0-GA.jar
+net\bytebuddy\byte-buddy\1.10.21\byte-buddy-1.10.21.jar
+antlr\antlr\2.7.7\antlr-2.7.7.jar
+org\jboss\spec\javax\transaction\jboss-transaction-api_1.2_spec\1.1.1.Final\jboss-transaction-api_1.2_spec-1.1.1.Final.jar
+org\jboss\jandex\2.2.3.Final\jandex-2.2.3.Final.jar
+com\fasterxml\classmate\1.5.1\classmate-1.5.1.jar
+javax\activation\javax.activation-api\1.2.0\javax.activation-api-1.2.0.jar
+org\dom4j\dom4j\2.1.3\dom4j-2.1.3.jar
+org\hibernate\common\hibernate-commons-annotations\5.1.2.Final\hibernate-commons-annotations-5.1.2.Final.jar
+javax\xml\bind\jaxb-api\2.3.1\jaxb-api-2.3.1.jar
+org\glassfish\jaxb\jaxb-runtime\2.3.1\jaxb-runtime-2.3.1.jar
+org\glassfish\jaxb\txw2\2.3.1\txw2-2.3.1.jar
+com\sun\istack\istack-commons-runtime\3.0.7\istack-commons-runtime-3.0.7.jar
+org\jvnet\staxex\stax-ex\1.8\stax-ex-1.8.jar
+com\sun\xml\fastinfoset\FastInfoset\1.2.15\FastInfoset-1.2.15.jar
+mysql\mysql-connector-java\8.0.23\mysql-connector-java-8.0.23.jar
+com\google\protobuf\protobuf-java\3.11.4\protobuf-java-3.11.4.jar    
+activate      
+hibernate-core-5.3.4.jar
+|-org.hibernate.tool.hbm2ddl.SchemaExport
+|-org.hibernate.tool.hbm2ddl.SchemaUpdate
+|-org.hiberante.tool.hbm2ddl.SchemaValidate
+
+we can create an windows bat file, in which we can export an environment variable like HIBERNATE_LIB pointing to all the jars we want to use
+bat = batch file, if we want to perform some command-line operations repeatedly/daily basis rather than typing those commands we can write them in bat file and execute it whenever we want.
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

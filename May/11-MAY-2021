@@ -1,0 +1,30 @@
+Hibernate Tools
+In general tools are meant for making the development process easy. Hibernate Framework is Metadata Intensive Framework, which means for every table we need entity class representing the structure of the table, mapping file to map class to the corresponding table. Along with this we need to write configuration file to carry persistence operations on underlying database. In order to write Entity Classes and Mapping information it takes lot of time and validating all things are in right place is also going to be very difficult.
+From this we can understand even though hibernate eliminates boilter-plate logic in building jdbc application, we need to spend lot of time in making hibernate work for us, which is of no big use.
+  
+How to eliminate the above problem?
+To help the developers in speeding up their efforts of build hibernate application, hibernate team has provided tools.
+  There are 2 types of tools are provided by hibernate
+  1. Command-Line Tools = These are meant for creating or validating or updating the database tables out of the existing mapping we have in our application.
+    1.1 SchemaExport
+    1.2 SchemaUpdate
+    1.3 SchemaValidate
+        
+  
+  2. Graphical User Interface Tools
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

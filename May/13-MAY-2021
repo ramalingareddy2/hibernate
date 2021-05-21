@@ -1,0 +1,56 @@
+There are 2 types of hibernate tools are available
+1. command-line tools 
+These helps us in creating, updating or validating the database tables from mapping information
+  1.1 SchemaExport = creating/dropping an existing database schema from the given mapping information
+    - to recreate database tables from the application code across the developers of our team during development
+    - during the time of running junit testcases we create and drop a test database
+        
+  1.2 SchemaUpdate = updating the existing database tables out of the mapping provided
+    - to quickly reflect the code changes we made interms of entity classes onto the underlying database during development we use this tool
+  
+  1.3 SchemaValidate = verifies the mapping information of the application and the database tables are valid or not
+    - before deploying and running the application, to ensure the code version and database schema are matching or not we will verify using this tool
+
+These 3 tools are java classes which are shipped as part of hibernate libraries, to run a java class within a jar we need to set classpath pointing to jar and execute the main class.
+Usually we apply these tools within a project, so lets start settingup a project with entity classes, mapping and configuration information, once we have these we can create tables out of it by using these tools.
+
+How to run the tool
+#1 create an env.bat in the project directory
+#2 set 2 environment variables pointing as below
+  - M2_REPO=pointing to maven repository location
+  - HCP=pointing all the hibernate jars of our poject from M2_REPO
+
+SchemaExport:-
+  java -cp %HCP% org.hibernate.tool.hbm2ddl.SchemaExport options mapping_files
+  -- quite
+  -- drop
+  -- create
+  -- text
+  -- output=file
+  --config=hibernate.cfg.xml
+  --properties=hibernate.properties
+  --format=true
+  --delimeter=;
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
