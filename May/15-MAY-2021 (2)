@@ -1,0 +1,46 @@
+There are 2 types of tools are provided by hibernate to facilitate the ease of development while working with Hibernate Framework based applications
+  1. command-line tools
+    1.1 SchemaExport
+    1.2 SchemaUpdate
+    1.3 SchemaValidate
+    
+  either we can run these tools manually by invoking them as main() method classes from command-line or we can invoke them automatically by configuring a property in hibernate.cfg.xml "hibernate.hbm2ddl.auto"
+    - create = drop if already exists and create at the startup of the application
+    - create-drop = drop if exists the create during startup, and at the end of the application drop
+    - update = if table exists update, other wise create new
+    - validate = validate the mapping info with db schema
+    
+  2. gui tools
+  These works in reverse way of command-line tools, they take schema information and create mapping and entities classes out of the database tables, apart from this there are several tools that help us in speeding up the developement. These tools are provided by hibernate as part of Eclipse plugin "Jboss Tools", you need to install these to have them available.
+      2.1 Mapping Editor
+      2.2 Configuration Console
+      2.3 Reverse Engineering
+      2.4 HQL Editor
+      2.5 Criteria Editor
+      2.6 Hibernate Configuration Wizard
+      2.7 Database Explorer
+
+
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

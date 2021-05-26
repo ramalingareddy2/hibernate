@@ -1,0 +1,82 @@
+What is first-level cache in hibernate, what is the purpose of it and how does it works?
+
+First-Level cache in hibernate is also called as Session-Level Cache, the cache will be maintained at the Session object and will be destroyed when we close the Session object, so it is called "Session-Level" Cache, we can say the cache is local to the Session object.
+  
+The First-level cache is enabled by default in Hibernate Application, and there is no way to turn it off. All the operations we perform in our application through Session object first goes through the Cache.
+    
+How does the Cache class looks like as part of the Session?
+  
+class Cache {
+  private Map<Class<?>, Map<Object, Object>> cacheMap;
+  
+  public Cache() {
+    cacheMap = new HashMap<>();
+  }
+  
+  public void put(Object id, Object entityObject) {
+    Class<?> classType = null;
+    Map<Object, Object>  entityMap = null;
+    
+    classType = entityObject.getClass();
+    if(cacheMap.containsKey(classType)) {
+      entityMap = cacheMap.get(classType);
+    }else {
+      entityMap = new HashMap<>();
+    }
+    entityMap.put(id, entityObject);
+    cacheMap.put(classType, entityMap);      
+  }
+  
+  
+}  
+
+Branch.class, Map
+Bank.class, Map
+Account.class, Map
+
+
+Session session1 = sessionFactory.openSession();
+Branch branch1 = session1.get(Branch.class, 1);
+Bank bank = session1.get(Bank.class, 1);
+
+Branch
+Bank
+Account
+
+
+//session1.close();
+
+Session session2 = sessionFactory.openSession();
+Branch branch3 = session2.get(Branch.class, 1);
+
+
+
+Branch branch1 = session.get(Branch.class, 1);
+it goes to the underlying database queries the data from the branch table based on primary key column value supplied and fetches the records, populates the data into entity object, then store the entity object into the Cache of Session and returns the object to the user.
+
+Branch branch2 = session.get(Branch.class, 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,153 @@
+What is First-Level Cache in Hibernate Framework?
+First-Level cache in hibernate application is also called as "Session-Level" cache. The cache object will be created for each session object we create and will be closed when we close a Session object, as the Cache is associated with the Session level it is called Session-Level Cache.  
+First-Level Cache is the default Cache and we cannot turnoff the Cache in Hibernate Application. All the operations that we carry on the Session object goes throught the Cache only.
+  
+class Cache {
+  private Map<Class<?>, Map<Object, Object>> cacheMap;
+  public Cache() {}
+  public void put(Object id, Object entityObject) {}
+  public Object get(Class<?> classType, Object id){}
+  public boolean containsKey(Class<?> classType, Object id){}
+}  
+
+The First-level Cache is not maintained at application level, as singleton, rather it is created at the scope of Session Object and would be created and destroyed along with Session object.
+--------------------------------------------------------------------------------------------------------
+Why do we need First-Level Cache, why does Hibernate framework has mandated the First-Level cache?
+
+Before understanding the purpose of reason for First-Level Cache, lets explore what are the types of data typically exists as part of our application, and what their requirements of Caching those data.
+  
+In an Application we can broadly group the data into 3 Categories  
+
+#1 Long-Lived Data / Static Data
+--------------------------------
+There is some data as part of our application which seems to constant and fixed, will not change during the lifetime of our application. Looks like most of the time this data is necessary for our application to work and will be used always in our application. 
+
+For eg.. configuration information that we maintain in an application as part of properties/xml-based configuration files or master tables which holds the data and usually will not be encouraged to change during the runtime of our application are the best examples of Long-lived / Static Data
+
+Qualified for Caching or not?
+this type of data is a good candidate for caching, as the data is fixed and constant always we can load this type of data during the startup of the application and can be placed inside Cache and would remain till the end of the application.
+  
+  
+#2 Moderate data
+-------------------
+There is some data that is there as part of our application, which seems to constant most of the time, but undergo changes rarely during the Runtime of the application. while the application is running, through the end-user operations the data would be modified/delete/newly added as well, but the frequency of changes seems to quite low than its usage.
+  
+For eg.. In a swiggy application, the Restaurants information would be added, modified and removed but the tendency of these changes going to happen on the Restaurant table is quite low. But the frequency accessing the Restaurant information and the Dishes they offer would be very high as end-users/customer would be browsing the Restaurants.  
+  
+Qualified for Caching or not?
+Even though the data seems to be not-constant, very rarely it undergo changes and within that duration of change looks like many people are going to access the data, which indicates we can Cache and can save good amount of performance of the application.
+  
+How to Cache such data?
+The data here we refers is a Runtime data, which means the data might change during the Runtime of the application, it can grow to any amount of extent and can be modified for any number of times.
+  
+This type of data should not be cached during the startup of the application, since it is not constant in nature and can be of any amount in size caching such data during startup would waste the jvm memory unncessarily.
+  
+This data should be cached only on demand while access the data, and they must be some rentention policy and cleanup policy at regular intervals of time to remove the unused data. For eg.. clean up the data from cache which is LRU
+
+Since this data is going to be modified we should have a mechanism to mark the data as stale whenever it is changed, so that it would be used from the Cache.
+By excersing the above technics we can cache the moderate data as part of our application.
+  
+#3 Short-Lived data / Frequently undergo changes
+-------------------------------------------------
+There is some data within our application that seems to transactional data and will remains constant only for short interval time, which means it frequenlty undergo changes.
+
+Qualified for Caching or not?
+This data that is of frequently undergoing changes is not considered to be a candidate of caching, because if we cache the data, maintaining the latest of the copy of the data in cache for every change of data in source impacts the performance of the application.
+By the above we can understand caching such data brings unwanted performance issues within the application.
+  
+Exception here:
+Within the short-interval of duration in which it is going to undergo the changes, if the frequency of the usage of data is going to be really high, the it can be cached only for that short-interval of time only.
+Note:- should be cached only for that short-interval of duration only.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

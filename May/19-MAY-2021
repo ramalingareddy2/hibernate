@@ -1,0 +1,140 @@
+What is first-level cache, what is the purpose of it?
+First-Level cache in hibernate is also called as "Session-Level" cache, the Cache will be created along with the Session object, when we create Session and would be closed automatically when we close the Session object, it is the default cache that would be created automatically in hibernate application and there is no way to turn off.
+Every operation we do on the database through the Session object will go through the Cache of the Session object.
+  
+For e.g.. if we fetch an Entity Class object using a Session object, a consecutive fetch of the same object using the same Session will pulls the object from Session cache rather than database
+
+Session session = sessionFactory.openSession();
+BankAccount bankAccount1 = session.get(BankAccount.class, 1);
+BankAccount bankAccount2 = session.get(BankAccount.class, 1);
+
+if we compare the references of the above 2 objects, it will return true indicating both of the references are point to the same object. in the 2nd call to session.get() will not trigger any sql query on database.
+  
+bankAccount1 == bankAccount2 =? true
+  
+How does Session maintains the data within the Cache?
+  (or)
+How does the Cache look like inside the Session object?
+The Cache we have here at Session level is not Singleton, because for each Session object a instance of the Cache would be created separately. So, the scope of the cache is not application level, it is Session object level.
+
+// internal code of Cache looks like below [provided by hibernate]  
+class Cache {
+  private Map<Class<?>, Map<Object, Object> cacheMap;
+  public Cache() {
+    cacheMap = new HashMap<>();
+  }
+  public void put(Object id, Object entityObject) {
+    Map<> entityObjectMap = null;
+    
+    entityObjectMap = cacheMap.get(entityObject.getClass());
+    if(entityObjectMap == null) {
+      entityObjectMap = new HashMap<>();
+      cacheMap.put(entityObject.getClass(), entityObjectMap);
+    }
+    entityObjectMap.put(id, entityObject);    
+  }
+  public Object get(Class entityClass, Object id) {
+    Map<> entityObjectMap = null;
+    
+    entityObjectMap = cacheMap.get(entityClass);
+    if(entityObjectMap != null) {
+      if(entityObjectMap.containsKey(id)) {
+        return entityObjectMap.get(id);
+      }
+    }
+    return null;
+  }
+  public boolean containsKey(Class entityClass, Object id) {
+    Map<> entityObjectMap = null;
+    
+    entityObjectMap = cacheMap.get(entityClass);
+    if(entityObjectMap != null) {
+      return entityObjectMap.containsKey(id);
+    }
+    return false;
+  }  
+}  
+
+// internal code of Session Object looks like below [provided by hibernate]
+class Session {
+  Connection con;
+  MappingMetadata mMetadata;
+  ConfigurationMetadata cMetadata;
+  Cache cache;
+  
+  public Session() {
+    cache = new Cache();
+  }
+  public Object get(Class<?> classType, Object id) {
+    Object entityObject = null;
+    
+    if(cache.containsKey(classType, id) == true) {
+      return cache.get(classType, id);
+    }
+    // sql = dailect
+    // substitute primary key in query
+    // execute the query get ResultSet object
+    // entityObject = genericMapper.mapToEntityObject(rs, classType);
+    return entityObject;
+  }
+}
+-------------------------------------------------------------------------------------------------------
+Why do we need First-Level cache, why is it mandatory in hibernate?
+Cache is meant for storing the data temporarily within the memory, so that we can fetch the data back when we need it without going back to the source location, which saves the performance of the application.
+
+Which data should be cached as part of our application?  
+In an application typically we can categorize the data in 3 groups based on the native of their usage.
+1. static data (long-lived data) :- There is some data we have as part of our application will never undergo changes at all, and throughout the lifetime of our application it remains constant, this type of data is a good candidate of caching (always). So that we can optimize the performance of our application
+
+For eg.. a properties or an xml configuration file, will not change during the runtime of an application which can be considered as static data.
+Similary few master tables within the database, also will not undergo changes while the application is running.  
+
+2. Moderate Data :- There is some data within our application, which is very rarely going to be changed. Such data, if there is a chance of more number of time being accessed as part of our application before the interval change, then it is a good candidate of Cache. Since there is a chance of data being modified here, they should be some mechanism of invalidating the data within the Cache must be there.
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,205 @@
+First-Level cache in Hibernate Framework is called "Session-Level" cache. The Cache would be created along with Session object and would be destroyed when we close the Session object, since it exists with the Session object, it is called "Session-Level" Cache.
+its the default cache of the hibernate application, and cannot be turned off. every operation we perform using the Session object goes throught the Cache only.
+
+Internal Cache representation may looks like below:  
+class Cache {
+  private Map<Class<?>, Map<Object, Object>> cacheMap;
+  public Cache() {}
+  public void put(Object id, Object entityObject){}
+  public Object get(Class<?> classType, Object id){}
+  public boolean containsKey(Class<?> classType, Object id){}
+}  
+The Session class would keep hold of the reference of the above Cache and would be created as part of each new Session being instantiated and would be destroyed, so this Cache is not Singleton/Not to the Application scope, it is Session Scope cache.
+  
+What is the purpose of Cache?
+Cache is meant for storing the data temporarily within the memory, so that we can quickly fetch the data back inour application whereever required, without going to the Source system which help us in gaining the performance imporvement in an application.
+  
+Which nature of the data is qualified for Caching?
+There are different types of data is there as part of an application, based on their usage, the technic and mechanism of caching differs from different types of data. To understand first we need to explore categories of the data.
+  
+Long-Lived data or Fixed/Static Data =   There is some data within our application that seems to be constant and fixed in size, this data will not change through out the lifetime of our application. such data is called long-lived data or static data aswell. 
+
+It is a good candidate of cache, and we can cache all of this data during the startup of the application.
+  
+Moderate Data or Rarely undergo changes = There is some data within our application which will very rarely going to change, and within that interval, always there is a chance more number of people will use that data.
+
+It is a good candidate of cache, but with some technic being enforced.
+1. This data is Runtime data which could be of huge in size, so we should not cache this during startup only on demand while using the data should be cached.
+2. Since it is an Runtime, the data could grow enormously while using the application in Cache, and would lead to Memory Exceptions, so they should be some mechanism in place, that periodically cleanup the data in cache based on some algorithm to identify the data to be cleaned.
+  
+Short-lived data = There is some data in our application that frequently undergo changes, ideally speaking such data should not be cached, because the cost of overhead in keeping the data latest in the cache would kill more performace of the application.
+  
+exception:-
+but in few conditions we can exempt the above rule, within the short-interval of duration if there exists a chance of using the data more, then we can cache the data only to that shorted interval of time or to the operation level whichever is being carried using that data.
+  
+
+Hibernate Framework is an ORM Technology supported Framework this means all the data we query from the database would be accessed interms of Objects. This is an biggest bottleneck for every ORM implementation Framework, why?
+
+For each operation we perform on the database, the hibernate framework pull loads and loads of objects and places them within jvm memory there are 2 downsides of it.
+  1. it kills the performance of the application, because of each retrieval of the data should be transformed into object model.
+  2. the more the records the more the memory will be utilized and leads to performance and memory crisis in the application.
+
+Lets try to understand why first-level cache is required and mandated by Hibernate Framework developers.
+consider a bike_rental and bike tables, we want to fetch all the bike_rentals which are above 5 hours and analyze which bikes has to be send for maintainance.
+  
+List<Bike> getBikesForMaintainance() {
+  Query query = session.createQuery("select br from bike_rental where rented_dt between ? and ?");
+  query.param(1, monthStart);
+  query.param(2, monthEnd);
+  List<BikeRental> brList = query.list(); // 20000 unique objects
+
+  for(BikeRental br : brList) {
+    if(br.getRentedHours() >= 5) {
+      Bike bike = session.get(br.getBikeNo()); // 20000 bike objects, given worest case all bikeRentals > 5hours are these 20000 bike objects are unqiue and pointing 20000 bikes in the garage, or may be there could be 200 bikes that might have been given 20000 rentals      
+    }
+  }  
+} 
+
+In the above usecase, if we have 20000 bike rentals within that month, we end up in creating 20000 unique objects representing bike rental information in jvm memory, eventhough looks huge data, but still justifiable.
+But here the real problem is for each bike rental, the bike object would be created by reading the data from the database, which indicates almost 20000 bike objects would be created,out of which barely we might have 200 bikes only within our business and remaining are duplication of those 200 bikes this kill the jvm memory by keeping duplicate instances of the objects with same data with jvm memory. eventually leads to out of memory exceptions.
+
+To address the above problem, we need have some cache mechanism in place
+  1. can we have the cache placed at application level, so that all the data can be cached to the scope of the application and can be reused?
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  

@@ -1,0 +1,40 @@
+GUI (Graphical User Interface) Tools = helps us in creating mapping and configuration files quickly, by taking the inputs from the user or reading the entity class attributes.
+In addition we have Reverse Engineering Tool which will goes to the database tables read the metadata and based on that it generates Entity Classes and Mapping Files as well.
+  
+  
+1. Hibernate Mapping Editor = It takes the entity class packages or entity classes as an input and generates mapping file out of it. So it follows naming convention in writing the hbm.xml, it assumes attributeName and column name are same and generates the mapping file. it doesnt goes to the database table.
+  
+2. Hibernate Configuration File = takes the inputs from the user like dialect, driver, url, username and password and generates the hibernate configuration file.
+  
+---------------------------------------------------------------------------
+3. Database Explorer
+4. Hibernate Console Configuration
+
+project
+-> DatabaseExplorer
+    |-Database Connection
+-> hibernate console configuration (hibernate.cfg.xml) (plugin)
+-> Reverse Engineering File
+-> Hibernate Code Generation Wizard (Reverse Engineering, Hiberate Console Configuration)
+  
+
+6. HQL Editor
+7. Criteria Editor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

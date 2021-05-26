@@ -1,0 +1,132 @@
+What are the types of data that typical exists in an application based on their usage?
+There are 3 types of data are there
+1. Long-Lived/Static data = Good candidate of caching and can be done permenantly during the startup of the application.
+  
+2. Moderate data = Good candidate of caching, but since it is runtime data below things to be takencare
+  2.1 only on-demand, not on startup
+  2.2 periodical cleanup of the data based on some algorithm to identify the data for cleanup
+  
+3. Short-Lived data = Not recommended to Cache, as the performance overhead is more in keeping the latest snapshot of data always in the Cache.
+  Exception to the above:- within the short-interval of time, if more no of people are trying to repeatedly user the same data then we can consider it to be cached, but again based on conditions
+  3.1 on-demand cache
+  3.2 data should be cached only for that short interval of time
+  
+Any ORM Technology Framework works in accessing the relational data interms of Objects. while performing the operation these Framework based Applications quickly runs out of memory issues due to the large number of Objects being constructed and placed in the Jvm Memory, and greatly suffers with performance in repeatedly creating the objects through transforming relations to object format. 
+How can we overcome this problem?  
+There should be some mechanism in place like a Cache, to avoid repeatedly creating the duplication objects and place within JVM memory.
+For eg.. while performing an operation, we might endup in fetching the same records of data multiple times, even then also for each the record hibernate will instantiate a new entity object and populates the record data and place within jvm memory, looks by the end of the operation we might have huge number of same objects being constructed and placed in jvm which kills the jvm memory and performance as shown below.
+
+Session session = sessionFactory.openSession();
+Query query = session.createQuery("select * from bike_rentals where rented_dt between ? and ?");
+query.setParameter(1, startDt);
+query.setParameter(2, endDt);
+List<BikeRental> bikeRentals = query.list(); // 20000
+
+for(BikeRental bikeRental : bikeRentals) {
+  if(bikeRental.getRentedHours() > 5) {
+    Bike bike = session.get(Bike.class, bikeRental.getBikeNo()); // 20k 
+    // doing some operation
+  }
+}
+
+In the above we have just only 200 bikes in the database, but for each bike rental a new bike object of the same data has been created and placed in jvm memory. which leads to duplicate data, if there is no cache being implemented by hibernate.
+  
+#1 Can we cache the data to the application scope permanently?
+#2 Can we cache all the data we fetch from database on-demand and cleanup? No
+#3 Can we cache the data for each operation level and discard at the end of the operation? Yes
+
+From the above we can understand, all the nature of the data can be cached to the shortest-interval of time until we complete the operation no matter whether it is Long-lived, Moderate or Short-lived data, so that we can avoid creating multiple objects in the Jvm Memory. 
+How do we perform operation in hibernate framework?
+By using Session object we perform operation in hibernate and at the end of the operation we close the Session object. So if hibernate framework by itself can implement a Cache at Session level the problem would be solved, so here comes First-Level cache from hibernate.
+  
+Why is First-level cache in hibernate is automatic and mandatory?
+Why cant we turn it off?
+What will happens if the Hibernate Framework allows us to turnoff the First-Level Cache?
+Why is Cache implemented to the Session scope, why not for an application scope?
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
