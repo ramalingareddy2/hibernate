@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated 17-May-2021, 8:02:28 AM by Hibernate Tools 5.4.7.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true" default-access="property" default-cascade="none" default-lazy="true">
+    <class catalog="vogodb" dynamic-insert="false" dynamic-update="false" mutable="true" name="com.hbmtools.entities.BikeRental" optimistic-lock="version" polymorphism="implicit" select-before-update="false" table="bike_rental">
+        <id name="bikeRentalNo" type="java.lang.Integer">
+            <column name="bike_rental_no"/>
+            <generator class="identity"/>
+        </id>
+        <many-to-one class="com.hbmtools.entities.Bike" embed-xml="true" fetch="select" insert="true" name="bike" not-found="exception" optimistic-lock="true" unique="false" update="true">
+            <column name="bike_no" not-null="true"/>
+        </many-to-one>
+        <many-to-one class="com.hbmtools.entities.Customer" embed-xml="true" fetch="select" insert="true" name="customer" not-found="exception" optimistic-lock="true" unique="false" update="true">
+            <column name="customer_no" not-null="true"/>
+        </many-to-one>
+        <property generated="never" lazy="false" name="rentedDt" optimistic-lock="true" type="timestamp" unique="false">
+            <column length="19" name="rented_dt" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="duration" optimistic-lock="true" type="int" unique="false">
+            <column name="duration" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="amountPaid" optimistic-lock="true" type="float" unique="false">
+            <column name="amount_paid" not-null="true" precision="12" scale="0"/>
+        </property>
+    </class>
+</hibernate-mapping>

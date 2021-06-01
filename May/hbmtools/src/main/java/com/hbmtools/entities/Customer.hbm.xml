@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated 17-May-2021, 8:02:28 AM by Hibernate Tools 5.4.7.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true" default-access="property" default-cascade="none" default-lazy="true">
+    <class catalog="vogodb" dynamic-insert="false" dynamic-update="false" mutable="true" name="com.hbmtools.entities.Customer" optimistic-lock="version" polymorphism="implicit" select-before-update="false" table="customer">
+        <id name="customerNo" type="java.lang.Integer">
+            <column name="customer_no"/>
+            <generator class="identity"/>
+        </id>
+        <property generated="never" lazy="false" name="fullNm" optimistic-lock="true" type="string" unique="false">
+            <column length="45" name="full_nm" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="dob" optimistic-lock="true" type="date" unique="false">
+            <column length="10" name="dob" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="gender" optimistic-lock="true" type="string" unique="false">
+            <column length="1" name="gender" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="mobileNo" optimistic-lock="true" type="string" unique="false">
+            <column length="12" name="mobile_no" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="emailAddress" optimistic-lock="true" type="string" unique="false">
+            <column length="45" name="email_address" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="drivingLicenseNo" optimistic-lock="true" type="string" unique="false">
+            <column length="20" name="driving_license_no"/>
+        </property>
+        <set embed-xml="true" fetch="select" inverse="true" lazy="true" mutable="true" name="bikeRentals" optimistic-lock="true" sort="unsorted" table="bike_rental">
+            <key on-delete="noaction">
+                <column name="customer_no" not-null="true"/>
+            </key>
+            <one-to-many class="com.hbmtools.entities.BikeRental" embed-xml="true" not-found="exception"/>
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,83 @@
+Why hibernate has not implemented the Cache at application-level directly?
+Short-Lived data and Moderate data cannot be Cached at application-level, since these type of data undergo changes, permanently Cache at application-level brings lot of problems.
+  
+Which data can we cache in First-Level cache?
+all types of data we can Cache at First-Level cache of hibernate, because the Cache is short-lived to the operational scope, which that that shorted duration any type of data is qualified for caching.
+  
+Session session = sessionFactory.openSession();  
+Branch branch1 = session.get(Branch.class, 1); //from the datbaase
+Branch branch2 = session.get(Branch.class, 1); // from Session cache
+session.close();
+
+Session session = sessionFactory.openSession();  
+Branch branch3 = session.get(Branch.class, 1); // from the database
+--------------------------------------------------------------------------------------------------------
+The Session-Level cache is not only used during reads, it is also used during writes to optimize the number of writes to the underlying database.
+  
+Session session = sessionFactory.openSession();  
+Branch branch = Session.get(Branch.class, 1);  
+  
+branch.setIfscCode("S03039");
+session.update(branch); // updating existing object
+
+branch.setContactNo("028309344");
+session.update(branch);
+
+transaction.commit(); // round-trips onto the database can be avoided so that performance improvement
+---------------------------------------------------------------------------------------------------------
+Session session = sessionFactory.openSession();  
+Branch branch1 = session.get(Branch.class, 1);
+session.evict(branch1); 
+
+Branch branch2 = session.get(Branch.class, 1);
+
+session.evict(object) = will remove the object from the Cache, so that consecutive reference of the object will fetch it from database again.
+  
+session.clear() = will removes all the data from Session Cache  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+  

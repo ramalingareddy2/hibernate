@@ -1,0 +1,84 @@
+What is a primary key column of a Table means?
+Primary Key column of a table holds the data uniquely across all the records of the table, so that it is being used as an identifier in establishing the relationship between other tables within the database.
+
+Most of the time while choosing a primary key column for a table, we choose the one of the column out of the business data considering as a unique column and mark it as primary key, such columns selected as key columns are called "Natual Key" columns.
+
+While choosing the natural data/business data as primary key column we make several assumptions in considering as a unique column.  
+  
+consider below example, we considered a customer voter_id is always unique and choosen to be an primary key column, so that using that column we established relationship with address table. 
+  
+customer
+----------
+aadhar_no (pk) (natural key column)
+firstnm
+lastnm
+mobileno
+emailaddress 
+gender
+dob
+
+address
+----------
+address_id (pk)
+address_line1
+address_line2
+city
+state
+zip
+country
+voter_id (fk)
+
+tomorrow the voter_id has been replaced with an aadhar_no to identify the people uniquely, in such a case the assumption under which we designed the datamodel broke and should modify our table to consider aadhar_no as a primary key, which not only affect our table, even the tables in relationship with our table also needs to be modified.
+These changes inccurs a huge cost in redesigning the database tables and rewriting the application build on top of it.  
+
+So to avoid the above problems always choose a primary key column of a table as a surrogate column or an additional column other than the business data.
+  
+customer
+--------
+customer_no (pk) 
+aadhar_no
+first_nm
+last_nm
+gender
+dob
+email_address
+mobile_no
+  
+address
+----------
+address_no (pk)
+address_line1
+address_line2
+city
+state
+zip
+country
+customer_no (fk)
+
+  
+When we choose the surrogate columns as primary key columns, since these columns doesnt have any relationship with business data, the customer/end-user while using our system would not able to pass the value for these columns in performing the operations.
+
+In this case the programmers should write the logic for generating the surrogates key columns uniquely using some mechanism and should perform the operation rather than asking the end-user to enter unique data for these primary key columns.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+

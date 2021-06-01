@@ -1,0 +1,181 @@
+What is Primary Key?
+Primary key is a column that holds unique data across all the records of that table and the purpose of it is, the table can participate in relationship with other tables through the help of Primary key being written as foreign key.
+In-Short: A table cannot participate in Relation-Ship with other table without Primary Key.
+  
+In general while designging a datamodel for an application usually people consider one of the data out of the business data which seems to be unique as Primary Key (by making lot of assumptions). Such data out of the business data being considered as a Primary Key is called "Natural Key" column.
+  
+It is not recommended to consider Natual Key as a Primary key column because in future if the nature of the business has been changes or a change business data might lead to failure of the assumptions under which we constructed the primary key column. This leads to changes not only in our table primary key column affects even all the other tables in relationship with our table. and huge application re-development cost will inccur.
+  
+Then how to choose a primary key column for the database tables?
+Always choose surrogate column as a primary key column for the database table. A surrogate key column is an additional column that is taken in the database table, that has no relationship with the business data. The data will be inserted into this column automatically by the system through some mathematical calculation deriving its value to be unique to act as a primary key column.
+  
+characteristics of surrogate key column:-
+  1. Never surrogate key columns will change/fail as those are no way related to business.
+  2. End-User cannot supply the value as input while performing the operation on the System/Application since he is no way related to the data.
+  3. System (Application) itself should generate the value for this column while inserting the data into the table through some algorithm or mathematical calculation to ensure always the value is unique.
+
+category
+-----------------------------------------
+category_no (pk) category_nm  description
+------------------------------------------
+
+class CategoryDao {
+  public int saveCategory(String categoryName, String description) {
+  PreparedStatement pstmt = null;
+    Connection con = null;
+    Statement stmt = null;    
+    ResultSet rs = null;
+    int categoryNo = 0;
+    
+    try {
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      con = DriverManager.getConnection(url, un, pwd);
+      
+      stmt = con.createStatement();
+      rs = stmt.executeQuery("select max(category_no) from category");
+      if(rs.next()) {
+        categoryNo = rs.getInt(1);
+      }
+      categoryNo +=1;
+      pstmt = con.preparedStatement("insert into category(category_no, category_nm, description) values (?,?,?)");
+      pstmt.setInt(1, categoryNo);
+      pstmt.setString(2, categoryName);
+      pstmt.setString(3, description);
+      pstmt.executeUpdate();
+      flag = true;
+    }catch(SqlException | ClassNotFoundException e) {
+      throw e;
+    }finally {
+      // close resources
+      commit or rollback
+    }
+  }
+}
+
+From the above code we can understand developer has to write the snippet of code, in fetching existing max category no and add +1 to compute the next category unique no with which he has to perform the operation.
+There are lot of challenges are there here.
+  1. For all the tables in the application on whom we are performing insert operation developer has to write code for computing the primary key column value, which indicates he endup in writing lot of code for handling primary key column.
+  2. The key we computed will not work in multi-user and multi-threaded environment, again developer has to comeup with a more robust way of generating the key column that works in all the env.
+    
+Addressing different types of requirements in generating the key column values seems to be challenging and complicated as well. How to solve this problem?
+    
+In Hibernate Framework, it has provided ID Generator classes using which we can generate ID value uniquely so that developer can avoid writing such code in generating the ID.
+    
+ID generators are the classes written by the Hibernate Framework itself and has provided for us to use in generating the ID. For different requirements of the application we need different strategeis of generating the Primary key values, to handle all such requirements Hibernate Framework has provided 11 ID Generators.
+  
+1. increment
+2. native
+3. identity
+4. sequence
+5. hilo
+6. seq_hilo
+7. guid
+8. uuid
+9. select
+10. foreign
+11. assign
+
+entity.hbm.xml
+<class name="Category" table="category">
+  <id name="categoryNo" column="category_no">
+    <generator class="increment"/>
+  </id>
+</class>
+
+session.save(entityObject);
+here Session class would takecare of performing the below operations when we call save(entityObject) method.
+  1. grab the connection from SessionFactory
+  2. dialect ask for generating the sql query for insert operation
+  3. I will call the id generator, generates the value and populate into entityObject, using that value
+  3. create preparedStatement and substitute the parameters
+  4. executeUpdate() on preparedStaetment in store the record in database.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

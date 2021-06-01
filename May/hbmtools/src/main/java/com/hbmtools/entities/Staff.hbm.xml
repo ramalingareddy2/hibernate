@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated 17-May-2021, 8:02:28 AM by Hibernate Tools 5.4.7.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true" default-access="property" default-cascade="none" default-lazy="true">
+    <class catalog="vogodb" dynamic-insert="false" dynamic-update="false" mutable="true" name="com.hbmtools.entities.Staff" optimistic-lock="version" polymorphism="implicit" select-before-update="false" table="staff">
+        <id name="staffNo" type="int">
+            <column name="staff_no"/>
+            <generator class="assigned"/>
+        </id>
+        <property generated="never" lazy="false" name="fullNm" optimistic-lock="true" type="string" unique="false">
+            <column name="full_nm"/>
+        </property>
+        <property generated="never" lazy="false" name="age" optimistic-lock="true" type="java.lang.Integer" unique="false">
+            <column name="age"/>
+        </property>
+        <property generated="never" lazy="false" name="gender" optimistic-lock="true" type="string" unique="false">
+            <column name="gender"/>
+        </property>
+        <property generated="never" lazy="false" name="experience" optimistic-lock="true" type="java.lang.Integer" unique="false">
+            <column name="experience"/>
+        </property>
+        <property generated="never" lazy="false" name="mobileNbr" optimistic-lock="true" type="string" unique="false">
+            <column name="mobile_nbr"/>
+        </property>
+        <property generated="never" lazy="false" name="emailAddress" optimistic-lock="true" type="string" unique="false">
+            <column name="email_address"/>
+        </property>
+    </class>
+</hibernate-mapping>
