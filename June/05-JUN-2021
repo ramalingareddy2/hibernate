@@ -1,0 +1,18 @@
+What is a composite primary key?
+If we take a primary key with 2 or more columns within it then it is called Composite Primary Keys. We encounter composite primary key in 2 usecases
+  1. while working on many-to-many relationships 
+  2. when we are using natural columns as key columns then we might need to consider multiple columns in primary key column.
+    
+In hibernate configuration based mapping application we have 2 ways of mapping an composite primary key are there.
+#1
+ <composite-id>
+  <key-property name="" column=""/>
+  <key-property name="" column=""/>
+ </composite-id>
+ 
+#2    
+ wrap key column into a pk class, which must and should implement from Serializable interface. declare pk class as attribute within our entity class and write mapping
+  <composite-id name="guaratePk">
+    <key-property name="" column=""/>
+    <key-property name="" column=""/>
+  </composite-id>

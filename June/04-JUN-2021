@@ -1,0 +1,218 @@
+Composite Primary Key = If we mark 2 or more columns together as a primary key, then it is called "Composite Primary key"
+  
+There are 2 conditions under which we generally found ourselve into composite primary keys.
+  1. while working with many-to-many relationship the 3rd table will always has composite primary key for representing the relationship
+  2. when we consider natural data in creating the keys, we may not be able to identify one single column to be unique in the table, in such case we combine multiple columns and represent primary key.
+
+From the above we can clearly understand composite primary keys will not require id generators as most of the time those are business/natural key columns whose data comes from the business or through relationship columns.
+    
+    
+
+If a table has a composite primary key, how to map the composite primary key in hibernate framework application, so hibernate can manage the persistence operation with keycolumns.
+    
+Xml-based configuration approach:-
+There are 2 ways we can map an composite primary key in hibernate framework.
+
+#1
+
+(tbl) guarage
+------------------------
+guarage_club_reg_no (pk)
+guarage_nm (pk)
+proprietor_nm
+location
+contact_no
+email_address
+
+class Guarage implements Serializable {
+  String guarageClubRegNo;
+  String guarageName;
+  String proprietorName;
+  String location;
+  String contactNo;
+  String emailAddress;
+  // accessors
+}
+
+Guarage.hbm.xml
+----------------
+<hibernate-mapping package="com.cpk.entities">
+  <class name="Guarage" table="guarage">
+    <composite-id>
+      <key-property name="guarageClubRegNo" column="guarage_club_reg_no"/>
+      <key-property name="guarageName" column="guarage_nm"/>
+    </composite-id>    
+  
+    <property name="proprietorName" column="proprietor_nm"/>
+    <property name="location"/>
+    <property name="contactNo" column="contact_no"/>
+    <property name="emailAddress" column="email_address"/>
+  </class>
+</hibernate-mapping>
+
+Guarage pk = new Guarage();
+pk.setGuarageClubRegNo("g029303");
+PK.setGuarageName("Smith Tools");
+
+Guarage guarage = session.get(Guarage.class, pk);
+
+dis-advantage:-
+  if a table has lot of columns with composite key, then to fetch always the object we need to create complete object populating the pk column values, which wastes lot of memory.
+    
+#2
+Primary key class representing the composite keys must and should implement from Serializable interface.
+  
+class GuaragePk implements Serializable {
+  String guarageClubRegNo;
+  String guarageName;
+  // accessors
+}
+
+class Guarage implements Serializable {
+  GuaragePk guaragePk; // primary key class as attribute (as multiple columns are primary key)
+  String proprietorName;
+  String location;
+  String contactNo;
+  String emailAddress;
+  // accessors
+}
+
+In the below mapping file we are telling the key-properties are embeded in a classType attribute name="guaragePk".
+  
+Guarage.hbm.xml
+-----------------
+<hibernate-mapping package="com.cpk.entities">
+  <class name="Guarage" table="guarage">
+    <composite-id name="guaragePk">
+      <key-property name="guarageClubRegNo" column="guarage_club_reg_no"/>
+      <key-property name="guarageName" column="guarage_nm"/>
+    </composite-id>
+    <property name="proprietorName" column="proprietor_nm"/>
+    <property name="location"/>
+    <property name="contactNo" column="contact_no"/>
+    <property name="emailAddress" column="email_address"/>
+  </class>
+</hibernate-mapping>
+
+
+GuaragePk pk = new GuaragePk();
+pk.setGuarageClubRegNo("g029303");
+PK.setGuarageName("Smith Tools");
+
+
+Guarage guarage = session.get(Guarage.class, pk);
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

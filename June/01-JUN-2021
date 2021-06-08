@@ -1,0 +1,13 @@
+How many id generators are provided by Hibernate Framework?
+1. assigned = no id generator
+2. increment = last generated value + 1
+3. identity = database generated id value identity or auto increment columns will be fetched
+4. sequence = default sequence name "hibernate_sequence" will use to generate the id
+5. native = works either identity or sequence
+6. hilo 
+7. seq_hilo
+8. guid = global unique id
+9. uuid = universal unique id
+10. select = fetches the primary key based on the candidate of the object
+11. foreign = used to populate foreign key as primary key in direct one-to-one relationship based on association.
+

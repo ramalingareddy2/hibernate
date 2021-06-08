@@ -1,0 +1,70 @@
+Jpa has provided 4 id generators
+1. AUTO = Either works as Identity or Sequence depends on the database
+2. IDENTITY = works for database that supports auto increment or identity columns
+3. SEQUENCE = works with oracle sequences in generating the id
+
+4. TABLE = Instead of depending on database capabilities in generating the id, Table id generator keeps the id of the Entity class in another table and increments and returns everytime when we request.
+By default it creates table hibernate_unique_keys with 2 columns
+
+hibernate_unique_key
+pkName   pkValue
+
+given each entity class id will be maintained one record
+Branch
+Customer
+Bank
+For the above 3 entity class the hibernate_unique_key has 3 rows
+hibernate_unique_key
+pkName      pkValue
+bank_no     10
+customer_no 30
+branch_no   40
+
+// jpa table generator goto hibernate_unique_key and fetch the pkvalue where pkName=bank_no
+class Bank {}
+---------------------------------------------------------------------------------------------------------
+
+@Entity
+@Table(name="bill")
+class Bill {
+  @Id
+  @Column(name="bill_no")
+  /*@SequenceGenerator(name="bilgen", sequenceName="bill_no_seq")
+  @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bilgen")*/
+  
+  /*@TableGenerator(name="billtblgen", table="unique_keys", pkColumnName="keyName",valueColumnName="keyValue", pkColumnNameValue="bill_no")
+  @GeneratedValue(strategy=GenerationType.TABLE)*/
+  @GenericGenerator(name="billIncrementGen", strategy="select", parameters = {@Parameter(name="key", value="outletName"), @Parameter(name="", value="")} )
+  @GeneratedValue(generator="billIncrementGen")
+  int billNo;
+  
+  @Column(name="bill_dt")
+  Date billDate;
+  @Column(name="customer_nm")
+  String customerName;
+  // accessors
+  
+}
+
+unique_keys
+keyName   keyValue
+bill_no   1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
