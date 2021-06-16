@@ -1,0 +1,40 @@
+Entity Relationship Mapping = it is about how to map entity classes with relationship between them into the underlying relational database relationship.  
+An entity class can be in relationship with another entity class in 2 ways
+  1. Inheritance
+    reusing the data/functionality of a class in another class is called "Inheritance". When we establish inheritance relationship between the classes those classes are said to be in "IS-A" relationship and any of the subclass can be accessed through the reference of Super Class (Polymorphism).
+  
+  2. Association
+    another form of reusing the data/functionality of a class in another class. an association relationship between classes is established by writing one class as an attribute inside another class, thus forming "HAS-A" relationship.
+      
+Entity Relationship mapping is about how to represent inheritance relationship or association relationship between entity classes into database relationships.
+From the above we can derive 2 types of Entity Relationship Mappings.
+1. Inheritance Mapping Model
+2. Assocation Mapping Model
+
+
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+  
+
+
+  

@@ -1,0 +1,194 @@
+@Embeddable // it is used inside another class
+class GuaragePk implements Serializable {
+  @Column(name="guarage_club_reg_no")
+  String guarageClubRegNo;
+  @Column("guarage_nm")
+  String guarageName;
+  // accessors
+}
+
+
+@Entity
+@Table(name="guarage")
+class Guarage implements Serializable {
+  @EmbeddedId // this class properties are representing primary key
+  GuaragePk id;
+  String proprietorName;
+  String location;
+  String contactNo;
+  String emailAddress;
+  
+  // accessors  
+}
+---------------------------------------------------------------------------------------------------------
+DML Operations in Hibernate
+---------------------------
+save() or persist() or saveOrUpdate()
+---------------------------------------
+#1
+Object save(entityObject)  
+save() method is used for inserting a new record into database using the entity object passed as an input. save() method post insertion of the object will update the entity object with the id used for storing the data and along with that returns id as a return value.
+  
+In case if we use id generator as "assigned", and the id of object is matching withan existing record then it will throw exception saying a record already exists and we cannot persist.
+  
+  
+#2
+void persist(entityObject)
+persist() method came from jpa, in case of persist() the return type is void, which indicates it doesnt return the id of the object with which the current record has been inserted.
+after calling the persist() method the entity object might be reflected with the id with which it has been persisted or may be after commit(), which is dependening on the implementation vendor.
+
+flag = true;
+try {
+  entityManager = emf.createEntityManager();
+  transaction = entityManager.getTransaction();
+  transaction.begin();
+  entityManager.persist(bike); // sequence id generator
+  int bikeNo = bike.getBikeNo(); // hibernate works
+  
+  flag = true;
+}finally {
+  if(transaction != null) {
+    if(flag) {
+      transaction.commit(); // id will not be reflected
+    }else {
+      transaction.rollback();
+    }
+  }
+}
+
+
+persist() method may update the entity object with the id with which it has persisted or might delay the reflecting the id into entity object util we commit() it.
+  
+#3 saveOrUpdate()
+This method name is mis-leading. we configure an attribute in mapping file called unsaved-value for an entity class.
+  
+<class name="Bike" table="bike">
+  <id name="bikeNo" column="bike_no" unsaved-value="10">
+    <generator class="increment"/>
+  </id>
+</class>
+it will never check whether object we passed is there or not in database to decide save or update. How does it determines whether an object should be saved or updated.
+  
+we configure an attributed shown above which is unsaved-value="0".
+So when we pass an entity object to saveOrUpdate() method, it will compared object id with unsaved-value.
+  if it matches will save() otherwise will update()
+    
+  
+  
+Bike bike = new Bike();
+bike.setBikeNo(10);
+bike.SetModel("Pulsor");
+bike.setManufacturer("Bajaj");
+
+session.saveOrUpdate(bike); // id non-zero insert
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

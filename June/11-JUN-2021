@@ -1,0 +1,95 @@
+Hibernate Entity Object Lifecycle
+The Entity Object within the Hibernate Framework Application can exists in various different stages, which are termed as Object Lifecyle. An Entity object could exists in one of the 3 stages.
+  1. Transient state
+  2. Persistent state
+  3. Detached state
+How does an entity object moves across these lifecycle stages?
+While performing the operations on the entity object, it will moved across any of these stages. Lets describe each of these stages of entity object and how can we move the entity object across these stages.
+  
+1. Transient
+An entity object is said to be in transient state, if there is no record availabe in the database table for that entity object, and it is not assicated with the session
+
+For eg.. when we create an new entity object in java using new operator, as it has never been persisted into database and is not associated with session, it can be called as transient.
+  Guarage guarage = new Guarage(); = transient state
+  
+2. Persistent state  
+An entity object is said to be in persistent state, if there is a record representing that entity object in the corresponding database table and that object is associated with an active session.   
+  
+For eg..  
+  Guarage guarage = session.get(Guarage.class, 1);
+
+What do you mean by persistent state object?
+Since the object is associated with an active session, any changes that happened on that entity object would be tracked and persisted automatically by the Session object while we close the session object even though we didnt call udpate() or merge() or saveOrUpdate()
+  
+try {  
+  SessionFactory sessionFactory = SessionFactoryRegistry.getSessionFactory();
+  Session session = sessionFactory.openSession();
+  Transaction transaction = session.beginTransaction();
+  Bike bike = session.get(Bike.class, 1);
+
+  bike.setModelName("KTM 2000C");  
+  flag = true;
+}finally {
+  if(transaction != null) {
+    if(flag) {
+      transaction.commit(); // flush the current state of the objects into the database and will issue a commit operation on database
+    }else {
+      transaction.rollback();
+    }
+    if(session != null) {
+      session.close(); // flush the objects that are in cache when we close them
+    }
+  }
+}
+
+How to move an object into persistent state?
+  #1 we can directly bring an object into persistent state, using 
+    get(Class, id)
+    load(Class, id)
+  #2 we can move an transient object into persistent state by using
+    save(Object)
+    persist(Object)
+    saveOrUpdate(Object)
+
+3. Detached State
+An entity object is said to be in detached state, given for that object there exists a record in database representing the identity of the object but the object is not associated with active session.
+  
+This means the changes that were happened on that object, would not be tracked and persisted into the database automatically when we close the session. programmer has to explicitly call update() or merge() or saveOrUpdate() to persist the changes of that object into database.
+  
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

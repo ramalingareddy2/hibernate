@@ -1,0 +1,170 @@
+An entity object can be there in any one of the 3 stages
+1. Transient = An entity object is said to be in transient state, if there is no record representing that entity object exists within the table and it is not associated with any active session.
+  
+2. Persistent = An entity object is said to be in persistent state if there is a record on database table representing that entity object and it is associated with active session.
+  
+3. Detached = An entity object is said to be in detached state, if there is a record in database table representing that entity object, but it is not associated with active session.
+--------------------------------------------------------------------------------------------------------
+
+Entity Relationship Mapping
+
+An Entity object can have relationship with another entity object in realworld, how can we model/represent the relationship between these entity classes in java into corresponding database tables, so that we can perform operations on the object as per the Relationship.
+  
+In-Short: How to model Entity Objects with their relationship into Relational Database table relationship.  
+  
+class Customer {
+  int customerNo;
+  String customerName;
+  int age;
+  String gender;
+  String mobileNo;
+  Set<Sale> sales;
+  // accessors
+}  
+
+class Sale {
+  int saleNo;
+  Date saleDate;
+  int quantity;
+  double amount;  
+  // accessors
+}
+
+{
+  customerNo: 1,
+  customerName: "smith",
+  age: 51,
+  gender: "Male",
+  mobileNo: 93983894,
+  sale: {
+    saleNo: 1,
+    saleDate: "12/05/2021",
+    quantity: 10,
+    amount: 3838
+  }
+}
+
+We have Customer, Sale classes above which are in Has-A relationship with each other indicating which customer has made which sales. So Entity Relationship Mapping is about how to comeup with database tables representing the above entity classes and how do we establish relationship of those classes in table relationship model, so that
+  1. when we persist the customer object, we not only have customer and sales being stored we should be able to persist association relationship as well in database tables to identify class relationship
+  2. while accessing we not only able to fetch customer data along with that their associated Sales also we should access how is it possible?
+--------------------------------------------------------------------------------------------------------
+
+How many ways an object can be in relationship with another object?
+There are 2 ways are there
+  1. Inheritance
+  Inheritance represents Is-A relationship between the classes. If all the traits of the class are common to the sub-class, to reuse the existing data/functionality of another class, we use inheritance
+    Characteristics:-
+      - In an Inheritance relationship a super class can be abstract sometimes
+      - Polymorphic access is supported in case of Inheritance, any of the subclasses can be represented in Super class type.
+        A
+      B   C
+      
+      A a = new B();
+  
+  2. Association
+  Association represents Has-A relationship between the classes, one class holds the reference of another class to reuse data/functionality of others.
+    Characteristics:-
+      - Bi-Directional (or) Uni-Directional
+      - Cardinality of Relationship exists
+      
+    
+    
+Relational Model
+One Table can be in relationship with another table in one of three ways.
+ 1. one-to-one
+ 2. one-to-many
+ 3. many-to-many
+ Characteristics:-
+   - table relationship are uni-directional
+   
+How many types of entity relationship mappings are there.
+There are 2 types of Entity Relationship mapping models are there
+  1. Inheritance Mapping model
+  2. Association Mapping model
+  
+  
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

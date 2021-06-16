@@ -1,0 +1,231 @@
+Hibernate DML Operations
+1. Object save(Object entity)
+2. void persist(Object entity)
+3. Object saveOrUpdate(Object entity)
+4. void update(Object entity)
+5. void merge(Object entity)
+6. void delete(Object entity)
+
+#1. Object save(Object entity) = it is used for inserting a new record into the database using the entity object passed. once after performing the insert operation, it updates the entity object (in memory) reflecting the id using which it has persisted, along with that it is going to return the id of object as well.
+  
+#2 void persist(Object entity) = persist method has been added to hibernate through jpa api implementation. it is also used for inserting the data into the database table for the entity object we passed, but the main different between save(entity) and persist(entity) is persist returnType is void thus will not return any id after performing the operation.
+In addition to the above, there is no guarantee that it updates the entity object immediately after performing the operation with the id it has persisted the object, depends on the implementation vendor reflecting the id might take place until the transaction has been comitted.
+
+#3 Object saveOrUpdate(Object entity) = based on the unsaved-value we configured for the entity class, it compares the object id we supplied with the unsaved value, to determine whether it should save the object or update the existing object into the database.
+It just helps the programmer in minimizing the amount of code he is going to write in performing the operation.
+
+<class name="Bill" table="bill">
+  <id name="billNo" column="bill_no" unsaved-value="-1">
+    <generator class="increment"/>
+  </id>
+</class>
+
+unsaved-value = refers to consider the object supplied was not saved if the id of the object is -1 so that perform insert operation. otherwise update
+
+Bill bill = new Bill();
+bill.setBillNo(-1);
+bill.setBillDate(new Date());
+bill.setCustomerName("James");
+bill.setAmount(2000);
+session.saveOrUpdate(bill);
+
+Important:- saveOrUpdate() will never goes to database to verify object exists in the database or not.
+Note:- we cannot use saveOrUpdate() method with id generator as "assigned".
+--------------------------------------------------------------------------------------------------------- void update(Object entity)
+update method is used for updating an existing entity object into the database table. in case if the object we have supplied is not found within the database, it is going to throw exception.
+  
+There are 2 ways of working with update(Object) are available.
+  #1 fetch the existing entity object and populate the fields of data that are changed and call update to perform operation.
+  
+  Bike bike = session.get(Bike.class, 10);    
+  
+  bike.setColor(color);
+  bike.setRegistrationNo(regNo);
+  bike.setAmount(amount);
+  
+  session.update(bike);
+
+here we didnt set the values for bikeName, model, manufacturer in the above object so it updates bike record#10 with supplied values by making bikeName,model and manufacturer "null".
+  
+The above approach has to be used in case of partial update of fields of object, but suffers with performance issue as we readonce and writeonce for update.
+  
+  #2 in case of a fullupdate of fields, as the values will be submitted from user interface for all of its attributes dont fetch an existing object from database rather create a new object and populate all the values and update as below.
+    
+  Bike bike = new Bike();
+  bike.setBikeNo(10);
+  // populate all the attributes from ui
+  session.update(bike);
+---------------------------------------------------------------------------------------------------------
+
+class BikeDao {  
+  // partial fields of data
+  public void updateBike(Bike mBike) {
+    Bike bike = null;
+    
+    bike = session.get(Bike.class, mBike.getBikeNo());
+    // we got modified value from user interface, to it we add database values of unmodifiable fields
+    
+    mBike.setBikeName(bike.getBikeName());
+    mBike.setModel(bike.getModel());
+    mBike.setManufacturer(bike.getManufacturer());
+    
+    session.merge(mBike);   // update operation, but will overwrite the existing object within the Session   
+  }
+}
+
+When we have an existing object associated with the session withan id, and we try to perform an update operation with a new object of the same id which we have in the session, then hibernate will throw NonUniqueObjectException.
+  
+Bike bike = session.get(Bike.class, 1);
+// we modified the bike
+session.update(bike); // not yet comitted
+
+Bike nBike = new Bike();
+// populated data with bikeNo=1
+session.update(nBike); // allows this, it is going to overwrite the existing changes of the same object within the session, which runs into in-consistency
+
+--------------------------------------------------------------------------------------------------------
+delete(Object)
+delete is used for deleting the existing object within the database.
+There are 2 ways we can perform delete operation.
+  1. fetch the existing object from database and call delete method
+  
+  Bike bike = session.get(Bike.class, 1);
+  if(bike != null) {
+    session.delete(bike);
+  }
+
+  2. if you are sure about the existence of the object with that id in the database, then create a new entity object by populating the id and pass it to delete without fetching.
+  Bike bike = new Bike();
+  bike.setBikeNo(1);
+  session.delete(bike);
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
