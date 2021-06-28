@@ -1,0 +1,378 @@
+Table per concreate class
+-------------------------
+In Table per concreate class strategy for every concreate entity class within the hierarchy create a separate/independent database table. If it is a non-abstract parent entity class we need to create an separate database table representing its attributes. If it is a subclass create a separate table representing parent entity class attributes and child entity class attributes.
+  
+That is where the name has been given as Table per concreate class, For each concreate entity class in inheritance hierarchy create a separate table.
+  
+How to perform persistence operation within this strategy?
+We need to tell the hibernate/jpa framework the mapping strategy we have choosen in creating relational database tables for these entity classes.
+avoid using identity generator, since we need the primary key value as unique across the inheritance hierarchy to support polymorphic retrieval.
+For eg.. if we have stored an insuranceplan with plan_no = 1, we should not store accidental_insurance_plan with accidental_insurance_plan_no = 1 again, because when we try retieving subclass objects with super class reference type hibernate cannot support polymorphic access in fetching subclass objects based on super class type since record 1 exists in both the tables.
+  
+if we maintain primary key as unique across the hierarchy of tables, hibernate/jpa framework can quickly identify the record was found in which table based on which it returns corresponding entity object supporting polymorphic retrieval.
+  
+How does hibernate/jpa framework perform persistence operations here?
+
+increment id generator:- first query max of primary key from all the tables in the hierarchy to ensure the primary key is unique across the tables and increment by 1 and use it as id value.
+sequence id generator:- use same sequence for all the three entity classes so that across the tables the sequence will generate unique number
+
+identity = dont use identity
+increment = it automatically queries max(pk) frm the hierarchy of classes and returns +1 based on strategy we told
+sequence = use same sequence for all the entity class in hierarchy
+uuid = always unique
+guid = always unique
+select = hibernate just fetches the id
+
+increment id generator= computes the unique id by union all the 3 table primarykey as below
+select max(pno) from (  
+  select plan_no 'pno' from insurance_plan
+  union
+  select accidental_insurance_plan_no 'pno' from accidental_insurance_plan
+  union
+  select automobile_insurance_plan_no 'pno' from automobile_insurance_plan
+);
+
+save(entityObject)/persist(entityObject):
+parent:
+directly store the data into parent table with unique pk generated out of the hierarchy of classes.
+  
+child entity object:-
+store the superclass attributes + subclass attributes together into subclass corresponding table directly by generating id uniquely across the tables of hierarchy
+
+
+get(classType, id) / fetch(classType, id):
+child entity object:-
+For eg.. session.get(AccidentalInsurancePlan.class, 2)
+For any of the subclasses fetch the data directly from subclass table only. since each entity class has separate table.
+
+super entity object:-
+to support polymorphic retrieval of data for the hierarchy of classes, it has to go to all the 3 tables in the hierarchy to identify the record belongs to which table and return an corresponding entity object.
+  
+  
+select ip.*, '' ic, '' dpc, '' fc, '' vt, 0 tno from insurance_plan ip where ip.plan_no = ?
+  union
+select aip.*,'' fc, '' vt, 1 tno from accidental_insurance_plan aip where aip.accidental_insurance_plan_no = ?
+  union
+select amip.*, '' ic, '' dpc, 2 tno from automobile_insurance_plan amip where amip.automobile_insurance_plan_no = ?
+  
+From the above we can understand hibernate has to manage accessing the data for the hierarchy of classes based on union.
+
+Inheritance Mapping Strategy table
+----------------------------------
+table per class hierarchy = discriminator column? because single table
+table per subclass = joined relation, join key column
+table per concreate class = union, pk should unique across the classes in hierarchy to support polymorphic access
+
+
+InsurancePlan.hbm.xml
+----------------------
+<hibernate-mapping package="com.tpcc.entities">
+  <class name="InsurancePlan" table="insurance_plan">
+    <id name="planNo" column="plan_no">
+      <generator class="increment"/>
+    </id>
+    <property name="planName" column="plan_nm"/>
+    <property name="minEligibilityAge" column="min_eligiblity_age"/>
+    <property name="maxEligibilityAge" column="max_eligibility_age"/>
+    <property name="minTenure" column="min_tenure"/>
+    <property name="maxTenure" column="max_tenure"/>
+    <property name="minAmount" column="min_amount"/>
+  </class>
+</hibernate-mapping>
+
+AccidentalInsurancePlan.hbm.xml
+--------------------------------
+<hibernate-mapping package="com.tpcc.entities">
+  <!--Inheritance strategy is table per concreate class we are telling to hibernate through union-subclass tag-->
+  <union-subclass name="AccidentalInsurancePlan" table="accidental_insurance_plan" extends="InsurancePlan">
+    <property name="internationalCoverage" column="international_coverage"/>
+    <property name="disabilityCoveragePercentage" column="disability_coverage_percentage"/>
+  </union-subclass>
+</hibernate-mapping>
+
+AutomobileInsurancePlan.hbm.xml
+-------------------------------
+<hibernate-mapping package="com.tpcc.entities">
+  <union-subclass name="AutomobileInsurancePlan" table="automobile_insurance_plan" extends="InsurancePlan">
+    <property name="fullCoverage" column="full_coverage"/>
+    <property name="vehicleType" column="vehicle_type"/>
+  </union-subclass>
+</hibernate-mapping>
+---------------------------------------------------------------------------------------------------------
+How to work with Inheritance Mapping in Jpa api?
+Jpa api support 3 strategies of mapping
+1. SINGLE_TABLE = table per class hierarchy (discriminator column)
+2. JOINED = table per subclass (foreign key column)
+3. TABLE_PER_CLASS = table per concreate class (nothing)
+  
+
+#1 SINGLE TABLE strategy
+-------------------------
+@Entity
+@Table(name="insurance_plan")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="plan_type")  
+@DiscriminatorValue("ip")  
+class InsurancePlan {
+  @Id
+  @Column(name="plan_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int planNo;
+  @Column(name="plan_nm")
+  String planName;
+  @Column(name="min_eligibility_age")
+  int minEligibilityAge;
+  @Column(name="max_elgibility_age")
+  int maxEligibilityAge;
+  @Column(name="min_tenure")
+  int minTenure;
+  @Column(name="max_tenure")
+  int maxTenure;
+  @Column(name="min_amount")
+  double minAmount;
+  
+  // accessors
+}
+
+@Entity
+@DiscriminatorValue("aip")
+class AccidentalInsurancePlan extends InsurancePlan {
+  @Column(name="international_coverage")
+  boolean internationalCoverage;
+  @Column(name="disability_coverage_percentage")
+  double disabilityCoveragePercentage;
+}
+
+@Entity
+@DiscriminatorValue("amip")
+class AutomobileInsurancePlan extends InsurancePlan {
+  @Column(name="full_coverage")
+  boolean fullCoverage;
+  @Column(name="vehicle_type")
+  String vehicleType;
+}
+------------------------------------------------------------------------------------
+#2 JOINED
+
+@Entity
+@Table(name="insurance_plan")
+@Inheritance(strategy=InheritanceType.JOINED)
+class InsurancePlan {
+  @Id
+  @Column(name="plan_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int planNo;
+  @Column(name="plan_nm")
+  String planName;
+  @Column(name="min_eligibility_age")
+  int minEligibilityAge;
+  @Column(name="max_elgibility_age")
+  int maxEligibilityAge;
+  @Column(name="min_tenure")
+  int minTenure;
+  @Column(name="max_tenure")
+  int maxTenure;
+  @Column(name="min_amount")
+  double minAmount;
+  
+  // accessors
+}
+
+@Entity
+@PrimaryKeyJoinColumn
+class AccidentalInsurancePlan extends InsurancePlan {
+  @Column(name="international_coverage")
+  boolean internationalCoverage;
+  @Column(name="disability_coverage_percentage")
+  double disabilityCoveragePercentage;
+}
+
+@Entity
+@PrimaryKeyJoinColumn
+class AutomobileInsurancePlan extends InsurancePlan {
+  @Column(name="full_coverage")
+  boolean fullCoverage;
+  @Column(name="vehicle_type")
+  String vehicleType;
+}
+-------------------------------------------------------------------------------------
+#3 TABLE_PER_CLASS
+@Entity
+@Table(name="insurance_plan")
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+class InsurancePlan {
+  @Id
+  @Column(name="plan_no")
+  @GeneratedValue(strategy=GenerationType.TABLE)
+  int planNo;
+  @Column(name="plan_nm")
+  String planName;
+  @Column(name="min_eligibility_age")
+  int minEligibilityAge;
+  @Column(name="max_elgibility_age")
+  int maxEligibilityAge;
+  @Column(name="min_tenure")
+  int minTenure;
+  @Column(name="max_tenure")
+  int maxTenure;
+  @Column(name="min_amount")
+  double minAmount;
+  
+  // accessors
+}
+
+@Entity
+class AccidentalInsurancePlan extends InsurancePlan {
+  @Column(name="international_coverage")
+  boolean internationalCoverage;
+  @Column(name="disability_coverage_percentage")
+  double disabilityCoveragePercentage;
+}
+
+@Entity
+class AutomobileInsurancePlan extends InsurancePlan {
+  @Column(name="full_coverage")
+  boolean fullCoverage;
+  @Column(name="vehicle_type")
+  String vehicleType;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

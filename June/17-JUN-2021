@@ -1,0 +1,142 @@
+There are 3 ways we can map an inheritance relationship between the entity classes into relational model
+  1. Table per class hierarchy
+  2. Table per subclass
+  3. Table per concreate class
+    
+#2 Table per subclass
+Representing the parent entity class we create on table, and for each sub class within the inheritance hierarchy we create a separate table in relationship with parent class table.
+
+We need to provide 2 things to the hibernate/jpa framework
+  1. declare the inheritance strategy
+  2. relationship / foreign key column of the subclass
+
+Now hibernate/jpa framework will be able to perform database operation.
+What will happen when we tried to perform persistence operation, how the inheritance relationship is supported?
+
+save(entityObject) / persist(entityObject):
+-------------------------------------------
+parent object: directly into parent class table.
+subclass object: store the superclass attributes of the subclass in parent table, and take pk of the record and store it as fk in subclass represented table along with subclass attributes
+
+get(entityObject) / fetch(entityObject):
+-----------------------------------------
+subclass object:
+for eg.. session.get(AccidentalInsurancePlan.class, 2);
+inner join the super class table with subclass table based on relationship column and query the subclass object
+select ip.*, aip.* from insurance_plan inner join accidental_insurance_plan aip on ip.plan_no = aip.accidental_insurance_plan_no where ip.plan_no = 2;
+
+parent class object:
+for eg.. session.get(InsurancePlan.class, 2);
+
+select ip.*, aip.*, amip.*, CASE WHEN aip.plan_no <> null then '1'
+  CASE WHEN amip.plan_no <> null then '2' else '0' from insurance_plan ip left outer join accidental_insurance_plan aip on ip.plan_no = aip.accidental_insurance_plan_no left outer join automobile_insurance_plan on ip.plan_no = amip.automobile_insurance_plan_no where ip.plan_no = 2;
+
+
+
+InsurancePlan.hbm.xml
+----------------------
+<hibernate-mapping package="com.tpsc.entities">
+  <class name="InsurancePlan" table="insurance_plan">
+    <id name="planNo" column="plan_no">
+      <generator class="increment"/>
+    </id>
+    <property name="planName" column="plan_nm"/>
+    <property name="minEligibilityAge" column="min_eligibility_age"/>
+    <property name="maxElibilityAge" column="max_eligibility_age"/>
+    <property name="minTenure" column="min_tenure"/>
+    <property name="maxTenure" column="max_tenure"/>
+    <property name="minAmount" column="min_amount"/>
+  </class>
+</hibernate-mapping>
+
+AccidentalInsurancePlan.hbm.xml
+-------------------------------
+<hibernate-mapping package="com.tpsc.entities">
+  <!-- Inheritance Strategy -->
+  <joined-subclass name="AccidentalInsurancePlan" table="accidental_insurance_plan" extends="InsurancePlan">
+    <key column="accidental_insurance_plan_no"/>
+    <!--This column is in relationship with key column of parent table -->
+    <property name="internationalCoverage" column="international_coverage"/>
+    <property name="disabilityCoveragePercentage" column="disablity_coverage_percentage"/>        
+  </joined-subclass>
+</hibernate-mapping>
+
+AutomobileInsurancePlan.hbm.xml
+---------------------------------
+<hibernate-mapping package="com.tpsc.entities">
+  <joined-subclass name="AutomobileInsurancePlan" table="automobile_insurance_plan" extends="InsurancePlan">
+    <key column="automobile_insurance_plan_no"/>
+    <property name="fullCoverage" column="full_coverage"/>
+    <property name="vehicleType" column="vehicle_type"/>    
+  </joined-subclass>
+</hibernate-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

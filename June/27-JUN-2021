@@ -1,0 +1,65 @@
+JobSheet.hbm.xml
+<hibernate-mapping package="com.otmset.entities">
+  <class name="JobSheet" table="job_sheet">
+    <id name="jobSheetNo" column="jobsheet_no">
+      <generator class="increment"/>
+    </id>
+    <property name="bikeRegNo" column="bike_reg_no"/>
+    <property name="jobSheetOpenedDate" column="jobsheet_opened_dt"/>
+    <property name="description"/>
+    <property name="kms"/>
+    <property name="estimatedAmount" column="estimated_amount"/>
+    <set name="problems">
+      <key column="jobsheet_no"/>
+      <one-to-many class="Problem"/>
+    </set>
+  </class>
+</hibernate-mapping>
+
+when storing the JobSheet object directly store all the attributes of Jobsheet into job_sheet table in addition to this take the primary key of job_sheet table and update each object of Problem with foriegn key in problem table
+---------------------------------------------------------------------------------------------------------
+class Product {
+  int productNo;
+  String productName;
+  String description;
+  String manufacturer;
+  double price;
+  Set<Review> reviews;
+  // accessor
+}
+
+class Review {
+  int reviewNo;
+  int rating;
+  String comments;
+  Date reviewPostedDate;
+  String reviewedBy;
+  // Product product; (unidirectional)
+  // accessors
+}
+---------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

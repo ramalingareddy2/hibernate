@@ -1,0 +1,211 @@
+What is impedance mis-match how do we need to solve it?
+The impedance match is even called as paradigm mismatch where when we try to map the objects into the relational model there are difference we find between object and relational world which are termed as impedance mismatch. If we are able to provide solution for these mis-matches then we can achieve ORM. There are 5 mis-matches between object and relational world.
+  
+1. granularity = The number of classes and the tables into which the data of those objects should be persisted may not be same, then how to manage in storing those class objects into relational tables is termed as granularity mis-match
+For eg..
+class Person {
+  Address address;
+}  
+class Address {}
+
+person
+------
+id, name, age, gender, address_line1, address_line2, city, state, zip, country  
+
+2. SubTypes
+In object world we can have a class inherited from another class for the sake of reusability. but in relational model we cannot extend one table from another table, then how to map objects with inheritance relationship in relational world which is considered as subtypes problem.
+
+3. Identity
+In database we use primary key as an identity of the record through which we determine what operation has to be performed.
+In java world an object has 2 identities
+  1. equals
+  2. hashcode
+looks like the identity of the database world and java world are not same due to which we land into incorrect operations being carried. like below.  
+
+
+person[10] record already exists in table
+
+// we have created a new object p2, how to determine we should save or update the object based on existence of the object
+Person p2 = new Person(10, "bob", 30); // data 
+
+principle:- when do we go for update, if there is an existing object, we update the data otherwise we insert the data.
+  
+Person ep = session.get(Person.class, 10);
+
+if(ep.equals(p2) == false) {
+  session.save(p2);
+}
+if(ep == p2) {
+  session.save(p2);
+}
+as equals and hashcode both fails in comparing p2 with ep object, we try to save the object where already an record exists with same id and will endup in exception.
+How to match database identity with object identity so that we can accurately carry the operations?
+So always construct equals and hashcode based on database identity only  
+
+4. Association
+In java we can establish association relationship between the classes by writing one class as an attribute inside another class, whereas in relational world we cannot represent association relationship. then how to model association relationship classes in relational world.
+
+5. Navigatability
+We can navigate from one object into another one through accessor methods when there are associated with each other.
+  
+class Person {
+  int id;
+  String name;
+  Address address;
+  // accessors
+}
+
+Person p = session.get(Person.class, 10);
+Address address = p.getAddress(); // how to fetch address given if it stored in another database table when we call the getter method.
+but in relational world since those are stored separately how to fetch the associated objects when we call getter method on them and navigate through objects?
+
+To accomplish mapping the data between java objects and relational world we need to solve the above 5 problems for which Object Relational Mapping technology has provided solutions, which are adopted by Hibernate Framework, Jpa api or any other ORM technology frameworks in the market.  
+--------------------------------------------------------------------------------------------------------- Association Mapping Model
+--------------------------
+How to map the association relationship between the entity class into the relational database tables.
+
+What is association relationship how to establish association relationship between classes?
+Declare one class as an attribute inside another class will establish association relationship between the classes. we declare a class as attribute in another class to reuse the data or functionality of the another class. Association relationship always established "HAS-A" relationship between classes.
+
+In association relationship there are 2 main characteristic of the relationship are there
+1. cardinality = how many occurences of another object a class is holding
+2. directionality = uni-directional or bi-directional
+
+A class can be in association relationship with another class in 
+  1-1 = one-to-one association
+  1-* = one-to-many association
+  *-* = many-to-many association
+  
+Relational world
+In relational database tables we cannot express association relationship between database table, the only way to represent relationship between the data in relational world is through primary key and foreign key. and these relationships are uni-directional.
+  one-to-one / one-to-many as one-to-one
+  one-to-many/many-to-one
+  many-to-many
+  
+Then how to represent association relationship of the entity classes into database relationships is called association mapping model.
+  
+Now we need to consider each type of association relationship of entity classes and should map them in relational tables.
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

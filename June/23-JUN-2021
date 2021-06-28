@@ -1,0 +1,77 @@
+Table per class hierarchy / Single Table
+  dis-advantages:
+  1. the data model is not normalized
+  2. huge amount of memory wastage, when more number of subclasses exists within the inheritance hierarchy
+  advantage:
+  1. performance, as all the entities classes are queried out of single table 
+  
+  
+Table per subclass / Joined
+  dis-advantages:
+  1. more number of subclasses would result into more number joined tables per subclass
+  2. for fetching subclass object we need to join subclass table with super class, which is a performance impact
+  3. while performing polymorphic access like query the subclass objects by super class reference type we have to do left outer join on all the tables of the hierarchy which is a big impact on performance.
+  advantage:
+  1. full normalized and no wastage of memory
+  
+Table per concreate class / Table per class
+  dis-advantages:
+  1. per each class within inheritance hierarchy there is a separate table created, due to which a change in super class affects all the tables. results in high maintainance
+  2. not fully normalized
+  advantage:
+  1. there is no wastage of memory
+-------------------------------------------------------------------------------------------------------
+What is Impedance Mis-Match?
+Talks about the difference that exists between the way data is represented and used in objects to the relational model. RDBMS represents data in table format, where as object will store the data as inter-connected graph, so how to load, store objects of data in a tabular fashion of RDBMS tables, while mapping the data from object model to table model we encounter 5 problems which are called "Impedance Mis-Match".
+  
+If we can provide solution for these Impedance problems then we can achieve ORM.
+1. Granularity
+2. SubTypes
+3. Identity
+4. Association
+5. Navigatability
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

@@ -1,0 +1,184 @@
+Entity Relationship Mapping
+How to represent relationship between the entity class into the underlying table relationship.
+There are 2 ways classes are related with each other
+  1. Inheritance
+  2. Association
+  
+From the above we have to types of Entity Relationship mappings
+1. Inheritance Mapping model
+Help us in mapping inheritance relationship between the entity classes into the relational model.
+  
+2. Association Mapping model
+Help us in mapping association relationship between entity classes into relational model.
+
+#1 Inheritance Mapping model
+There are 3 ways of mapping an inheritance relationship into the relational model.
+  1.Table per class hierarchy
+  2.Table per subclass
+  3.Table per concreate class
+
+Now our job is to let the hibernate understand based on which one of the 3 strategies we have choose in designing the database tables, to let the hibernate takecare of performing persistence operation.
+    
+    
+#1 Table per class hierarchy
+For all the entity classes in inheritance hierarchy relationship, we create only one single table declaring all the attributes of these classes as columns in that table.
+  
+Since we store all the entity classes and their data in one single table, we cannot differentiate which record belongs to which object, so we need an additional column within the table called "discriminator-column" in which we should capture the record belongs to which entity object/class by storing distriminator-value corresponding to each class object we are storing
+  
+How to map the above classes in hibernate/jpa framework, so that it can help us in performing the persistence operation?
+
+while mapping the entity classes we need to tell the hibernate/jpa for all of the 3 entity classes the data should be stored in one-single table only. 
+In addition we need declare the subclasses are extending from which superclass, so that it can persist along with subclass attributes superclass attributes also in the single-table.
+  
+We need to define descriminator column for that table, to differentiate the record belongs to which entity class. For each class within the hierarchy we need to tell discriminator value
+  
+If we provide the above information hibernate can help us in performing the persistence operation.  
+
+What does hibernate/jpa framework does when we provide the above information?
+  
+save(entityObject)/persist(entityObject):
+super class: stores all the super class attributes into single table with discriminator-value being stored in discriminator-column appropriate to super class.
+  
+sub class: along with subclass attributes, even it stores inherited properties of super class also into same table with discriminator value of those classes into discriminator column.
+  
+  
+get(Class, id):
+
+sub class: hibernate while retrieving the data for  a sub class, it should fetch record not only by matching with id, it should consider discriminator-column value to determine the record we are fetching belongs to that entity sub class we are requesting for retrieval.
+  
+AccidentalInsurancePlan plan = session.get(AccidentalInsurancePlan.class, 3);
+given 3 belongs to AutomobileInsurancePlan.
+  
+From the above even though the record with plan_no = 3 exists in the table, hibernate should not return the entity object since the record belongs to AutomobileInsurancePlan, it can find this information based on discriminator-column value.
+  select * from insurance_plan where plan_type = ? and plan_no ?
+  
+  
+super class: while querying for the superclass type, we can access anyone of the subclass objects by using super class type, which is called "polymorphic access".
+  
+To support polymorphic access hibernate should query the record only matching with plan_no.
+  select * from insurance_plan where plan_no = ? (2)
+once the record has been fetched/found, goto discriminator-column and check for value, based on which instantiate appropriate entity object of that hierarchy and return 
+  For eg..
+  InsurancePlan ip = session.get(InsurancePlan.class, 2);
+
+here planNo = 2 belongs to AccidentalInsurancePlan, even through we are asking hibernate to return InsurancePlan it should check the record belongs to which class object type and based on that it should appropriate object of the hierarchy to support polymorphic access.
+  
+---------------------------------------------------------------------------------------------------------
+InsurancePlan.hbm.xml
+
+<hibernate-mapping package="com.ihmm.entities">
+  <class name="InsurancePlan" table="insurance_plan" discriminator-value="ip">
+    <id name="planNo" column="plan_no">
+      <generator class="increment"/>
+    </id>
+    <descriminator column="plan_type" type="string"/>
+    <property name="planName" column="plan_nm"/>
+    <property name="minEligibilityAge" column="min_eligibility_age"/>
+    <property name="maxEligibilityAge" column="max_eligibility_age"/>
+    <property name="minTenure" column="min_tenure"/>
+    <property name="maxTenure" column="max_tenure"/>
+    <property name="minAmount" column="main_amount"/>
+  </class>
+</hibernate-mapping>
+  
+AccidentalInsurancePlan.hbm.xml
+<hibernate-mapping package="com.ihmm.entities">
+  <subclass name="AccidentalInsurancePlan" extends="InsurancePlan" discriminator-value="aip">
+    <property name="internationalCoverage" column="international_coverage"/>
+    <property name="disabilityPercentageCoverage" column="disability_percentage_coverage"/>
+  </subclass>
+</hibernate-mapping>
+
+AutomobileInsurancePlan.hbm.xml
+<hibernate-mapping package="com.ihmm.entities">
+  <subclass name="AutomobileInsurancePlan" extends="InsurancePlan" discriminator-value="amip">
+    <property name="vehicleType" column="vehicle_type"/>
+    <property name="fullCoverage" column="full_coverage"/>
+  </subclass>
+</hibernate-mapping>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

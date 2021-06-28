@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.tpsc.entities">
+	<joined-subclass name="AutomobileInsurancePlan"
+		table="automobile_insurance_plan" extends="InsurancePlan">
+		<key column="automobile_insurance_plan_no" />
+		<property name="fullCoverage" column="full_coverage" />
+		<property name="vehicleType" column="vehicle_type" />
+	</joined-subclass>
+</hibernate-mapping>

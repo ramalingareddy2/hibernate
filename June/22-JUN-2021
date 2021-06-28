@@ -1,0 +1,83 @@
+What are the Inheritance Mapping Strategies supported by Jpa api?
+There are 3 inheritance strategies are supported by Jpa api
+  1. SINGLE_TABLE
+  2. JOINED
+  3. TABLE_PER_CLASS
+  
+#1 SINGLE_TABLE = This strategy is same as Table per class hierarchy where for all the entity classes within the inheritance hierarchy we create only one single table.
+
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)  
+@DiscriminatorColumn(name="columnName")    
+@DiscriminatorValue("value")
+  
+#2 JOINED = This strategy is equal to Table per sub class, here for each subclass we create a table in joined relationship with super class.
+
+@Inheritance(strategy=InheritanceType.JOINED)  
+For each subclass we need to annotate @PrimaryKeyJoinColumn indicating the primary key of the sub class itself is acting as a join column
+  
+#3 TABLE_PER_CLASS = equal to Table per concreate class where each entity class within the hierarchy has their own separate tables.
+  
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)  
+
+  
+Tour
+- tourNo
+- tourPackageName
+- source
+- destination
+- days
+- amount
+
+Domestic
+- additionalStateCharges
+- tollTaxesTobePaid
+  
+International
+- passportNo
+- visaRequired
+- visaCharges
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

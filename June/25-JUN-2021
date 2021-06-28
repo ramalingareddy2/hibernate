@@ -1,0 +1,37 @@
+What is impedance mis-match?
+While mapping the data between Objects into the Relational database management system we run into few problems due to the way of data representation which are termed as impedance-mismatch.
+1. granularity
+2. subtypes
+3. identity
+4. association
+5. navigatability
+---------------------------------------------------------------------------------------------------------
+Association mapping model
+one-to-many association
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.tpcc.entities">
+	<class name="InsurancePlan" table="insurance_plan">
+		<id name="planNo" column="plan_no">
+			<generator class="increment" />
+		</id>
+		<property name="planName" column="plan_nm" />
+		<property name="minEligibilityAge"
+			column="min_eligibility_age" />
+		<property name="maxEligibilityAge"
+			column="max_eligibility_age" />
+		<property name="minTenure" column="min_tenure" />
+		<property name="maxTenure" column="max_tenure" />
+		<property name="minAmount" column="min_amount" />
+	</class>
+</hibernate-mapping>
