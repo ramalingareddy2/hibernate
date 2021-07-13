@@ -1,0 +1,73 @@
+What is cascade option, why do we use it?
+When we perform an operation on the entity object, how does the operation will be propagated to the associated entity objects is indicated by Cascade option.
+Using cascade we can reduce the lines of code in performing the persistence operations.
+There are 5 cascade options are available
+1. none
+2. all
+3. save-update
+4. delete
+5. delete-orphan
+
+save-update:
+when we perform save or update operation on an entity object, the associated entities also will be saved/updated along with the entity automatically which is cascade on save/update.
+  
+
+delete:
+
+Member.hbm.xml
+<set name="tasks" cascade="delete">
+  <key column="member_no"/>
+  <one-to-many class="Task"/>
+</set>
+
+Task.hbm.xml
+<many-to-one name="member" column="member_no" class="Member"/>
+
+if we apply cascade="delete", then we dont need to delete each associated object, rather the delete will be applied to each associated object and finally the entity will be deleted automatically.
+  
+Member member = session.get(Member.class, 1);
+Set<Task> tasks = member.getTasks();
+for(Task t : tasks) {
+  member.getTasks().remove(t);
+  session.delete(t);
+}
+
+session.delete(member);
+
+
+Task task = session.get(Task.class, 1);
+session.delete(task);
+--------------------------------------------------------------------------------------------------------
+#3 delete-orphan
+when we dis-associate a child from the parent, update the parent, if the child entity object is dangling or orphan then the child object will be removed, is called "delete-orphan"
+
+Member member = session.get(Member.class, 1);
+Set<Task> tasks = member.getTasks();
+for(Task task : tasks) {
+  member.getTasks().remove(task);
+}
+session.update(member);// the task will be delete as it is not assicated with any other parent
+
+
+
+member 
+member_no member_name experience role
+1
+
+task
+task_no title description duration member_no (nullable)
+1                                   1
+
+
+
+
+
+
+
+
+
+
+
+
+
+

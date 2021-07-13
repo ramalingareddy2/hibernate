@@ -1,0 +1,160 @@
+@Entity
+@Table(name="property")
+class Property {
+  @Id
+  @Column(name="property_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int propertyNo;
+  String title;
+  String description;
+  @Column(name="property_type")
+  String propertyType;
+  double amount;
+  
+  @OneToMany(mappedBy="property")  
+  Set<Enquiry> enquiries; // dont persist the association, it is already taken care by the property
+  
+}
+
+@Entity
+@Table(name="enquiries")
+class Enquiry {
+  @Id
+  @Column(name="enquiry_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int enquiryNo;
+  @Column(name="person_nm")
+  String personName;
+  @Column(name="mobile_no")
+  String mobileNo;
+  @Column(name="email_address")
+  String emailAddress;
+  String remarks;
+  
+  @ManyToOne
+  @JoinColumn(name="property_no", nullable="true")
+  Property property;
+  
+}
+---------------------------------------------------------------------------------------------------------
+class Account {
+  int accountNo;
+  String accountHolderName;
+  String accountType;
+  double balance;
+  
+  @ManyToOne
+  @JoinColumn(name="branch_no")
+  Branch branch;
+}  
+
+
+class Branch {
+  int branchNo;
+  String branchName;
+  String contactNo;
+  
+  @OneToMany(mappedBy="branch") // take my pk and update into fk column of associated account objects
+  //@JoinColumn(name="branch_no") // in the other table branch_no foreign key column
+  Set<Account> accounts;
+}
+  
+
+account
+account_no account_holder_nm account_type balance  branch_no
+
+branch
+branch_no branch_nm contact_no 
+---------------------------------------------------------------------------------------------------------
+
+@Entity
+@Table(name="electricity_bill")
+class ElectricityBill {
+  @Id
+  @Column(name="bill_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int billNo;
+  String serviceNo;
+  String uscNo;
+  int units;
+  double amount;
+  
+  @OneToOne(mappedBy="electricityBill")
+  Receipt receipt;
+}
+
+<generator class="foreign">
+  <param name="property" value="electricityBill"/>
+</generator>
+
+@Entity
+@Table(name="receipt")
+class Receipt {
+  @Id
+  @GenericGenerator(name="foreign_gen", strategy="foreign", parameters={@Parameter(name="property", value="electricityBill")})
+  @GeneratedValue(generator="foreign_gen")
+  int billNo;
+  String transactionNo;
+  Date paidDate;
+  double amount;
+  
+  @OneToOne
+  @PrimaryKeyJoinColumn // the join column in my table is pk column only
+  ElectricityBill electricityBill;
+}
+
+electricity_bill
+bill_no  service_no usc_no units amount
+
+receipt
+bill_no (pk)(fk)  transaction_no  paid_date amount 
+
+persistence= the relationship column will be populated through foreign id generator
+querying = based on pk-pk the data will be fetched
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

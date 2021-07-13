@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.manytomanyset.entities">
+	<class name="Channel" table="channel">
+		<id name="channelNo" column="channel_no">
+			<generator class="increment" />
+		</id>
+		<property name="channelName" column="channel_nm" />
+		<property name="language" />
+		<property name="hd" />
+		<property name="subscriptionCharges"
+			column="subscription_charges" />
+	</class>
+</hibernate-mapping>

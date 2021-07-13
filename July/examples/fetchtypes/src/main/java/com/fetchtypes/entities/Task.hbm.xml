@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.fetchtypes.entities">
+	<class name="Task" table="task">
+		<id name="taskNo" column="task_no">
+			<generator class="increment" />
+		</id>
+		<property name="title" />
+		<property name="description" />
+		<property name="duration" />
+		<many-to-one name="member" column="member_no"
+			class="Member" not-null="true" cascade="save-update"/>
+	</class>
+</hibernate-mapping>

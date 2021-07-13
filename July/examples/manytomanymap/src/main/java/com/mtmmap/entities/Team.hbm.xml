@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.mtmmap.entities">
+	<class name="Team" table="team">
+		<id name="teamNo" column="team_no">
+			<generator class="increment" />
+		</id>
+		<property name="teamName" column="team_nm" />
+		<property name="managerName" column="manager_nm" />
+		<property name="coach" />
+		<map name="players" table="team_players">
+			<key column="team_no" />
+			<map-key column="membership_no" type="string" />
+			<many-to-many column="player_no" class="Player" />
+		</map>
+	</class>
+</hibernate-mapping>

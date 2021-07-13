@@ -1,0 +1,137 @@
+hql/jpql
+hibernate query language / java persistence query language
+The session.get() / load() or entityManager.find() are the methods available for fetching single objects based on primary key from the database.
+In an application we may want to access the data by querying through natural data rather than using primary key column of the record, hql/jpql query language help you in querying the data based on conditions and joins allows you to access the data.
+  
+To help us in accessing the data from database hibernate framework or jpa api has provided a 
+  - query language
+  - query api 
+for accessing the data from database.
+  
+SQL Queries are not portable across the database, While switching from one database to another, we not only need to modify the queries, even the code surrounding the query to execute and collect the data also has to be re-written. Thus maintainance of our application while switching from database is going to be very high.
+  
+So to overcome the above problem hibernate/jpa has introduced hql/jpql query language.
+hql/jpql query language provided query clauses which are independent of database, through which we need to write hql queries/jpql queries.
+  
+To execute hql/jpql queries hibernate/jpa has provided query api. The databases dont understand the hql and jpql query languages, so hibernate/jpql query apis takes the hql/jpql queries translate them into native sql queries specific to the database by using dialect and execute them on the database.
+  
+Now we need to understand 2 things
+1. how to write hql queries
+2. How to execute them and collect the data.
+  
+  
+HQL/JPQL:-
+hql/jpql are object query language. while working with native sql queries we build the queries pointing to database tables and their columns so that the queries are exposed to the underlying database and any changes within the database tables or columns would effect all of the queries written against that table and will incurr a huge maintainance cost.
+  
+To overcome the above problem hql/jpql are designed to refer objects and attributes of entity classes, so that the corresponding tables and columns in building native sql query can be fetched from mapping information.
+There are 2 advantages of using hql/jpql.
+  1. we can achieve database portability
+  2. the queries are independent of database table/column names, a change in the tables and columns would not affect the queries, only we need to change the mapping information.
+  
+Now we need to learn how to write
+1. hql query using from clause
+2. aggregate functions
+3. querying few columns of data
+4. filtering the data using where caluse
+5. joins
+6. groupby and having
+
+The Hibernate query api has been deprecated and removed in hiberate 5.0. The only way to execute HQL/JPQL queries are using jpa query api only.
+  
+There are 2 classes provided as part of jpa api to execute and collect the data from an jpql query
+1. Query  = non generic 
+2. TypedQuery  = generic query class
+  
+  
+How to write a basic hql/jpql query?
+from Account (short form)
+(or)
+select a from Account a
+
+query clauses are case-insensitive but the classnames and attribute names we refer in the query are case-sensitive.
+from com.onetomany.entities.Account a = In general while referring the entity class name in query we need to use fqn classname only. but in mapping file on hibernate-mapping root element there is an attribute called auto-import="true", which indicates in hql queries when we write class name the package names are automatically imported.
+auto-import = doesnt apply to mapping information, it only applies to hql queries in importing the package name when we specify class name in the query.
+If we disable auto-import or if there are any 2 entity classes with same name under different package then to resolve ambiguity we need to write fql classes hql queries.
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,33 @@
+What is cascade, how to work on it?
+When we perform the operation on parent object, how does it effect or propogate to the child object can be controlled through cascade option.
+We can reduce the lines of code we write in perform the persistence operation on associations throught cascade option.
+  
+cascade:-
+  none
+  all
+  save-update
+  delete
+  orphan-delete
+  
+<many-to-one name="member" column="member_no" class="Member" not-null="true" cacade="save-update"/>
+  
+  
+Member member = new Member(); (inverse=true)
+member.setMemberName("patrik");
+member.setRole("developer");
+member.setExperience(10);
+
+Task task = new Task();
+task.setTitle("Build javascript");
+task.setDescription("UI Validations");
+task.setDuration(3);
+task.setMember(member);
+session.save(task);
+
+member
+member_no member_nm  role  experience
+
+task 
+task_no  title  description duration  member_no (not null)
+
+

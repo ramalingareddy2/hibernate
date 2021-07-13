@@ -1,0 +1,242 @@
+What is inverse, what is the purpose of it?
+In a bi-directional association between entity classes when we are persisting the both parent and child entity objects, the relationship column will be persisted twice, while persisting many to one side the relationship column will be inserted, simiarly while persisting the parent object the associated child objects foreign key column with pk of the parent.
+So here both the sides association are being persisted into relationship column which is not required. We specify which side of the association should be persisted into database by using inverse=true. for example shown below.
+  <set name="members" inverse="true">
+    <key column="project_no"/>
+    <one-to-many class="Member"/>
+  </set>
+This indicates the Set of members should be updated with their foreign key column to maintain relationship. The other side of the association should be persisted.
+--------------------------------------------------------------------------------------------------------
+      
+Fetch options
+-------------
+How does the child associations has to be loaded/fetched from the database while we are accessing the parent object is indicated by Fetch options.
+  
+There are 3 fetch options are supported by Hibernate Framework  
+1. select
+2. join
+3. subselect
+
+class Member {                         class Task {
+  int memberNo;                         int taskNo;
+  String memberName;                    String title;
+  int experience;                       String description;
+  String role;                          int duration;
+  Set<Task> tasks;                      Member member;
+  public Set<Task> getTasks(){
+    return tasks;
+  }
+}                                      }
+
+
+Member.hbm.xml                    |    Task.hbm.xml
+<set name="tasks" inverse="true"> |    <many-to-one name="member" column="member_no" class="Member"/>
+  <key column="member_no"/>       |
+  <one-to-many class="Task"/>     |
+</set>
+
+The default fetch option for the association is 
+Fetch="select":-
+Member member = session.get(Member.class, 1);
+it executes only one query to fetch the member:- select * from member where member_no = 1;
+
+When we ask the hibernate to fetch the member, it only queries the member entity object from the table without querying the tasks of the member.
+The child objects task will be fetched only when we tried accessing the child association using accessor methods.
+member.getTask(); = then hibernate will trigger one more query to fetch the child objects from the database.
+  select * from task where member_no = 1;
+
+For each association type the default fetch option is "select", every time when we query the parent the child associated objects may not be required, if those are also fetched from database while selecting the parent, then it leads to lot of memory consumption/wastage and performance problem as well, so hibernate only fetches the parent object without querying the childs if we use "select".
+  
+  
+try {
+  member = session.get(Member.class, 1); 
+  member.getTasks();
+} finally {
+  if(session != null) {
+    session.close();
+  }
+} 
+  
+member.getTasks(); // this will fail as there is no active session to get the data from database.
+In case of fetch="select" while accessing the child collections, we must have an active session object to fetch child objects.
+  
+The hibernate framework will access the child association objects while we are iterating over the child collections.
+  
+Set<Task> tasks = member.getTasks();
+for(Task task: tasks) { // when we iterate hibernate will fetch the data from database
+  task.getTitle(); 
+}
+  
+Hibernate will instantiate special implementations of Collection class interfaces when we fetch the parent from the session object.
+member = session.get(Member.class ,1);
+while populating the data into Member entity object, the session class will instantiate for Collection type attributes hibernate own implementations for eg..
+Set = PersistentSet
+List = PersistentList
+Map = PersistentMap
+
+while holds the session object and the primary key of the parent entity, so that when we tried iterating over the collection it has logic for querying the data from database.
+So to support lazy fetching of association collections we should always declare the attributes of collection as interface type only, so that hibernate can instantiate and assign their own collection implementations to support layz fetching.
+  
+  
+<set name="tasks" inverse="true" fetch="select">
+  <key column="member_no"/>
+  <one-to-many class="Member"/>
+</set>
+--------------------------------------------------------------------------------------------------------
+#2 join
+when we use fetch="join", while querying the parent objects, the hibernate will make an join query to fetch even child objects along with the parent and loads them into child association objects.
+This saves the database round trips in fetching the child associations unline your select.
+  
+Member member = session.get(Member.class, 1);
+select m.*, t.* from Member m left outer join task t on m.member_no = t.member_no where m.member_no = 1;
+
+The fetch="join" should be carefully used otherwise we run into performance and memory issues. If the child association has to be fetched mandatorily always then for such associations only we need to turn on fetch="join".
+--------------------------------------------------------------------------------------------------------
+N+1 problem in hibernate framework
+The N+1 problem arises when we are using the fetch="select". While fetching the parent objects using HQL query the hibernate will not query the child associations, now while iterating each of the parent and fetch child object of them it query the database in fetching the child.
+  
+Set<Task> tasks;  
+Query query = session.createQuery("from Member"); // 1 query on the database to fetch all the Parent objects
+List<Member> members = query.list();
+
+for(Member member : members) {
+  tasks = member.getTasks();
+  for(Task task : tasks) { // a separate query will be triggered on database to fetch each member task
+    sop(task.getTitle();)
+  }
+}
+
+If we have N members to fetch N members one query
+and for each member to fetch their associated task one separate query per member level will triggered. which indicates 1 = parent, N queries for child N + 1 problem
+
+This will degrades the performance of your application while iterating and accessing parent objects.
+  
+How to solve N+1 problem?
+In addition to the fetch="select", we need to even apply batch-size="N".
+  
+<set name="tasks" inverse="true" fetch="select" batch-size="5">
+  <key column="member_no"/>
+  <one-to-many class="Task"/>
+</set>
+
+Query query = session.createQuery("from Member");
+List<Member> members = query.list();
+
+for(Member member : members) {
+  tasks = member.getTask();
+}
+  
+when we tried accessing child associated objects for a member tasks, instead of query task for each member hibernate goes to the database and fetch tasks of 5 members and loads into the parent objects.
+  
+when we use batch-size="N" , it indicates how many child associated collections should be loaded from the database at one shot instead of for each parent.
+  
+if we have 100 members in the database  
+1 = members
+20 = 100 member tasks
+
+------------------------------------------------------------------------------------------------------
+
+#3 subselect
+when we use fetch="subselect", while querying the parent objects, the hibernate will not fetch the child associations. A separate subselect query will be applied by hibernate in fetching the child associations when we tried to access.
+
+Query query = session.createQuery("from Member"); // 1, 2,3 4, 5, 6 ,7
+List<Member> members = query.list();
+
+for(Member member : members) {
+  tasks = member.getTask();
+}
+
+now when we call member.getTasks() for each member, in case of subselect hibernate will not fetch each parent collection rather it fires an subselect query to fetch all parent associated child collections at one shot.
+select * from member // fetch parent objects
+when we tried accessing for the first parent the child collection object hibernate will fetch not only for that parent all the members tasks will be fetched using subselect
+
+select * from tasks where member_no in (select member_no from members);
+
+Now only 2 queries are executed on the database one fetch for parent and another fetch for child objects.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
