@@ -1,0 +1,116 @@
+What is Criteria Api, what is the purpose of it?
+Instead of using HQL Query language for accessing the data from the database, we can construct HQL queries through Criteria Api classes and access the data from database. 
+There are 3 advantages with this
+  1. no need to memorize or know query language to access the data from database.
+  2. the queries we construct or type-safe, so there is no chance of endingup in referring wrong classnames or attribute names of the classes since we are going to use MetaModel of the Entity in referring the attributes
+  3. the criteria api makes the best call in generating the hql query with optimized join conditions.
+  
+Hibernate Framework has its proprietary criteria api, which is not type-safe api and jpa 2.0 has introduced Metamodel based criteria api using which we can build type-safe queries to access the data from database. So, favouring the jpa 2.0 criteria hibernate criteria api classes were marked as deprecated and removed from Hibernate 5.0 Framework.
+  
+How to work with Criteria Api?
+
+@Entity
+@Table(name="member")
+class Member {                                        member
+  @Id                                                 member_no   memberName   role    experience
+  @Column(name="member_no")                
+  @GeneratedValue(strategy=GenerationType.IDENTITY)   
+  int memberNo;                                       task
+  String memberName;                                  task_no   title   description   duration  member_no
+  String role;
+  int experience;
+  @OneToMany(mappedBy="member")
+  Set<Task> tasks;
+}  
+@Entity
+@Table(name="task")
+class Task {
+  @Id
+  @Column(name="task_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int taskNo;
+  String title;
+  String description;
+  int duration;
+  @ManyToOne
+  @JoinColumn(name="member_no")
+  Member member;
+}
+  
+How to write criteria api for the above?
+#1 from Member
+
+1. create CriteriaQuery object representing the query you want to construct and execute. upon creating a CriteriaQuery object it doesnt have any of the 3 clauses. Now we need to construct all the parts of the query.
+  
+To create CriteriaQuery object jpa api has provied CriteriaBuilder using which we construct CriteriaQuery object and build Criterion to add conditions to the query.
+
+EntityManagerFactory emf = EntityManagerFactoryHelper.getEntityManager();
+EntityManager em = emf.createEntityManager();
+
+CriteriaBuilder builder = em.getCriteriaBuilder();
+CriteriaQuery<Member> memberCriteriaQuery = builder.createQuery(Member.class); // empty object, we only specified here generic type as a query result, we are not selecting any table here for querying
+The above statement indicates create a CriteriaQuery object that gives me Member Type collection data.
+  
+Root<Member> root = memberCriteriaQuery.from(Member.class); // table from which we want query the data from
+memberCriteriaQuery.select(root);
+
+
+TypedQuery<Member> typedQuery = em.createQuery(memberCriteriaQuery);
+List<Member> members = typedQuery.getResultList();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ehcache>
+	<defaultCache maxEntriesLocalHeap="200"
+		maxEntriesLocalDisk="200" eternal="false" 
+		timeToLiveSeconds="600" />
+	<cache name="citiesCache" maxEntriesLocalHeap="200" />
+</ehcache>

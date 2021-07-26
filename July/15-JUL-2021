@@ -1,0 +1,11 @@
+What is Criteria api, why do we need to use it?
+We can query the data by writing HQL Queries, instead of we building the query as a String, we can build the same HQL query through Criteria Api classes and execute against the database to fetch the data.
+  
+advantages:-
+  1. programmer dont need to know the complex query syntaxes in writing hql queries, with no knowledge on sql language one can query the data from the database by creating queries through Criteria Api
+  2. The queries we construct through Criteria api are type-safe queries
+  3. The Criteria api will generate an optimized HQL query based on the join conditions we specified in Criteria api, so always resulted query will be fast in execution.
+  
+Hibernate has provided Criteria Api, 5.0 Criteria api has been deprecated and removed (easy)
+Jpa api has provided an Criteria Api 
+  

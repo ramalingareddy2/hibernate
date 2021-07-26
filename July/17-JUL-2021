@@ -1,0 +1,221 @@
+What is Criteria Api, what is the purpose of it?
+Instead of building HQL Queries directly, we can build equivalent of HQL queries using Criteria API classes.
+  advantages:
+  1. no knowledge of sql query language is required to query the data from database, without knowing the complex query syntax we can create queries using Criteria Api to access the data
+  2. Type-Safe, the queries we build in Criteria api are Type-Safe
+  3. Optimized Queries
+  
+#1 A Criteria Query is represented by a class CriteriaQuery into which we need to add the parts of the query clauses like
+  - from
+  - where
+  - select 
+Then we can convert the CriteriaQuery object into HQL TypedQuery and execute on the database.
+
+#2 CriteriaBuilder is a class that is used for 2 reasons.
+  2.1 it acts as an builder for creating the object of CriteriaQuery
+  2.2 To the CriteriaQuery we need to add where clause, which are called Criterion (conditions) like eq, greaterThan, lessThan, notEqual all these Criterition objects can be created using CriteriaBuilder.
+    
+    
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
+EntityManager em = emf.createEntityManager();
+CriteriaBuilder cb = em.getCriteriaBuilder();
+
+CriteriaQuery<Member> cq = cb.createQuery(Member.class); //specific generic type indicating result out of executing the query, this is not indicating from clause
+
+Root<Member> root = cq.from(Member.class);
+cq.select(root);
+
+TypedQuery<Member> typedQuery = em.createQuery(cq);
+typedQuery.getResultList();
+---------------------------------------------------------------------------------------------------------
+When choosing the columns or building the conditions we use root for referring the entity class and its attributes.
+cq.multiselect(root.get("memberName"), root.get("experience"));
+cq.where(cb.greaterThanOrEqual(root.get("experience"), experience));
+
+Root = represents the dynamic meta model of the entity classes allowing us to build expressions on the attributes of the class. But if we use Dynamic Meta Model of the entity class, our queries are not type-safe. even though we wrote the attributes names wrongly still our code will compile, but will not execute and run into exception during runtime.
+  
+To overcome the above problem the Jpa2.0 has introduced static-meta model for an Entity classes. For each entity representings its atrributes, jpa generates Static MetaModel class.
+For eg..
+@Entity
+@Table(name="member")
+class Member {
+  @Id
+  @Column(name="member_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int memberNo;
+  @Column(name="member_nm")
+  String memberName;
+  String role;
+  int experience;
+  @OneToMany(mappedBy="member_no")
+  Set<Task> assignedTasks;
+  // accessors
+}  
+
+Jpa has a JPAMetaModelEntityProcessor that reads the annotations on the Entity class and generates an MetaModel class with attribute details inside with name EntityName_
+Holds information about original entity class  
+For eg.
+  1. what are the attribute names in the Entity class
+  2. Type
+  3. Belongs to which Entity class
+
+@Generated(value="JPAMetaModelEntityProcessor")    
+@StaticMetamodel(Member.class)  
+public class abstract Member_ {
+  public static volatile SingularAttribute<Member, Integer> memberNo;
+  public static volatile SingularAttribute<Member, String> memberName;
+  public static volatile SingularAttribute<Member, String> role;
+  public static volatile SingularAttribute<Member, Integer> experience;  
+  public static volatile SetAttribute<Member, Task> assignedTasks;
+  
+  public static final String MEMBER_NO = "memberNo";
+  public static final String MEMBER_NAME = "memberName";
+  public static final String ROLE = "role";
+  public static final String EXPERIENCE = "experience";
+  public static final String ASSINGED_TASKS = "assignedTasks";
+}  
+  
+cb = em.getCriteriaBuilder();
+cq = cb.createQuery(Member.class);
+root = cq.from(Member.class);
+
+cq.multiselect(root.get(Member_.memberName), root.get(Member_.experience));
+  
+How to generate static metamodel for the entity classes. 
+there is an hibernate jpa metamodel dependency upon adding it generates the static metamodel by reading annotations written aspart of the entity class.
+  
+  
+  
+  
+cb = em.getCriteriaBuilder();
+cq = cb.createQuery(Object[].class);
+
+root = cq.from(Member.class);
+Join<Member, Task> assignedTasksJoin = root.join(Member_.assignedTasks); // joined root 
+// to select columns from Entity class use root
+// if we want to select colums from join table use assignedTasksJoin
+
+cq.where(cb.greaterThanOrEqual(assignedTasksJoin.get(Task_.duration). duration));
+cq.multiselect(root.get(Member_.memberName). assignedTasksJoin.get(Task_.title));
+
+
+NamedQueries:-
+  
+List<Member> getMembers() {
+  TypedQuery<Member> typedQuery = em.createQuery("from Member");
+  List<Member> members = typedQuery.getResultList();
+  return members;
+} 
+In the above code the HQL query will be translated into native sql query through the help of dialect each time when we call getMembers() method. Even though there is no change in query, still it is translated multiple times that results into performance issue. so, avoid using hql queries in your code, rather use NamedQueries.
+  
+@Entity
+@Table(name="member")
+@NamedQueries({@NamedQuery(name="getMembers", query="from Member"), @NamedQuery(name="getMembersByExperience", query="from Member m where m.experience >- :experience")})
+class Member {
+  @Id
+  @Column(name="member_no")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int memberNo;
+  @Column(name="member_nm")
+  String memberName;
+  String role;
+  int experience;
+  @OneToMany(mappedBy="member_no")
+  Set<Task> assignedTasks;
+  // accessors
+}    
+  
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("hdbpu");
+SessionFactory sessionFactory = configuration.buildSessionFactory();
+at the time of creating EntityManagerFactory or SessionFactory along with reading configuration information, it will try to read mapping information. within the Entity mapping we declared hql queries, which are going to be translated into native sql queries will be stored SessionFactory or EMF level.
+  
+List<Member> getMembers(int experience) {  
+  TypedQuery<Member> typedQuery = emf.createNamedQuery("getMembersByExperience");  
+  typedQuery.setParameter("experience", experience);
+  List<Member> members = typedQuery.getResultList();
+  return members;
+}
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  

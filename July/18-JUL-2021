@@ -1,0 +1,121 @@
+2nd Level Cache
+---------------
+
+The Hibernate Framework or Jpa api are the full implementations of ORM Technology in the market. Any ORM Framework suffers with 2 problems.
+  1. huge memory consumption = because of graphs of objects with their associations will be loaded into the jvm memory, thus increasing the consumption of jvm memory
+  2. poor performance = due to repeated fetching of the data and child associations will result in poor performance of the application.
+unless proper tuning parameters and cache in place we cannot handle both of these problems.
+  
+#1 performance tuning parameters
+1. use uni-directional associations only
+2. Fetch Type (lazy = be careful while choosing fetchType=LAZY we might run into N+1 Problem)
+<property name="default_batch_fetch_size">10</property>
+
+3. Avoid navigating through associations for fetching the child data.
+Branch branch = session.get(Branch.class, 1);
+branch.getAccount(); // dont navigate through associations
+4. specify the max_fetch_depth
+<property name="hibernate.max_fetch_depth">2</property>
+5. To query the association objects we have to must and should use HQL Queries only
+6. Property Cache Mechanism should be in place
+---------------------------------------------------------------------------------------------------------
+With no proper Cache Mechanism, the ORM technology applications quickly run into out of memory exceptions, so it is necessary to implement caching as part of hibernate/jpa framework based applications.
+  
+First-Level cache is also called as Session level cache and the default cache available as part of the Hibernate Application. We cannot disable the First-level cache.
+How long the data will be cached?
+The first-level cache stores the data to the operational level, which is the shortest-interval possible in holding the data.
+  There are 2 main reasons for using First-Level cache in hibernate.
+    1. There is a possibility where we might repeatedly access the same data within an operation, which will tries to access the data repeatedly from database and might lead to huge performance and memory consumption. This can be avoided by caching the data at the operation level
+    2. to avoid concurrency problem in multiple users modifying the data at the same time.
+---------------------------------------------------------------------------------------------------------
+We can categorize the data that typically exists in an application into 3 groups.
+  1. long-lived data / static data
+  by nature this data will not be modified as part of our application, any changes to such data in our application will happen only during the down-time of our application. This data that never gets modified and remain static and fixed as part of our application is called "long-lived" data
+  
+  2. moderate data
+  rarely undergoes changes, for eg.. master data and can be considered as runtime data of our application. where data keeps modifying or added through our application. but the chances of modying the data is quite less when compared with runtime data of our application.
+  
+  3. short-lived data
+  frequently gets modified as part of our application through end-users operation
+  
+First-level cache doesnt help us in optimizing memory utilization and performance problems, since the cache itself is short-lived to the operational scope. But in a typical application we have other types of data like long-lived data and moderate data, that should cached across the user sessions to avoid memory/performance problems.
+    
+Looks like 2nd level cache seems exists for the entire lifetime of our application, if push all the data of our application into 2nd level cache we eventually leads to memory problem.
+  
+So we should have property cache retention policy must be there
+  1. how many entries should be cached
+  2. how long the data can be kept in memory
+  3. eviction policies 
+  
+Branch - 1 lac -> 100 entitries (eviction policy, LRU, MRU) (idle: 20 ms)
+  
+1. 2nd level cache is not enabled by default, we should enable the 2nd level cache explicitly
+2. We need to mark which entities has to be cached unless otherwise no data goes to 2nd level cache
+3. Every Entity will be stored in it own cache. (should be configured with cache policies)  
+4. Hibernate integrates with 3rd party cache frameworks in the market to implement 2nd level cache.
+  
+  
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

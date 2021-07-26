@@ -1,0 +1,128 @@
+product 
+product_no product_nm  description amount
+
+review
+review_no  rating comment reviewed_by  product_no
+
+class Product {
+  int productNo;
+  String productName;
+  
+  @OneToMany(mappedBy="product")
+  Set<Review> reviews;
+}
+
+class Review {
+  int reviewNo;
+  String reviewedBy;
+  
+  @ManyToOne
+  @JoinColumn(name="product_no")
+  Product product;
+}
+
+select p.* from product p inner join review r on p.product_no = r.product_no where r.reviewed_by = 'patrik';
+
+In HQL Queries we can write 2 types of joins
+1. Implicit join = we dereference the association object based on relationship to form a join query, we dont use here a join keyword and always results in inner join only.
+  
+2. Explicit Join = we use join keyword for joining 2 entity classes out of their association. we can build all types of joins like inner, left and right joins.
+  
+  
+How join queries are written?
+The join queries are written always based on join condition on the relationship columns of both the tables, so that we can combine the records of these tables and fetch.
+  
+select r.product from Review r where r.reviewedBy=:reviewedBy
+
+While writing association we already specified the pk and fk of the both the tables, so while building join queries we dont need to specify the join condition since we already declare the same in association mapping, so we only have to tell the entity should be joined with which associated object.
+  
+  
+class Review {
+  @ManyToOne
+  @JoinColumn(name="product_no")
+  Product product;
+  
+  @ManyToOne
+  @JoinColumn(name="user_no")
+  User user;
+} 
+
+class Product {
+  Set<Review> reviews;
+}
+
+
+
+
+implicit:-
+select r.product from Review r 
+select p.* from product p inner join review r on p.product_no = r.product_no;
+= give me all the products which has reviews
+
+explicit:-
+select p.productNo, p.productName, r.reviewedBy, r.rating from Product p inner join p.reviews r where r.reviewedBy = :reviewedBy
+
+Limitation of implicit join
+---------------------------
+we cannot dereference collection types in an implicit join, we have to must and should use explicit join only. because we cannot dereference a collection object.
+  
+class Project {
+  int projectNo;
+  String title;
+  int budget;
+  
+  @ManyToOne
+  @JoinColumn(name="contractor_no")
+  Contractor contractor;
+}
+
+class Contractor {
+  int contractorNo;
+  String contractorName;
+  
+  @OneToMany(mappedBy="contractor")
+  Set<Project> projects;
+}
+
+select p from Project p where p.contractor.contactorName like 'l & t'
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,50 @@
+@Entity
+@Table(name="loan")
+class Loan {
+  @Id
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int loanNo;
+  String loanType;
+  double principleAmount;
+  float interestRate;
+  int tenure;
+  
+  @JoinTable(name="loan_customers", joinColumns={@JoinColumn(name="loan_no")}, inverseJoinColumns={@JoinColumn(name="customer_no")})
+  @ManyToMany  
+  Set<Customer> customers;
+  
+}
+
+@Entity
+@Table(name="customer")
+class Customer {
+  @Id
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  int customerNo;
+  String customerName;
+  int age;
+  String gender;
+  String mobileNo;
+  Set<Loan> loans;
+}
+
+loan
+loan_no   loan_type   principle_amount    interest_rate     tenure
+
+customer
+customer_no      customer_nm     age     gender     mobile_no
+
+loan_customers
+loan_no  customer_no
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,145 @@
+Hibernate Framework supports 3 levels cache.
+  1. First Level Cache
+  2. Second Level Cache
+  3. Query-level Cache
+  
+2. Second Level Cache  
+For storing the long-lived data or moderate data, the first-level doesnt help as the data should be stored longer amount of time within the Cache we need 2nd level cache.
+  
+Second Level Cache is also called as SessionFactory Level Cache. By default 2nd level cache is not turned on as part of Hibernate Framework. We need to enable 2nd level cache and should tag which entities has to be cached at 2nd level cache to Hibernate Framework.
+  
+Hibernate has integrated with third-party Cache Frameworks or Libraries in implementation Cache capabilities.
+  1. oscache
+  2. swarncache
+  3. ehcache
+  4. jcache
+  5. coherance
+  
+EHCache is considered to be very popular opensource cache framework available in Java, where hibernate has integration with EHCache.
+  
+EHCache is a distributed cache framework, that helps in maintaining the Cache across the nodes of the Cluster.
+EHCache 2.x (legacy)  
+EHCache 3.7 (backward compatibility not there)
+
+Hibernate Framework 5.x has integration with EHCache 2.x only
+EHCache 3.7 
+
+We have different types of data we want to cache as part of our application which requires different cache semantics/mechanims with which we should maintain the data. So EHCache let you define cache with configurations specific to the type of the data you want to store using configuration file.
+  
+cache.xml
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  
+  <cache-template name="defaultTemplate">
+    <key-type>java.lang.Integer</key-type>
+    <value-type>java.lang.String</value-type>
+    <heap unit="entries">20</heap>
+  </cache-template>
+  
+  <cache name="cities-cache" uses-template="defaultTemplate"/>
+  <cache name="states-cache" uses-template="defaultTemplate"/>
+  <cache name="countries-cache" uses-template="defaultTemplate"/>    
+</config>
+
+Test.java
+Url url = this.getClass().getClassLoader().getResource("/cache.xml");
+Configuration configuration = new XmlConfiguration(url);
+CacheManager cacheManager = CacheManagerBuilder.createCacheManager(configuration);
+
+
+Cache<Integer, String> cache = cacheManger.getCache("cities-cache", Integer.class, String.class);
+cache.put(1, "Hyderabad");
+cache.put(2, "Chennai");
+String city = cache.get(1);
+-------------------------------------------------------------------------------------------------------
+  
+
+org = session.get(Organization.class, 1);
+org.getJobs().iterate();
+
+select * from jobs where org_no = 1 
+1,2 (cached)
+  
+session.close(); // job objects are removed 1st level
+
+org1 = session.get(Organization.class, 1);
+// 2nd level
+org1.getJobs().iterate(); 1,2 (2nd level)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+ONSH118072021=Pr4VrW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

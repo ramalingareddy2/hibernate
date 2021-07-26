@@ -1,0 +1,53 @@
+What are HQL/JPQL Queries, why does hibernate has provided a separate query language then using an native sql query?
+while working with native sql queries we run into 2 problems
+1. the queries are not database portable, due to which we need to rewrite the code while switching from one database to another
+2. within the queries we refer to table and column names due to which the queries are tightly coupled with underlying database, so if there is a change in table/column name a huge rework needed to reflecting the changes.
+  
+To overcome the above 2 problems Hibernate/Jpa has introduced HQL/JPQL query language.
+How did Hibernate/Jpa solved the above 2 problems:-
+- HQL/JPQL is a own query language introduced by Hibernate Framework/Jpa api with their own query clauses and syntaxes independent of the database. These queries are translated into native queries while executing on the underlying database by using the help of dialect. 
+- The HQL/JPQL is an object query language, so that our queries are decoupled from the table/column names instead we refer Entity classname and attribute names in building the query
+
+We need to explore writing HQL queries and executing them.
+Hibernate query api has been deprecated and removed in Hibernate5, so we need to use only jpa 2.1 query api only. There are 2 api classes are available to execute an jpql query.
+  1. Query
+  2. TypedQuery
+  
+#1 from package.EntityClass  
+equal to select * from table. "*" is not an valid selection operator in hql.
+if we want to select all the attributes of an object the short form of writing the query is
+from package.EntityClass or 
+else we can select the alias of the object as below.
+select e from package.EntityClass e
+
+Points to remember:-
+  1. the query clauses are case-insensitive we can query in mixed cases also
+  2. the attribute names and classnames are casesensitive
+  3. The query always returns list of objects, for single object to fetch we can use get/load/find methods
+  4. the packageName.entityClass is optional, because auto-import="true" is enabled by default, which indicates import the entity classnames with their package when those are not qualified in hql queries.
+    
+How to execute an hql/jpql query?    
+
+Query query = session.createQuery("from Branch");
+List<Branch> branches =(List<Branch>) query.getResultList();
+
+(or)
+
+TypedQuery<Branch> typedQuery = session.createQuery("from Branch", Branch.class);
+List<Branch> branches = typedQuery.getResultList();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
