@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.otmm.entities">
+	<class name="Contractor" table="contractor">
+		<id name="contractorNo" column="contractor_no">
+			<generator class="increment" />
+		</id>
+		<property name="organizationName" column="org_nm" />
+		<property name="establishedDate" column="est_dt" />
+		<property name="licenseNo" column="license_no" />
+		<property name="contactNo" column="contact_no" />
+		<property name="emailAddress" column="email_address" />
+		<map name="allotedWorkorders">
+			<key column="assigned_contractor_no" not-null="false" />
+			<map-key column="unique_contract_no" type="string" />
+			<one-to-many class="Workorder" />
+		</map>
+	</class>
+</hibernate-mapping>

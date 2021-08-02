@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.manytoone.entities">
+	<class name="Ornament" table="ornament">
+		<id name="ornamentNo" column="ornament_no">
+			<generator class="increment" />
+		</id>
+		<property name="description" />
+		<property name="weight" />
+		<property name="estimatedValue" column="estimated_value" />
+		<many-to-one name="goldLoan" column="goldloan_no"
+			class="GoldLoan" />
+	</class>
+</hibernate-mapping>

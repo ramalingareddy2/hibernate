@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.manytoone.entities">
+	<class name="GoldLoan" table="goldloan">
+		<id name="goldloanNo" column="goldloan_no">
+			<generator class="increment" />
+		</id>
+		<property name="description" />
+		<property name="totalWeight" column="total_weight" />
+		<property name="interestRate" column="interest_rate" />
+		<property name="loanAmount" column="loan_amount" />
+	</class>
+</hibernate-mapping>

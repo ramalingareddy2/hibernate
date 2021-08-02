@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.vogo.bs4.entities">
+	<class name="Customer" table="customer">
+		<id name="customerNo" column="customer_no" />
+		<property name="fullname" column="full_nm" />
+		<property name="dob" />
+		<property name="gender" />
+		<property name="mobileNo" column="mobile_no" />
+		<property name="emailAddress" column="email_address" />
+		<property name="drivingLicenseNo" column="driving_license_no" />
+	</class>
+</hibernate-mapping>

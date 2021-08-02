@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.inv.entities">
+	<class name="Project" table="project">
+		<id name="projectNo" column="project_no">
+			<generator class="increment" />
+		</id>
+		<property name="projectName" column="project_nm" />
+		<property name="duration" />
+		<property name="startDate" column="start_dt" />
+		<set name="members" inverse="true">
+			<key column="project_no" not-null="false" />
+			<one-to-many class="Member" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.onetoone.entities">
+	<class name="ItemizedBill" table="itemized_bill">
+		<id name="billNo" column="bill_no">
+			<generator class="foreign">
+				<param name="property">bill</param>
+			</generator>
+		</id>
+		<property name="localCallMinutes" column="local_call_mins" />
+		<property name="internationalCallMinutes"
+			column="international_call_mins" />
+		<property name="dataConsumed" column="data_consumed" />
+		<property name="voiceCallCharges" column="voice_call_charges" />
+		<property name="dataCharges" column="data_charges" />
+		<one-to-one name="bill" />
+	</class>
+</hibernate-mapping>

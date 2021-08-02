@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ehcache>
+	<cache name="com.slc.entities.Organization"
+		maxEntriesLocalHeap="100" eternal="true" />
+
+	<cache name="com.slc.entities.Organization.jobs"
+		maxEntriesLocalHeap="100" eternal="true" />
+		
+	<cache name="com.slc.entities.Job"
+		maxEntriesLocalHeap="100" eternal="true" />
+</ehcache>

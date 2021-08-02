@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.idgenerators.entities" auto-import="true">
+	<class name="Outlet" table="outlet">
+		<id name="outletNo" column="outlet_no">
+			<generator class="select">
+				<param name="key">outletName</param>
+			</generator>
+		</id>
+		<property name="outletName" column="outlet_nm" unique="true" />
+		<property name="description" />
+		<property name="inChargeName" column="incharge_nm" />
+		<property name="capacity" />
+		<property name="location" />
+		<property name="contactNo" column="contact_no" />
+	</class>
+</hibernate-mapping>

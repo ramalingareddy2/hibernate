@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.mtmlist.entities">
+	<class name="Journey" table="journey">
+		<id name="journeyNo" column="journey_no">
+			<generator class="increment" />
+		</id>
+		<property name="source" />
+		<property name="destination" />
+		<property name="journeyDate" column="journey_dt" />
+		<property name="amount" />
+		<list name="passengers" table="journey_passengers">
+			<key column="journey_no" />
+			<list-index column="ticket_no" base="1000" />
+			<many-to-many column="passenger_no" class="Passenger" />
+		</list>
+	</class>
+</hibernate-mapping>

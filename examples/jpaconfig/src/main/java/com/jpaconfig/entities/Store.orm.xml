@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings
+	xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm 
+        http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0">
+	<entity class="com.jpaconfig.entities.Store">
+		<table name="store" />
+		<attributes>
+			<id name="storeNo">
+				<column name="store_no" />
+			</id>
+			<basic name="storeName">
+				<column name="store_nm" />
+			</basic>
+			<basic name="contactNo">
+				<column name="contact_no" />
+			</basic>
+			<basic name="emailAddress">
+				<column name="email_address" />
+			</basic>
+			<basic name="address">
+				<column name="address" />
+			</basic>
+			<basic name="city" />
+			<basic name="state" />
+			<basic name="zip" />
+			<basic name="country" />
+		</attributes>
+	</entity>
+</entity-mappings>
+
+
+
+
+
+
+
+
